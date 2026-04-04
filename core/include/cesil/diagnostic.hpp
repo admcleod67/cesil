@@ -1,0 +1,42 @@
+#pragma once
+
+#include <ostream>
+#include <string>
+#include <vector>
+
+namespace cesil {
+
+/// Severity for structured compiler/runtime diagnostics.
+enum class DiagnosticSeverity {
+    Error,
+    Warning,
+    Note,
+};
+
+/// One diagnostic message with optional source location.
+struct Diagnostic {
+    DiagnosticSeverity severity{DiagnosticSeverity::Error};
+    std::string message{};
+    /// 1-based source line, or 0 if not applicable.
+    int line{0};
+    /// 1-based column, or 0 if not applicable.
+    int column{0};
+};
+
+/// Append a diagnostic to \p out (typically stderr).
+///
+/// \param out Output stream.
+/// \param d Diagnostic to format.
+void print_diagnostic(std::ostream& out, const Diagnostic& d);
+
+/// Append a diagnostic to \p sink.
+///
+/// \param sink Collection to append to.
+/// \param severity Severity level.
+/// \param message Human-readable message.
+/// \param line Optional 1-based line (0 = omit from output).
+/// \param column Optional 1-based column (0 = omit from output).
+void push_diagnostic(std::vector<Diagnostic>& sink, DiagnosticSeverity severity,
+                     std::string message, int line = 0, int column = 0);
+
+}  // namespace cesil
