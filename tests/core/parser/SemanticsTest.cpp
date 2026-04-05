@@ -1,7 +1,7 @@
 #include <catch2/catch_test_macros.hpp>
-#include "lexer/lexer.hpp"
-#include "parser/parser.hpp"
-#include "parser/validator.hpp"
+#include "lexer/Lexer.hpp"
+#include "parser/Parser.hpp"
+#include "parser/Validator.hpp"
 
 #include <string>
 

@@ -1,9 +1,9 @@
 #pragma once
 
-#include "errors/diagnostic.hpp"
-#include "runtime/hooks.hpp"
-#include "runtime/instruction.hpp"
-#include "runtime/io.hpp"
+#include "errors/Diagnostic.hpp"
+#include "runtime/Hooks.hpp"
+#include "runtime/Instruction.hpp"
+#include "runtime/Io.hpp"
 
 #include <cstddef>
 #include <string>

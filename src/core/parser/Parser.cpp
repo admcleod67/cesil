@@ -1,9 +1,9 @@
-#include "parser/parser.hpp"
+#include "parser/Parser.hpp"
 
-#include "lexer/lexer.hpp"
-#include "lexer/token_utils.hpp"
-#include "parser/instruction_rules.hpp"
-#include "parser/validator.hpp"
+#include "lexer/Lexer.hpp"
+#include "lexer/TokenUtils.hpp"
+#include "parser/InstructionRules.hpp"
+#include "parser/Validator.hpp"
 
 #include <optional>
 #include <string>

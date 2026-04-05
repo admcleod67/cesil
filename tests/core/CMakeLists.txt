@@ -1,8 +1,8 @@
 add_executable(cesil_tests
-    lexer/lexer_test.cpp
-    parser/parser_test.cpp
-    parser/semantics_test.cpp
-    runtime/smoke_test.cpp
+    lexer/LexerTest.cpp
+    parser/ParserTest.cpp
+    parser/SemanticsTest.cpp
+    runtime/SmokeTest.cpp
 )
 
 target_link_libraries(cesil_tests PRIVATE cesil-core Catch2::Catch2WithMain)

@@ -1,7 +1,7 @@
 #include <catch2/catch_test_macros.hpp>
-#include "runtime/interpreter.hpp"
-#include "runtime/io.hpp"
-#include "parser/parser.hpp"
+#include "runtime/Interpreter.hpp"
+#include "runtime/Io.hpp"
+#include "parser/Parser.hpp"
 
 #include <sstream>
 #include <string>

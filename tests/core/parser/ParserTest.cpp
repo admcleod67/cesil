@@ -1,8 +1,8 @@
 #include <catch2/catch_test_macros.hpp>
-#include "lexer/lexer.hpp"
-#include "runtime/opcode.hpp"
-#include "runtime/operand.hpp"
-#include "parser/parser.hpp"
+#include "lexer/Lexer.hpp"
+#include "runtime/Opcode.hpp"
+#include "runtime/Operand.hpp"
+#include "parser/Parser.hpp"
 
 #include <string>
 

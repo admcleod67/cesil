@@ -1,7 +1,7 @@
 #pragma once
 
-#include "runtime/opcode.hpp"
-#include "runtime/operand.hpp"
+#include "runtime/Opcode.hpp"
+#include "runtime/Operand.hpp"
 
 namespace cesil {
 

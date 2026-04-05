@@ -1,9 +1,9 @@
 #pragma once
 
-#include "errors/diagnostic.hpp"
-#include "runtime/instruction.hpp"
-#include "parser/raw_operand.hpp"
-#include "lexer/token.hpp"
+#include "errors/Diagnostic.hpp"
+#include "runtime/Instruction.hpp"
+#include "parser/RawOperand.hpp"
+#include "lexer/Token.hpp"
 
 #include <cstddef>
 #include <string_view>

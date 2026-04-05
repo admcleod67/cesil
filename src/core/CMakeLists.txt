@@ -1,12 +1,12 @@
 add_library(cesil-core
-    lexer/lexer.cpp
-    lexer/token_utils.cpp
-    parser/parser.cpp
-    parser/instruction_rules.cpp
-    parser/validator.cpp
-    runtime/opcode.cpp
-    runtime/interpreter.cpp
-    errors/diagnostic.cpp
+    lexer/Lexer.cpp
+    lexer/TokenUtils.cpp
+    parser/Parser.cpp
+    parser/InstructionRules.cpp
+    parser/Validator.cpp
+    runtime/Opcode.cpp
+    runtime/Interpreter.cpp
+    errors/Diagnostic.cpp
 )
 
 target_include_directories(cesil-core

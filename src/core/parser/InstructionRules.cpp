@@ -1,4 +1,4 @@
-#include "parser/instruction_rules.hpp"
+#include "parser/InstructionRules.hpp"
 
 #include <string>
 #include <unordered_map>

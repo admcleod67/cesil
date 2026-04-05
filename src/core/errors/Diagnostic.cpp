@@ -1,4 +1,4 @@
-#include "errors/diagnostic.hpp"
+#include "errors/Diagnostic.hpp"
 
 #include <ostream>
 

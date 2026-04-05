@@ -1,6 +1,6 @@
 #include <catch2/catch_test_macros.hpp>
-#include "lexer/lexer.hpp"
-#include "lexer/token.hpp"
+#include "lexer/Lexer.hpp"
+#include "lexer/Token.hpp"
 
 #include <string>
 #include <vector>

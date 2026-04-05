@@ -152,8 +152,8 @@ IoHost (console / IDE / simulator)
 ## 🔌 Embedding CESIL (minimal example)
 
 ```cpp
-#include <parser/parser.hpp>
-#include <runtime/interpreter.hpp>
+#include <parser/Parser.hpp>
+#include <runtime/Interpreter.hpp>
 
 auto program = cesil::parseFile("examples/hello.ces");
 cesil::Interpreter vm;

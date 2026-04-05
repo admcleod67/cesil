@@ -1,7 +1,7 @@
-#include <errors/diagnostic.hpp>
-#include <runtime/interpreter.hpp>
-#include <runtime/io.hpp>
-#include <parser/parser.hpp>
+#include <errors/Diagnostic.hpp>
+#include <runtime/Interpreter.hpp>
+#include <runtime/Io.hpp>
+#include <parser/Parser.hpp>
 
 #include <fstream>
 #include <iostream>

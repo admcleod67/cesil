@@ -1,6 +1,6 @@
-#include "runtime/interpreter.hpp"
+#include "runtime/Interpreter.hpp"
 
-#include "runtime/opcode.hpp"
+#include "runtime/Opcode.hpp"
 
 #include <limits>
 #include <utility>

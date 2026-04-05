@@ -1,7 +1,7 @@
 #pragma once
 
-#include "runtime/opcode.hpp"
-#include "lexer/token.hpp"
+#include "runtime/Opcode.hpp"
+#include "lexer/Token.hpp"
 
 namespace cesil {
 

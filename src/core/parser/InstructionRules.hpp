@@ -1,6 +1,6 @@
 #pragma once
 
-#include "runtime/opcode.hpp"
+#include "runtime/Opcode.hpp"
 
 #include <string_view>
 

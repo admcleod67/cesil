@@ -1,8 +1,8 @@
-#include "parser/validator.hpp"
+#include "parser/Validator.hpp"
 
-#include "errors/diagnostic.hpp"
-#include "lexer/token_utils.hpp"
-#include "parser/instruction_rules.hpp"
+#include "errors/Diagnostic.hpp"
+#include "lexer/TokenUtils.hpp"
+#include "parser/InstructionRules.hpp"
 
 namespace cesil {
 
