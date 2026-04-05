@@ -1,90 +1,190 @@
-# CESIL Programming Language
+# ✨ CESIL Programming Language
+*A modern C++20 re‑imagining of a classic educational language*
 
-A modern **C++20** implementation of **CESIL** (Computer Education in Schools Instruction Language): a small educational assembly-style language with a single accumulator, named store locations, and a trailing data section for `IN`.
+---
 
-This repository provides a reusable **core library**, a **command-line runner**, unit tests, and example programs.
+## 🕹️ What is CESIL?
 
-## Features
+CESIL — *Computer Education in Schools Instruction Language* — was a small, assembly‑style teaching language used in UK schools in the 1970s. It introduced programming concepts using:
 
-- **Front end**: lexer, syntax parser, and semantic validation (`SemanticValidator`) producing structured IR
-- **Interpreter**: executes `Instruction` streams with an accumulator, program counter, and named store
-- **I/O abstraction** (`IoHost`) for console, future IDE, or simulator front-ends
-- **Execution hooks** for stepping and breakpoints
-- **Diagnostics** with line and column information where available
+- a single accumulator
+- named store locations
+- a compact instruction set
+- a trailing data section for input
+
+This project brings CESIL into the modern era with a clean, modular **C++20** implementation designed for teaching, tinkering, retro‑computing, and embedding in other tools.
+
+---
+
+## 🌟 Inspiration & History
+
+My own journey with CESIL began in the early 1980s, when I attempted to build a CESIL programming environment for the **Sinclair ZX81**. That first experiment led to several more versions over the years — most of them written in BASIC — for machines such as:
+
+- the **RML 380Z**
+- the **BBC Micro**
+- the **Amstrad CPC464**
+
+Later in the decade, I created a more generic CESIL interpreter that could be compiled with standard C compilers and run under **CP/M** and **DOS**. CESIL has been a quiet companion through much of my computing life, and this modern C++20 implementation is a continuation of that long‑running fascination.
+
+A major influence on this project is the excellent **Visual CESIL** environment created by **Andrew Jacobs**:  
+<http://www.6502.org/users/obelisk/cesil/index.html>
+
+Andrew’s work captured the spirit of CESIL beautifully, and his contributions to the retro‑computing community were immense. Andrew sadly passed away in 2021, and this project is, in part, a small homage to his creativity, generosity, and passion for classic computing.
+
+---
+
+## 🚀 Features
+
+- **Front end**
+    - Lexer
+    - Syntax parser
+    - Semantic validation (`SemanticValidator`)
+    - Structured IR output
+
+- **Interpreter**
+    - Accumulator + program counter
+    - Named store
+    - Execution hooks for stepping & breakpoints
+
+- **I/O abstraction (`IoHost`)** for console, IDEs, or simulators
+- **Diagnostics** with line/column information
+- **Reusable core library** for embedding
 - **Examples** under `examples/`
 
-## Requirements
+---
 
-- **CMake** 3.20 or newer
-- A **C++20**-capable compiler (Clang, GCC, or MSVC)
-- **Network access on the first configure**: tests depend on **Catch2 v3.4.0**, which CMake fetches via `FetchContent` (see root `CMakeLists.txt`)
+## 👋 A Tiny CESIL Example
 
-## Project layout
+```cesil
+PRINT "Hello, world"
+HALT
+%
+*
+```
+
+Run it with:
+
+```
+./build/src/cli/cesil run examples/hello.ces
+```
+
+---
+
+## 📦 Requirements
+
+- CMake **3.20+**
+- A C++20‑capable compiler (Clang, GCC, MSVC)
+- Network access on first configure (Catch2 is fetched automatically)
+
+---
+
+## 🗂️ Project Layout
 
 | Path | Description |
 |------|-------------|
-| `src/core/` | Static library **cesil-core**: sources and headers directly under `lexer/`, `parser/`, `runtime/`, and `errors/`. CMake adds `src/core` as the single `PUBLIC` include root (e.g. `lexer/lexer.hpp`, `parser/parser.hpp`). |
-| `src/cli/` | Executable target **cesil-cli**; the built binary is named **`cesil`** |
-| `examples/` | Sample `.ces` sources |
-| `tests/core/` | Test executable **cesil_tests** (Catch2) |
+| `src/core/` | Static library `cesil-core`: lexer, parser, runtime, errors |
+| `src/cli/` | CLI executable `cesil` |
+| `examples/` | Sample `.ces` programs |
+| `tests/core/` | Catch2 unit tests |
 
-## Build
+---
 
-Configure and build out-of-tree:
+## 🔧 Build
 
-```bash
+Out‑of‑tree build:
+
+```
 cmake -S . -B build
 cmake --build build
 ```
 
-Release build (single-configuration generators):
+Release build:
 
-```bash
+```
 cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
 cmake --build build
 ```
 
-## Tests
+---
 
-```bash
+## 🧪 Tests
+
+Run all tests:
+
+```
 ctest --test-dir build --output-on-failure
 ```
 
-CTest registers one test, **`cesil_tests`**, which runs the Catch2-linked binary (lexer, parser, semantics, and smoke coverage).
+---
 
-## Running programs
+## ▶️ Running Programs
 
-After a successful build, run a CESIL source file with:
-
-```bash
-./build/src/cli/cesil run examples/hello.ces
-./build/src/cli/cesil run examples/total.ces
 ```
-
-The exact path to the `cesil` binary matches CMake’s output directory for the `cli` target; with a default Ninja or Makefile build it is typically **`build/src/cli/cesil`** (on Windows, `build/src/cli/cesil.exe` or under `build/src/cli/Debug/` depending on the generator).
-
-Usage:
-
-```text
 cesil run <file>
 ```
 
-Runtime numeric input for `IN` is read from standard input; output uses standard output.
+Example:
 
-## Architecture (overview)
+```
+./build/src/cli/cesil run examples/total.ces
+```
 
-1. **Lexer** tokenizes source (identifiers, numbers, strings, punctuation, newlines).
-2. **Parser** (`Parser::parse` / `parseSyntax`) builds syntax-level IR: instructions with opcodes and line numbers, **raw operands** (`RawOperand`), label maps, and raw data tokens.
-3. **SemanticValidator** resolves operands, validates data integers and jump targets, and fills final `Operand` values on each `Instruction`.
-4. **Interpreter** runs the resolved IR against an `IoHost`.
+---
 
-Public API entry points for embedding use includes such as `parser/parser.hpp`, `runtime/interpreter.hpp`, and `lexer/lexer.hpp`, with `src/core` as the include root (see `target_include_directories` in `src/core/CMakeLists.txt`).
+## 🏗️ Architecture Overview
 
-## Language reference
+```
+Source
+  ↓
+Lexer
+  ↓
+Parser (syntax IR)
+  ↓
+SemanticValidator (resolved IR)
+  ↓
+Interpreter
+  ↓
+IoHost (console / IDE / simulator)
+```
 
-CESIL is documented in teaching materials and on the web, for example:
+---
 
-- [Wikipedia: CESIL](https://en.wikipedia.org/wiki/Cesil)
-- [CESIL.org](https://cesil.org/)
+## 🔌 Embedding CESIL (minimal example)
 
-This project aims to accept common CESIL program and data-section layouts (`%` … `*`); see `examples/` for runnable samples.
+```cpp
+#include <parser/parser.hpp>
+#include <runtime/interpreter.hpp>
+
+auto program = cesil::parseFile("examples/hello.ces");
+cesil::Interpreter vm;
+vm.run(program);
+```
+
+---
+
+## 📜 Language Reference
+
+CESIL documentation and historical material:
+
+- Wikipedia: *CESIL*
+- CESIL.org
+- Visual CESIL by Andrew Jacobs
+- Original teaching materials (various scans online)
+
+---
+
+## 🛣️ Roadmap
+
+- Visual debugger / stepping UI
+- Syntax highlighting
+- CESIL‑to‑IR visualisation
+- Hardware CESIL CPU
+- More examples & teaching materials
+
+---
+
+## 🤝 Contributing
+
+This repository is public for reference and historical interest.  
+I’m **not** accepting direct contributions or pull requests.  
+Forks are welcome under the MIT license.
