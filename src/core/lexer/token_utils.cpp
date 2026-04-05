@@ -4,7 +4,7 @@
 
 namespace cesil::lexer {
 
-std::string_view trim_view(std::string_view s) {
+std::string_view trimView(std::string_view s) {
     while (!s.empty() && std::isspace(static_cast<unsigned char>(s.front()))) {
         s.remove_prefix(1);
     }
@@ -14,9 +14,9 @@ std::string_view trim_view(std::string_view s) {
     return s;
 }
 
-bool is_blank(std::string_view source) { return trim_view(source).empty(); }
+bool isBlank(std::string_view source) { return trimView(source).empty(); }
 
-std::string to_upper_copy(std::string_view s) {
+std::string toUpperCopy(std::string_view s) {
     std::string out;
     out.reserve(s.size());
     for (char ch : s) {
@@ -25,7 +25,7 @@ std::string to_upper_copy(std::string_view s) {
     return out;
 }
 
-bool is_valid_identifier(std::string_view name) {
+bool isValidIdentifier(std::string_view name) {
     if (name.empty() || name.size() > 6) {
         return false;
     }
@@ -40,8 +40,8 @@ bool is_valid_identifier(std::string_view name) {
     return true;
 }
 
-bool parse_signed_integer(std::string_view text, int& out) {
-    text = trim_view(text);
+bool parseSignedInteger(std::string_view text, int& out) {
+    text = trimView(text);
     if (text.empty()) {
         return false;
     }

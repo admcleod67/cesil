@@ -25,6 +25,6 @@ enum class OpCode : std::uint8_t {
 };
 
 /// \return Human-readable name for \p op (suitable for diagnostics).
-const char* to_string(OpCode op) noexcept;
+const char* toString(OpCode op) noexcept;
 
 }  // namespace cesil

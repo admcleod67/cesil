@@ -14,7 +14,7 @@ namespace {
 /// Console-backed \ref cesil::IoHost for the CLI.
 class ConsoleIoHost final : public cesil::IoHost {
    public:
-    int read_int() override {
+    int readInt() override {
         int value = 0;
         if (!(std::cin >> value)) {
             return 0;
@@ -22,18 +22,18 @@ class ConsoleIoHost final : public cesil::IoHost {
         return value;
     }
 
-    void write_int(int value) override { std::cout << value; }
+    void writeInt(int value) override { std::cout << value; }
 
-    void write_string(const std::string& text) override { std::cout << text; }
+    void writeString(const std::string& text) override { std::cout << text; }
 
-    void write_line() override { std::cout << '\n'; }
+    void writeLine() override { std::cout << '\n'; }
 };
 
-void print_usage(const char* argv0) {
+void printUsage(const char* argv0) {
     std::cerr << "Usage: " << argv0 << " run <file>\n";
 }
 
-bool read_file(const std::string& path, std::string& out, std::string& error) {
+bool readFile(const std::string& path, std::string& out, std::string& error) {
     std::ifstream in(path, std::ios::binary);
     if (!in) {
         error = "failed to open file: " + path;
@@ -49,37 +49,37 @@ bool read_file(const std::string& path, std::string& out, std::string& error) {
 
 int main(int argc, char* argv[]) {
     if (argc != 3 || std::string_view(argv[1]) != "run") {
-        print_usage(argc > 0 ? argv[0] : "cesil");
+        printUsage(argc > 0 ? argv[0] : "cesil");
         return 1;
     }
 
     const std::string path = argv[2];
     std::string source;
-    std::string io_error;
-    if (!read_file(path, source, io_error)) {
-        std::cerr << "error: " << io_error << '\n';
+    std::string ioError;
+    if (!readFile(path, source, ioError)) {
+        std::cerr << "error: " << ioError << '\n';
         return 1;
     }
 
     cesil::Parser parser;
     cesil::ParseResult parsed = parser.parse(source);
-    for (const auto& d : parsed.diagnostics) {
-        cesil::print_diagnostic(std::cerr, d);
+    for (const auto& d : parsed.diagnostics_) {
+        cesil::printDiagnostic(std::cerr, d);
     }
-    if (!parsed.ok) {
+    if (!parsed.ok_) {
         return 1;
     }
 
     ConsoleIoHost io;
     cesil::Interpreter interpreter(io);
-    interpreter.load(std::move(parsed.instructions), std::move(parsed.data),
-                     std::move(parsed.label_indices));
+    interpreter.load(std::move(parsed.instructions_), std::move(parsed.data_),
+                     std::move(parsed.labelIndices_));
 
     const cesil::RunResult ran = interpreter.run();
-    for (const auto& d : ran.diagnostics) {
-        cesil::print_diagnostic(std::cerr, d);
+    for (const auto& d : ran.diagnostics_) {
+        cesil::printDiagnostic(std::cerr, d);
     }
-    if (!ran.ok) {
+    if (!ran.ok_) {
         return 1;
     }
 

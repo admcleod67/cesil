@@ -21,10 +21,12 @@ enum class TokenType {
 
 /// Single token from the lexer with exact source text and location.
 struct Token {
-    TokenType type{TokenType::Unknown};
-    std::string text{};
-    int line{1};
-    int column{1};
+    TokenType type_{TokenType::Unknown};
+    std::string text_{};
+    /// 1-based source line at token start.
+    int line_{1};
+    /// 1-based column at token start.
+    int column_{1};
 };
 
 }  // namespace cesil

@@ -15,10 +15,10 @@ namespace cesil {
 /// Outcome of a full or partial interpreter run.
 struct RunResult {
     /// True if execution completed without a fatal runtime error.
-    bool ok{false};
-    /// Set when \ref ExecutionHooks::should_break stopped execution before the current PC.
-    bool stopped_at_breakpoint{false};
-    std::vector<Diagnostic> diagnostics{};
+    bool ok_{false};
+    /// Set when \ref ExecutionHooks::shouldBreak_ stopped execution before the current PC.
+    bool stoppedAtBreakpoint_{false};
+    std::vector<Diagnostic> diagnostics_{};
 };
 
 /// Executes a CESIL program held as a vector of \ref Instruction.
@@ -34,10 +34,10 @@ class Interpreter {
     /// Replace the loaded program and reset execution state.
     ///
     /// \param program Instruction sequence to run.
-    /// \param runtime_data Values consumed by \c IN in order.
-    /// \param label_indices Map from line label to instruction index (from \ref ParseResult).
-    void load(std::vector<Instruction> program, std::vector<int> runtime_data = {},
-              std::unordered_map<std::string, std::size_t> label_indices = {});
+    /// \param runtimeData Values consumed by \c IN in order.
+    /// \param labelIndices Map from line label to instruction index (from \ref ParseResult).
+    void load(std::vector<Instruction> program, std::vector<int> runtimeData = {},
+              std::unordered_map<std::string, std::size_t> labelIndices = {});
 
     /// Reset PC, accumulator, and store without changing the loaded program.
     void reset();
@@ -49,7 +49,7 @@ class Interpreter {
     int accumulator() const { return accumulator_; }
 
     /// Index of the next instruction in the program vector.
-    std::size_t program_counter() const { return pc_; }
+    std::size_t programCounter() const { return pc_; }
 
     /// Named integer store (CESIL variables).
     const std::unordered_map<std::string, int>& store() const { return store_; }
@@ -62,15 +62,15 @@ class Interpreter {
     ExecutionHooks hooks_;
     std::vector<Instruction> program_{};
     std::vector<int> data_{};
-    std::size_t data_ptr_{0};
-    std::unordered_map<std::string, std::size_t> label_indices_{};
+    std::size_t dataPtr_{0};
+    std::unordered_map<std::string, std::size_t> labelIndices_{};
     std::unordered_map<std::string, int> store_{};
     int accumulator_{0};
     std::size_t pc_{0};
 
-    bool execute_current(bool& halted, RunResult& result);
-    int load_operand_value(const Operand& op, int line_number, RunResult& result);
-    std::size_t resolve_jump_target(const std::string& label, int line_number, RunResult& result);
+    bool executeCurrent(bool& halted, RunResult& result);
+    int loadOperandValue(const Operand& op, int lineNumber, RunResult& result);
+    std::size_t resolveJumpTarget(const std::string& label, int lineNumber, RunResult& result);
 };
 
 }  // namespace cesil

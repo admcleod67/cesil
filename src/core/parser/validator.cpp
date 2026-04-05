@@ -6,113 +6,113 @@
 
 namespace cesil {
 
-bool SemanticValidator::resolve_operand(const RawOperand& raw, Operand& out, std::vector<Diagnostic>& diags) {
-    const OpCode op = raw.opcode_context;
-    const Token& tok = raw.token;
+bool SemanticValidator::resolveOperand(const RawOperand& raw, Operand& out, std::vector<Diagnostic>& diags) {
+    const OpCode op = raw.opcodeContext_;
+    const Token& tok = raw.token_;
 
-    if (!instruction_rules::needs_operand(op)) {
+    if (!instructionRules::needsOperand(op)) {
         out = Operand{};
         return true;
     }
 
-    if (tok.type == TokenType::EndOfFile) {
-        push_diagnostic(diags, DiagnosticSeverity::Error, "missing operand", tok.line, tok.column);
+    if (tok.type_ == TokenType::EndOfFile) {
+        pushDiagnostic(diags, DiagnosticSeverity::Error, "missing operand", tok.line_, tok.column_);
         return false;
     }
 
     if (op == OpCode::Print) {
-        if (tok.type != TokenType::String) {
-            push_diagnostic(diags, DiagnosticSeverity::Error, "PRINT operand must be a quoted string", tok.line,
-                            tok.column);
+        if (tok.type_ != TokenType::String) {
+            pushDiagnostic(diags, DiagnosticSeverity::Error, "PRINT operand must be a quoted string", tok.line_,
+                           tok.column_);
             return false;
         }
-        out.kind = OperandKind::Symbolic;
-        out.symbol = tok.text;
+        out.kind_ = OperandKind::Symbolic;
+        out.symbol_ = tok.text_;
         return true;
     }
 
-    if (instruction_rules::operand_must_be_label(op)) {
-        if (tok.type != TokenType::Identifier) {
-            push_diagnostic(diags, DiagnosticSeverity::Error, "jump target must be a valid label", tok.line,
-                            tok.column);
+    if (instructionRules::operandMustBeLabel(op)) {
+        if (tok.type_ != TokenType::Identifier) {
+            pushDiagnostic(diags, DiagnosticSeverity::Error, "jump target must be a valid label", tok.line_,
+                           tok.column_);
             return false;
         }
-        if (!lexer::is_valid_identifier(tok.text)) {
-            push_diagnostic(diags, DiagnosticSeverity::Error, "jump target must be a valid label", tok.line,
-                            tok.column);
+        if (!lexer::isValidIdentifier(tok.text_)) {
+            pushDiagnostic(diags, DiagnosticSeverity::Error, "jump target must be a valid label", tok.line_,
+                           tok.column_);
             return false;
         }
-        out.kind = OperandKind::Symbolic;
-        out.symbol = tok.text;
+        out.kind_ = OperandKind::Symbolic;
+        out.symbol_ = tok.text_;
         return true;
     }
 
     if (op == OpCode::Store) {
-        if (tok.type != TokenType::Identifier) {
-            push_diagnostic(diags, DiagnosticSeverity::Error, "STORE target must be a valid store name", tok.line,
-                            tok.column);
+        if (tok.type_ != TokenType::Identifier) {
+            pushDiagnostic(diags, DiagnosticSeverity::Error, "STORE target must be a valid store name", tok.line_,
+                           tok.column_);
             return false;
         }
-        if (!lexer::is_valid_identifier(tok.text)) {
-            push_diagnostic(diags, DiagnosticSeverity::Error, "STORE target must be a valid store name", tok.line,
-                            tok.column);
+        if (!lexer::isValidIdentifier(tok.text_)) {
+            pushDiagnostic(diags, DiagnosticSeverity::Error, "STORE target must be a valid store name", tok.line_,
+                           tok.column_);
             return false;
         }
-        out.kind = OperandKind::Symbolic;
-        out.symbol = tok.text;
+        out.kind_ = OperandKind::Symbolic;
+        out.symbol_ = tok.text_;
         return true;
     }
 
-    if (tok.type == TokenType::Number) {
+    if (tok.type_ == TokenType::Number) {
         int value = 0;
-        if (!lexer::parse_signed_integer(tok.text, value)) {
-            push_diagnostic(diags, DiagnosticSeverity::Error, "invalid numeric constant", tok.line, tok.column);
+        if (!lexer::parseSignedInteger(tok.text_, value)) {
+            pushDiagnostic(diags, DiagnosticSeverity::Error, "invalid numeric constant", tok.line_, tok.column_);
             return false;
         }
-        out.kind = OperandKind::Immediate;
-        out.immediate = value;
-        out.symbol.clear();
+        out.kind_ = OperandKind::Immediate;
+        out.immediate_ = value;
+        out.symbol_.clear();
         return true;
     }
 
-    if (tok.type == TokenType::Identifier) {
-        if (!lexer::is_valid_identifier(tok.text)) {
-            push_diagnostic(diags, DiagnosticSeverity::Error, "invalid operand", tok.line, tok.column);
+    if (tok.type_ == TokenType::Identifier) {
+        if (!lexer::isValidIdentifier(tok.text_)) {
+            pushDiagnostic(diags, DiagnosticSeverity::Error, "invalid operand", tok.line_, tok.column_);
             return false;
         }
-        out.kind = OperandKind::Symbolic;
-        out.symbol = tok.text;
+        out.kind_ = OperandKind::Symbolic;
+        out.symbol_ = tok.text_;
         return true;
     }
 
-    push_diagnostic(diags, DiagnosticSeverity::Error, "invalid operand for this instruction", tok.line, tok.column);
+    pushDiagnostic(diags, DiagnosticSeverity::Error, "invalid operand for this instruction", tok.line_, tok.column_);
     return false;
 }
 
-bool SemanticValidator::validate_label_names(const ParseResult& result, std::vector<Diagnostic>& diags) {
-    for (const auto& entry : result.label_define_lines) {
+bool SemanticValidator::validateLabelNames(const ParseResult& result, std::vector<Diagnostic>& diags) {
+    for (const auto& entry : result.labelDefineLines_) {
         const std::string& name = entry.first;
         const int line = entry.second;
-        if (!lexer::is_valid_identifier(name)) {
-            push_diagnostic(diags, DiagnosticSeverity::Error, "invalid label", line, 0);
+        if (!lexer::isValidIdentifier(name)) {
+            pushDiagnostic(diags, DiagnosticSeverity::Error, "invalid label", line, 0);
             return false;
         }
     }
     return true;
 }
 
-bool SemanticValidator::validate_jump_targets(const ParseResult& result, std::vector<Diagnostic>& diags) {
-    for (const Instruction& inst : result.instructions) {
-        if (!instruction_rules::operand_must_be_label(inst.opcode)) {
+bool SemanticValidator::validateJumpTargets(const ParseResult& result, std::vector<Diagnostic>& diags) {
+    for (const Instruction& inst : result.instructions_) {
+        if (!instructionRules::operandMustBeLabel(inst.opcode_)) {
             continue;
         }
-        if (inst.operand.kind != OperandKind::Symbolic) {
+        if (inst.operand_.kind_ != OperandKind::Symbolic) {
             continue;
         }
-        if (result.label_indices.count(inst.operand.symbol) == 0) {
+        if (result.labelIndices_.count(inst.operand_.symbol_) == 0) {
             // TODO: forward references / multi-pass label resolution for assembler.
-            push_diagnostic(diags, DiagnosticSeverity::Error,
-                            "undefined label '" + inst.operand.symbol + "'", inst.lineNumber, 0);
+            pushDiagnostic(diags, DiagnosticSeverity::Error,
+                           "undefined label '" + inst.operand_.symbol_ + "'", inst.lineNumber_, 0);
             return false;
         }
     }
@@ -120,40 +120,40 @@ bool SemanticValidator::validate_jump_targets(const ParseResult& result, std::ve
 }
 
 bool SemanticValidator::run(ParseResult& result) const {
-    result.semantic_ok = false;
-    result.data.clear();
+    result.semanticOk_ = false;
+    result.data_.clear();
 
-    if (result.instructions.size() != result.raw_operands.size()) {
-        push_diagnostic(result.diagnostics, DiagnosticSeverity::Error, "internal parse state mismatch", 0, 0);
+    if (result.instructions_.size() != result.rawOperands_.size()) {
+        pushDiagnostic(result.diagnostics_, DiagnosticSeverity::Error, "internal parse state mismatch", 0, 0);
         return false;
     }
 
-    if (!validate_label_names(result, result.diagnostics)) {
+    if (!validateLabelNames(result, result.diagnostics_)) {
         return false;
     }
 
-    for (std::size_t i = 0; i < result.instructions.size(); ++i) {
-        // TODO: relocatable symbols / assembler fixups in resolve_operand path.
-        if (!resolve_operand(result.raw_operands[i], result.instructions[i].operand, result.diagnostics)) {
+    for (std::size_t i = 0; i < result.instructions_.size(); ++i) {
+        // TODO: relocatable symbols / assembler fixups in resolveOperand path.
+        if (!resolveOperand(result.rawOperands_[i], result.instructions_[i].operand_, result.diagnostics_)) {
             return false;
         }
     }
 
-    for (const Token& t : result.raw_data_tokens) {
+    for (const Token& t : result.rawDataTokens_) {
         int value = 0;
-        if (!lexer::parse_signed_integer(t.text, value)) {
-            push_diagnostic(result.diagnostics, DiagnosticSeverity::Error, "invalid data section integer", t.line,
-                            t.column);
+        if (!lexer::parseSignedInteger(t.text_, value)) {
+            pushDiagnostic(result.diagnostics_, DiagnosticSeverity::Error, "invalid data section integer", t.line_,
+                           t.column_);
             return false;
         }
-        result.data.push_back(value);
+        result.data_.push_back(value);
     }
 
-    if (!validate_jump_targets(result, result.diagnostics)) {
+    if (!validateJumpTargets(result, result.diagnostics_)) {
         return false;
     }
 
-    result.semantic_ok = true;
+    result.semanticOk_ = true;
     return true;
 }
 

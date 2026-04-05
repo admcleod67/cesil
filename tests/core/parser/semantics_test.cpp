@@ -12,10 +12,10 @@ TEST_CASE("Semantic validation", "[semantics]") {
         cesil::Lexer lex("        STORE +1\nHALT\n");
         cesil::ParseResult r;
         REQUIRE(parser.parseSyntax(lex, r));
-        REQUIRE(r.syntax_ok);
+        REQUIRE(r.syntaxOk_);
         cesil::SemanticValidator sv;
         CHECK_FALSE(sv.run(r));
-        CHECK_FALSE(r.semantic_ok);
+        CHECK_FALSE(r.semanticOk_);
     }
 
     SECTION("Valid load with immediate") {
@@ -24,8 +24,8 @@ TEST_CASE("Semantic validation", "[semantics]") {
         REQUIRE(parser.parseSyntax(lex, r));
         cesil::SemanticValidator sv;
         CHECK(sv.run(r));
-        CHECK(r.semantic_ok);
-        CHECK(r.instructions[0].operand.immediate == 0);
+        CHECK(r.semanticOk_);
+        CHECK(r.instructions_[0].operand_.immediate_ == 0);
     }
 
     SECTION("Overflow data value") {

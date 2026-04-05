@@ -2,7 +2,7 @@
 
 namespace cesil {
 
-const char* to_string(OpCode op) noexcept {
+const char* toString(OpCode op) noexcept {
     switch (op) {
         case OpCode::Load:
             return "LOAD";
