@@ -11,10 +11,7 @@ add_library(cesil-core
 
 target_include_directories(cesil-core
     PUBLIC
-        ${CMAKE_CURRENT_SOURCE_DIR}/lexer
-        ${CMAKE_CURRENT_SOURCE_DIR}/parser
-        ${CMAKE_CURRENT_SOURCE_DIR}/runtime
-        ${CMAKE_CURRENT_SOURCE_DIR}/errors
+        ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
 target_compile_features(cesil-core PUBLIC cxx_std_20)

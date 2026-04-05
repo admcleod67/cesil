@@ -1,9 +1,9 @@
-#include "../../include/cesil/parser/parser.hpp"
+#include "parser/parser.hpp"
 
-#include "../../include/cesil/lexer/lexer.hpp"
-#include "cesil/lexer/token_utils.hpp"
-#include "cesil/parser/instruction_rules.hpp"
-#include "cesil/semantics/validator.hpp"
+#include "lexer/lexer.hpp"
+#include "lexer/token_utils.hpp"
+#include "parser/instruction_rules.hpp"
+#include "parser/validator.hpp"
 
 #include <optional>
 #include <string>

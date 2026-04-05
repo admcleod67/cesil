@@ -23,7 +23,7 @@ This repository provides a reusable **core library**, a **command-line runner**,
 
 | Path | Description |
 |------|-------------|
-| `src/core/` | Static library **cesil-core**: sources and public headers grouped under `lexer/`, `parser/`, `runtime/`, and `errors/` (each contributes a `cesil/…` include root). Legacy `#include` paths are preserved via symlinks under `src/core/include/cesil/`. |
+| `src/core/` | Static library **cesil-core**: sources and headers directly under `lexer/`, `parser/`, `runtime/`, and `errors/`. CMake adds `src/core` as the single `PUBLIC` include root (e.g. `lexer/lexer.hpp`, `parser/parser.hpp`). |
 | `src/cli/` | Executable target **cesil-cli**; the built binary is named **`cesil`** |
 | `examples/` | Sample `.ces` sources |
 | `tests/core/` | Test executable **cesil_tests** (Catch2) |
@@ -78,7 +78,7 @@ Runtime numeric input for `IN` is read from standard input; output uses standard
 3. **SemanticValidator** resolves operands, validates data integers and jump targets, and fills final `Operand` values on each `Instruction`.
 4. **Interpreter** runs the resolved IR against an `IoHost`.
 
-Public API entry points for embedding use includes such as `cesil/parser/parser.hpp`, `cesil/interpreter/interpreter.hpp`, and `cesil/lexer/lexer.hpp`, resolved via the `cesil/…` trees under `src/core/lexer`, `parser`, `runtime`, and `errors`.
+Public API entry points for embedding use includes such as `parser/parser.hpp`, `runtime/interpreter.hpp`, and `lexer/lexer.hpp`, with `src/core` as the include root (see `target_include_directories` in `src/core/CMakeLists.txt`).
 
 ## Language reference
 

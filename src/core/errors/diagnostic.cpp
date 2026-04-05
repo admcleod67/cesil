@@ -1,4 +1,4 @@
-#include "cesil/diagnostic.hpp"
+#include "errors/diagnostic.hpp"
 
 #include <ostream>
 

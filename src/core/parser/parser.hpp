@@ -1,9 +1,9 @@
 #pragma once
 
-#include "cesil/diagnostic.hpp"
-#include "cesil/instruction.hpp"
-#include "cesil/semantics/raw_operand.hpp"
-#include "../lexer/token.hpp"
+#include "errors/diagnostic.hpp"
+#include "runtime/instruction.hpp"
+#include "parser/raw_operand.hpp"
+#include "lexer/token.hpp"
 
 #include <cstddef>
 #include <string_view>

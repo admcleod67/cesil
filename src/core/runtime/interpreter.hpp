@@ -1,9 +1,9 @@
 #pragma once
 
-#include "cesil/diagnostic.hpp"
-#include "cesil/hooks.hpp"
-#include "cesil/instruction.hpp"
-#include "cesil/io.hpp"
+#include "errors/diagnostic.hpp"
+#include "runtime/hooks.hpp"
+#include "runtime/instruction.hpp"
+#include "runtime/io.hpp"
 
 #include <cstddef>
 #include <string>

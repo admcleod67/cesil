@@ -1,7 +1,7 @@
 #include <catch2/catch_test_macros.hpp>
-#include "../include/cesil/interpreter/interpreter.hpp"
-#include "cesil/io.hpp"
-#include "../include/cesil/parser/parser.hpp"
+#include "runtime/interpreter.hpp"
+#include "runtime/io.hpp"
+#include "parser/parser.hpp"
 
 #include <sstream>
 #include <string>

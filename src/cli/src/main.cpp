@@ -1,7 +1,7 @@
-#include <cesil/diagnostic.hpp>
-#include <cesil/interpreter/interpreter.hpp>
-#include <cesil/io.hpp>
-#include <cesil/parser/parser.hpp>
+#include <errors/diagnostic.hpp>
+#include <runtime/interpreter.hpp>
+#include <runtime/io.hpp>
+#include <parser/parser.hpp>
 
 #include <fstream>
 #include <iostream>

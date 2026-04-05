@@ -1,6 +1,6 @@
-#include "../../include/cesil/interpreter/interpreter.hpp"
+#include "runtime/interpreter.hpp"
 
-#include "cesil/opcode.hpp"
+#include "runtime/opcode.hpp"
 
 #include <limits>
 #include <utility>

@@ -1,4 +1,4 @@
-#include "cesil/parser/instruction_rules.hpp"
+#include "parser/instruction_rules.hpp"
 
 #include <string>
 #include <unordered_map>

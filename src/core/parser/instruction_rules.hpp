@@ -1,6 +1,6 @@
 #pragma once
 
-#include "cesil/opcode.hpp"
+#include "runtime/opcode.hpp"
 
 #include <string_view>
 
