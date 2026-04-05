@@ -15,169 +15,169 @@ namespace cesil {
 
 namespace {
 
-void skip_newlines(Lexer& lexer) {
-    while (lexer.peekToken().type == TokenType::Newline) {
+void skipNewlines(Lexer& lexer) {
+    while (lexer.peekToken().type_ == TokenType::Newline) {
         lexer.getNextToken();
     }
 }
 
-void discard_rest_of_line(Lexer& lexer) {
+void discardRestOfLine(Lexer& lexer) {
     while (true) {
         const Token t = lexer.peekToken();
-        if (t.type == TokenType::Newline || t.type == TokenType::EndOfFile) {
+        if (t.type_ == TokenType::Newline || t.type_ == TokenType::EndOfFile) {
             break;
         }
         lexer.getNextToken();
     }
 }
 
-bool expect_end_of_line(Lexer& lexer, std::vector<Diagnostic>& diags) {
+bool expectEndOfLine(Lexer& lexer, std::vector<Diagnostic>& diags) {
     const Token t = lexer.peekToken();
-    if (t.type == TokenType::Newline) {
+    if (t.type_ == TokenType::Newline) {
         lexer.getNextToken();
         return true;
     }
-    if (t.type == TokenType::EndOfFile) {
+    if (t.type_ == TokenType::EndOfFile) {
         return true;
     }
-    push_diagnostic(diags, DiagnosticSeverity::Error, "unexpected tokens at end of line", t.line, t.column);
+    pushDiagnostic(diags, DiagnosticSeverity::Error, "unexpected tokens at end of line", t.line_, t.column_);
     return false;
 }
 
-bool read_raw_operand(Lexer& lexer, OpCode op, int mnemonic_line, int mnemonic_column, RawOperand& out,
-                      std::vector<Diagnostic>& diags) {
-    using cesil::instruction_rules::needs_operand;
-    if (!needs_operand(op)) {
-        out = RawOperand{op, Token{TokenType::EndOfFile, "", mnemonic_line, mnemonic_column}};
+bool readRawOperand(Lexer& lexer, OpCode op, int mnemonicLine, int mnemonicColumn, RawOperand& out,
+                    std::vector<Diagnostic>& diags) {
+    using cesil::instructionRules::needsOperand;
+    if (!needsOperand(op)) {
+        out = RawOperand{op, Token{TokenType::EndOfFile, {}, mnemonicLine, mnemonicColumn}};
         return true;
     }
 
     const Token peeked = lexer.peekToken();
-    if (peeked.type == TokenType::Newline || peeked.type == TokenType::EndOfFile) {
-        push_diagnostic(diags, DiagnosticSeverity::Error, "missing operand", mnemonic_line, mnemonic_column);
+    if (peeked.type_ == TokenType::Newline || peeked.type_ == TokenType::EndOfFile) {
+        pushDiagnostic(diags, DiagnosticSeverity::Error, "missing operand", mnemonicLine, mnemonicColumn);
         return false;
     }
 
-    out.opcode_context = op;
-    out.token = lexer.getNextToken();
+    out.opcodeContext_ = op;
+    out.token_ = lexer.getNextToken();
     return true;
 }
 
-bool parse_data_section(Lexer& lexer, ParseResult& result) {
+bool parseDataSection(Lexer& lexer, ParseResult& result) {
     for (;;) {
-        skip_newlines(lexer);
+        skipNewlines(lexer);
         Token t = lexer.peekToken();
-        if (t.type == TokenType::EndOfFile) {
+        if (t.type_ == TokenType::EndOfFile) {
             return true;
         }
-        if (t.type == TokenType::Star) {
+        if (t.type_ == TokenType::Star) {
             lexer.getNextToken();
-            discard_rest_of_line(lexer);
+            discardRestOfLine(lexer);
             return true;
         }
-        if (t.type != TokenType::Number) {
-            push_diagnostic(result.diagnostics, DiagnosticSeverity::Error, "invalid data section integer", t.line,
-                            t.column);
+        if (t.type_ != TokenType::Number) {
+            pushDiagnostic(result.diagnostics_, DiagnosticSeverity::Error, "invalid data section integer", t.line_,
+                           t.column_);
             return false;
         }
         lexer.getNextToken();
-        result.raw_data_tokens.push_back(t);
-        if (!expect_end_of_line(lexer, result.diagnostics)) {
+        result.rawDataTokens_.push_back(t);
+        if (!expectEndOfLine(lexer, result.diagnostics_)) {
             return false;
         }
     }
 }
 
-bool parse_instruction_line(Lexer& lexer, ParseResult& result) {
-    using cesil::instruction_rules::lookup_opcode;
-    using cesil::instruction_rules::needs_operand;
+bool parseInstructionLine(Lexer& lexer, ParseResult& result) {
+    using cesil::instructionRules::lookupOpcode;
+    using cesil::instructionRules::needsOperand;
 
-    std::optional<std::string> label_name;
-    int label_line = 0;
-    int label_column = 0;
+    std::optional<std::string> labelName;
+    int labelLine = 0;
+    int labelColumn = 0;
     OpCode opcode{};
-    int mnemonic_line = 0;
-    int mnemonic_column = 0;
+    int mnemonicLine = 0;
+    int mnemonicColumn = 0;
 
     Token first = lexer.getNextToken();
 
-    if (first.type == TokenType::Label) {
-        label_name = first.text;
-        label_line = first.line;
-        label_column = first.column;
+    if (first.type_ == TokenType::Label) {
+        labelName = first.text_;
+        labelLine = first.line_;
+        labelColumn = first.column_;
         Token mn = lexer.getNextToken();
-        if (mn.type != TokenType::Identifier) {
-            push_diagnostic(result.diagnostics, DiagnosticSeverity::Error, "missing instruction", mn.line, mn.column);
+        if (mn.type_ != TokenType::Identifier) {
+            pushDiagnostic(result.diagnostics_, DiagnosticSeverity::Error, "missing instruction", mn.line_, mn.column_);
             return false;
         }
-        if (!lookup_opcode(lexer::to_upper_copy(mn.text), opcode)) {
-            push_diagnostic(result.diagnostics, DiagnosticSeverity::Error, "unknown instruction", mn.line, mn.column);
+        if (!lookupOpcode(lexer::toUpperCopy(mn.text_), opcode)) {
+            pushDiagnostic(result.diagnostics_, DiagnosticSeverity::Error, "unknown instruction", mn.line_, mn.column_);
             return false;
         }
-        mnemonic_line = mn.line;
-        mnemonic_column = mn.column;
-    } else if (first.type == TokenType::Identifier) {
-        if (lookup_opcode(lexer::to_upper_copy(first.text), opcode)) {
-            mnemonic_line = first.line;
-            mnemonic_column = first.column;
+        mnemonicLine = mn.line_;
+        mnemonicColumn = mn.column_;
+    } else if (first.type_ == TokenType::Identifier) {
+        if (lookupOpcode(lexer::toUpperCopy(first.text_), opcode)) {
+            mnemonicLine = first.line_;
+            mnemonicColumn = first.column_;
         } else {
-            label_name = std::string(first.text);
-            label_line = first.line;
-            label_column = first.column;
+            labelName = std::string(first.text_);
+            labelLine = first.line_;
+            labelColumn = first.column_;
             Token second = lexer.getNextToken();
-            if (second.type != TokenType::Identifier) {
-                push_diagnostic(result.diagnostics, DiagnosticSeverity::Error, "missing instruction", second.line,
-                                second.column);
+            if (second.type_ != TokenType::Identifier) {
+                pushDiagnostic(result.diagnostics_, DiagnosticSeverity::Error, "missing instruction", second.line_,
+                               second.column_);
                 return false;
             }
-            if (!lookup_opcode(lexer::to_upper_copy(second.text), opcode)) {
-                push_diagnostic(result.diagnostics, DiagnosticSeverity::Error, "unknown instruction", second.line,
-                                second.column);
+            if (!lookupOpcode(lexer::toUpperCopy(second.text_), opcode)) {
+                pushDiagnostic(result.diagnostics_, DiagnosticSeverity::Error, "unknown instruction", second.line_,
+                               second.column_);
                 return false;
             }
-            mnemonic_line = second.line;
-            mnemonic_column = second.column;
+            mnemonicLine = second.line_;
+            mnemonicColumn = second.column_;
         }
     } else {
-        push_diagnostic(result.diagnostics, DiagnosticSeverity::Error, "expected label or instruction", first.line,
-                        first.column);
+        pushDiagnostic(result.diagnostics_, DiagnosticSeverity::Error, "expected label or instruction", first.line_,
+                       first.column_);
         return false;
     }
 
     RawOperand raw{};
-    if (!read_raw_operand(lexer, opcode, mnemonic_line, mnemonic_column, raw, result.diagnostics)) {
+    if (!readRawOperand(lexer, opcode, mnemonicLine, mnemonicColumn, raw, result.diagnostics_)) {
         return false;
     }
 
-    if (!needs_operand(opcode)) {
+    if (!needsOperand(opcode)) {
         const Token extra = lexer.peekToken();
-        if (extra.type != TokenType::Newline && extra.type != TokenType::EndOfFile) {
-            push_diagnostic(result.diagnostics, DiagnosticSeverity::Error, "unexpected operand for this instruction",
-                            extra.line, extra.column);
+        if (extra.type_ != TokenType::Newline && extra.type_ != TokenType::EndOfFile) {
+            pushDiagnostic(result.diagnostics_, DiagnosticSeverity::Error, "unexpected operand for this instruction",
+                           extra.line_, extra.column_);
             return false;
         }
     }
 
-    if (!expect_end_of_line(lexer, result.diagnostics)) {
+    if (!expectEndOfLine(lexer, result.diagnostics_)) {
         return false;
     }
 
-    if (label_name) {
-        if (result.label_indices.count(*label_name) != 0) {
-            push_diagnostic(result.diagnostics, DiagnosticSeverity::Error, "duplicate label", label_line, label_column);
+    if (labelName) {
+        if (result.labelIndices_.count(*labelName) != 0) {
+            pushDiagnostic(result.diagnostics_, DiagnosticSeverity::Error, "duplicate label", labelLine, labelColumn);
             return false;
         }
         // TODO: lazy label resolution / forward references if assembler allows
-        result.label_indices.emplace(*label_name, result.instructions.size());
-        result.label_define_lines.emplace(*label_name, label_line);
+        result.labelIndices_.emplace(*labelName, result.instructions_.size());
+        result.labelDefineLines_.emplace(*labelName, labelLine);
     }
 
     Instruction inst{};
-    inst.opcode = opcode;
-    inst.operand = Operand{};
-    inst.lineNumber = mnemonic_line;
-    result.instructions.push_back(std::move(inst));
-    result.raw_operands.push_back(std::move(raw));
+    inst.opcode_ = opcode;
+    inst.operand_ = Operand{};
+    inst.lineNumber_ = mnemonicLine;
+    result.instructions_.push_back(std::move(inst));
+    result.rawOperands_.push_back(std::move(raw));
     return true;
 }
 
@@ -185,39 +185,39 @@ bool parse_instruction_line(Lexer& lexer, ParseResult& result) {
 
 bool Parser::parseSyntax(Lexer& lexer, ParseResult& result) const {
     result = ParseResult{};
-    result.syntax_ok = false;
+    result.syntaxOk_ = false;
 
     for (;;) {
-        skip_newlines(lexer);
+        skipNewlines(lexer);
         const Token t = lexer.peekToken();
-        if (t.type == TokenType::EndOfFile) {
+        if (t.type_ == TokenType::EndOfFile) {
             break;
         }
-        if (t.type == TokenType::Percent) {
+        if (t.type_ == TokenType::Percent) {
             lexer.getNextToken();
-            if (!parse_data_section(lexer, result)) {
+            if (!parseDataSection(lexer, result)) {
                 return false;
             }
-            while (lexer.peekToken().type != TokenType::EndOfFile) {
+            while (lexer.peekToken().type_ != TokenType::EndOfFile) {
                 lexer.getNextToken();
             }
             break;
         }
-        if (!parse_instruction_line(lexer, result)) {
+        if (!parseInstructionLine(lexer, result)) {
             return false;
         }
     }
 
-    result.syntax_ok = true;
+    result.syntaxOk_ = true;
     return true;
 }
 
 ParseResult Parser::parse(std::string_view source) const {
     ParseResult result;
-    if (lexer::is_blank(source)) {
-        result.syntax_ok = true;
-        result.semantic_ok = true;
-        result.ok = true;
+    if (lexer::isBlank(source)) {
+        result.syntaxOk_ = true;
+        result.semanticOk_ = true;
+        result.ok_ = true;
         return result;
     }
     Lexer lexer(source);
@@ -227,15 +227,15 @@ ParseResult Parser::parse(std::string_view source) const {
 ParseResult Parser::parse(Lexer& lexer) const {
     ParseResult result;
     if (!parseSyntax(lexer, result)) {
-        result.ok = false;
+        result.ok_ = false;
         return result;
     }
     SemanticValidator validator;
     if (!validator.run(result)) {
-        result.ok = false;
+        result.ok_ = false;
         return result;
     }
-    result.ok = true;
+    result.ok_ = true;
     return result;
 }
 

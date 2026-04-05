@@ -25,22 +25,22 @@ class Lexer {
     Token peekToken();
 
    private:
-    Token read_token_impl();
+    Token readTokenImpl();
 
-    void skip_horizontal_space();
-    void advance_one();
-    bool at_end() const;
-    char peek_char() const;
-    Token make_token(TokenType type, std::string text, int line, int col) const;
+    void skipHorizontalSpace();
+    void advanceOne();
+    bool atEnd() const;
+    char peekChar() const;
+    Token makeToken(TokenType type, std::string text, int line, int col) const;
 
     std::string buffer_;
     std::size_t pos_{0};
     int line_{1};
     int column_{1};
     /// True until the first non-comment token on the current logical line is emitted.
-    bool line_has_started_token_{false};
+    bool lineHasStartedToken_{false};
 
-    std::optional<Token> peek_buffer_{};
+    std::optional<Token> peekBuffer_{};
 };
 
 }  // namespace cesil

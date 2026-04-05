@@ -6,7 +6,7 @@ namespace cesil {
 
 namespace {
 
-const char* severity_label(DiagnosticSeverity s) {
+const char* severityLabel(DiagnosticSeverity s) {
     switch (s) {
         case DiagnosticSeverity::Error:
             return "error";
@@ -20,20 +20,20 @@ const char* severity_label(DiagnosticSeverity s) {
 
 }  // namespace
 
-void print_diagnostic(std::ostream& out, const Diagnostic& d) {
-    out << severity_label(d.severity) << ": " << d.message;
-    if (d.line > 0) {
-        out << " (line " << d.line;
-        if (d.column > 0) {
-            out << ", column " << d.column;
+void printDiagnostic(std::ostream& out, const Diagnostic& d) {
+    out << severityLabel(d.severity_) << ": " << d.message_;
+    if (d.line_ > 0) {
+        out << " (line " << d.line_;
+        if (d.column_ > 0) {
+            out << ", column " << d.column_;
         }
         out << ')';
     }
     out << '\n';
 }
 
-void push_diagnostic(std::vector<Diagnostic>& sink, DiagnosticSeverity severity,
-                     std::string message, int line, int column) {
+void pushDiagnostic(std::vector<Diagnostic>& sink, DiagnosticSeverity severity,
+                    std::string message, int line, int column) {
     sink.push_back(Diagnostic{severity, std::move(message), line, column});
 }
 

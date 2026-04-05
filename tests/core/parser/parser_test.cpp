@@ -11,21 +11,21 @@ TEST_CASE("Parser basic functionality", "[parser]") {
 
     SECTION("Simple instructions") {
         const cesil::ParseResult r = parser.parse("LOOP    LOAD +1\nHALT\n");
-        REQUIRE(r.ok);
-        CHECK(r.instructions.size() == 2);
-        CHECK(r.label_indices.count("LOOP") == 1);
-        CHECK(r.instructions[0].opcode == cesil::OpCode::Load);
-        CHECK(r.instructions[0].operand.kind == cesil::OperandKind::Immediate);
-        CHECK(r.instructions[0].operand.immediate == 1);
-        CHECK(r.instructions[1].opcode == cesil::OpCode::Halt);
+        REQUIRE(r.ok_);
+        CHECK(r.instructions_.size() == 2);
+        CHECK(r.labelIndices_.count("LOOP") == 1);
+        CHECK(r.instructions_[0].opcode_ == cesil::OpCode::Load);
+        CHECK(r.instructions_[0].operand_.kind_ == cesil::OperandKind::Immediate);
+        CHECK(r.instructions_[0].operand_.immediate_ == 1);
+        CHECK(r.instructions_[1].opcode_ == cesil::OpCode::Halt);
     }
 
     SECTION("Labels and strings") {
         const cesil::ParseResult r = parser.parse("DONE: PRINT \"Hi\"\nHALT\n");
-        REQUIRE(r.ok);
-        CHECK(r.label_indices.count("DONE") == 1);
-        CHECK(r.instructions[0].opcode == cesil::OpCode::Print);
-        CHECK(r.instructions[0].operand.symbol == "Hi");
+        REQUIRE(r.ok_);
+        CHECK(r.labelIndices_.count("DONE") == 1);
+        CHECK(r.instructions_[0].opcode_ == cesil::OpCode::Print);
+        CHECK(r.instructions_[0].operand_.symbol_ == "Hi");
     }
 
     SECTION("Jumps and multi-line") {
@@ -33,8 +33,8 @@ TEST_CASE("Parser basic functionality", "[parser]") {
             "        JUMP THERE\n"
             "THERE   HALT\n";
         const cesil::ParseResult r = parser.parse(src);
-        REQUIRE(r.ok);
-        CHECK(r.label_indices.count("THERE") == 1);
+        REQUIRE(r.ok_);
+        CHECK(r.labelIndices_.count("THERE") == 1);
     }
 
     SECTION("Duplicate labels") {
@@ -42,23 +42,23 @@ TEST_CASE("Parser basic functionality", "[parser]") {
             "HERE    HALT\n"
             "HERE    HALT\n";
         const cesil::ParseResult r = parser.parse(src);
-        CHECK_FALSE(r.ok);
-        CHECK_FALSE(r.diagnostics.empty());
+        CHECK_FALSE(r.ok_);
+        CHECK_FALSE(r.diagnostics_.empty());
     }
 
     SECTION("Unresolved jumps") {
         const std::string src = "        JUMP NOWHERE\nHALT\n";
         const cesil::ParseResult r = parser.parse(src);
-        CHECK_FALSE(r.ok);
-        CHECK_FALSE(r.diagnostics.empty());
+        CHECK_FALSE(r.ok_);
+        CHECK_FALSE(r.diagnostics_.empty());
     }
 
     SECTION("Parse from Lexer") {
         cesil::Lexer lex("LOAD +2\nHALT\n");
         cesil::ParseResult r = parser.parse(lex);
-        REQUIRE(r.ok);
-        CHECK(r.instructions.size() == 2);
-        CHECK(r.instructions[0].operand.immediate == 2);
+        REQUIRE(r.ok_);
+        CHECK(r.instructions_.size() == 2);
+        CHECK(r.instructions_[0].operand_.immediate_ == 2);
     }
 
     SECTION("Data sections") {
@@ -68,8 +68,8 @@ TEST_CASE("Parser basic functionality", "[parser]") {
             "5\n"
             "*\n";
         const cesil::ParseResult r = parser.parse(src);
-        REQUIRE(r.ok);
-        CHECK(r.data.size() == 1);
-        CHECK(r.data[0] == 5);
+        REQUIRE(r.ok_);
+        CHECK(r.data_.size() == 1);
+        CHECK(r.data_[0] == 5);
     }
 }

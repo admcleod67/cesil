@@ -16,11 +16,11 @@ enum class OperandKind {
 
 /// Flexible operand representation for IR and future assembler/IDE integration.
 ///
-/// Immediate values are carried in \p immediate; symbolic operands use \p symbol.
+/// Immediate values are carried in \p immediate_; symbolic operands use \p symbol_.
 struct Operand {
-    OperandKind kind{OperandKind::None};
-    int immediate{0};
-    std::string symbol{};
+    OperandKind kind_{OperandKind::None};
+    int immediate_{0};
+    std::string symbol_{};
 };
 
 }  // namespace cesil

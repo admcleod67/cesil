@@ -4,10 +4,10 @@
 
 #include <string_view>
 
-namespace cesil::instruction_rules {
+namespace cesil::instructionRules {
 
-bool lookup_opcode(std::string_view upper, OpCode& out);
-bool needs_operand(OpCode op);
-bool operand_must_be_label(OpCode op);
+bool lookupOpcode(std::string_view upper, OpCode& out);
+bool needsOperand(OpCode op);
+bool operandMustBeLabel(OpCode op);
 
-}  // namespace cesil::instruction_rules
+}  // namespace cesil::instructionRules

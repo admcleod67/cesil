@@ -10,12 +10,12 @@ namespace cesil {
 Interpreter::Interpreter(IoHost& io, ExecutionHooks hooks)
     : io_(io), hooks_(std::move(hooks)) {}
 
-void Interpreter::load(std::vector<Instruction> program, std::vector<int> runtime_data,
-                       std::unordered_map<std::string, std::size_t> label_indices) {
+void Interpreter::load(std::vector<Instruction> program, std::vector<int> runtimeData,
+                       std::unordered_map<std::string, std::size_t> labelIndices) {
     program_ = std::move(program);
-    data_ = std::move(runtime_data);
-    label_indices_ = std::move(label_indices);
-    data_ptr_ = 0;
+    data_ = std::move(runtimeData);
+    labelIndices_ = std::move(labelIndices);
+    dataPtr_ = 0;
     accumulator_ = 0;
     pc_ = 0;
     store_.clear();
@@ -25,37 +25,37 @@ void Interpreter::reset() {
     accumulator_ = 0;
     pc_ = 0;
     store_.clear();
-    data_ptr_ = 0;
+    dataPtr_ = 0;
 }
 
-int Interpreter::load_operand_value(const Operand& op, int line_number, RunResult& result) {
-    if (op.kind == OperandKind::Immediate) {
-        return op.immediate;
+int Interpreter::loadOperandValue(const Operand& op, int lineNumber, RunResult& result) {
+    if (op.kind_ == OperandKind::Immediate) {
+        return op.immediate_;
     }
-    if (op.kind == OperandKind::Symbolic) {
-        const auto it = store_.find(op.symbol);
+    if (op.kind_ == OperandKind::Symbolic) {
+        const auto it = store_.find(op.symbol_);
         if (it == store_.end()) {
             return 0;
         }
         return it->second;
     }
-    push_diagnostic(result.diagnostics, DiagnosticSeverity::Error, "missing numeric operand",
-                    line_number, 0);
+    pushDiagnostic(result.diagnostics_, DiagnosticSeverity::Error, "missing numeric operand",
+                   lineNumber, 0);
     return 0;
 }
 
-std::size_t Interpreter::resolve_jump_target(const std::string& label, int line_number,
+std::size_t Interpreter::resolveJumpTarget(const std::string& label, int lineNumber,
                                              RunResult& result) {
-    const auto it = label_indices_.find(label);
-    if (it == label_indices_.end()) {
-        push_diagnostic(result.diagnostics, DiagnosticSeverity::Error,
-                        "unknown label '" + label + "'", line_number, 0);
+    const auto it = labelIndices_.find(label);
+    if (it == labelIndices_.end()) {
+        pushDiagnostic(result.diagnostics_, DiagnosticSeverity::Error,
+                       "unknown label '" + label + "'", lineNumber, 0);
         return std::numeric_limits<std::size_t>::max();
     }
     return it->second;
 }
 
-bool Interpreter::execute_current(bool& halted, RunResult& result) {
+bool Interpreter::executeCurrent(bool& halted, RunResult& result) {
     if (pc_ >= program_.size()) {
         return true;
     }
@@ -63,102 +63,102 @@ bool Interpreter::execute_current(bool& halted, RunResult& result) {
     const Instruction& inst = program_[pc_];
     halted = false;
 
-    auto require_symbol = [&](const Operand& op) -> bool {
-        if (op.kind == OperandKind::Symbolic && !op.symbol.empty()) {
+    auto requireSymbol = [&](const Operand& op) -> bool {
+        if (op.kind_ == OperandKind::Symbolic && !op.symbol_.empty()) {
             return true;
         }
-        push_diagnostic(result.diagnostics, DiagnosticSeverity::Error, "expected symbolic operand",
-                        inst.lineNumber, 0);
+        pushDiagnostic(result.diagnostics_, DiagnosticSeverity::Error, "expected symbolic operand",
+                       inst.lineNumber_, 0);
         return false;
     };
 
-    switch (inst.opcode) {
+    switch (inst.opcode_) {
         case OpCode::Load: {
-            if (inst.operand.kind == OperandKind::None) {
-                push_diagnostic(result.diagnostics, DiagnosticSeverity::Error,
-                                "LOAD requires an operand", inst.lineNumber, 0);
+            if (inst.operand_.kind_ == OperandKind::None) {
+                pushDiagnostic(result.diagnostics_, DiagnosticSeverity::Error,
+                               "LOAD requires an operand", inst.lineNumber_, 0);
                 return false;
             }
-            accumulator_ = load_operand_value(inst.operand, inst.lineNumber, result);
-            if (!result.diagnostics.empty()) {
+            accumulator_ = loadOperandValue(inst.operand_, inst.lineNumber_, result);
+            if (!result.diagnostics_.empty()) {
                 return false;
             }
             ++pc_;
             break;
         }
         case OpCode::Store: {
-            if (!require_symbol(inst.operand)) {
+            if (!requireSymbol(inst.operand_)) {
                 return false;
             }
-            store_[inst.operand.symbol] = accumulator_;
+            store_[inst.operand_.symbol_] = accumulator_;
             ++pc_;
             break;
         }
         case OpCode::In: {
-            if (data_ptr_ >= data_.size()) {
-                io_.write_string("*** PROGRAM REQUIRES MORE DATA ***");
-                push_diagnostic(result.diagnostics, DiagnosticSeverity::Error,
-                                "program requires more data (IN past end of data section)",
-                                inst.lineNumber, 0);
+            if (dataPtr_ >= data_.size()) {
+                io_.writeString("*** PROGRAM REQUIRES MORE DATA ***");
+                pushDiagnostic(result.diagnostics_, DiagnosticSeverity::Error,
+                               "program requires more data (IN past end of data section)",
+                               inst.lineNumber_, 0);
                 return false;
             }
-            accumulator_ = data_[data_ptr_++];
+            accumulator_ = data_[dataPtr_++];
             ++pc_;
             break;
         }
         case OpCode::Add: {
-            if (inst.operand.kind == OperandKind::None) {
-                push_diagnostic(result.diagnostics, DiagnosticSeverity::Error,
-                                "ADD requires an operand", inst.lineNumber, 0);
+            if (inst.operand_.kind_ == OperandKind::None) {
+                pushDiagnostic(result.diagnostics_, DiagnosticSeverity::Error,
+                               "ADD requires an operand", inst.lineNumber_, 0);
                 return false;
             }
-            accumulator_ += load_operand_value(inst.operand, inst.lineNumber, result);
-            if (!result.diagnostics.empty()) {
+            accumulator_ += loadOperandValue(inst.operand_, inst.lineNumber_, result);
+            if (!result.diagnostics_.empty()) {
                 return false;
             }
             ++pc_;
             break;
         }
         case OpCode::Subtract: {
-            if (inst.operand.kind == OperandKind::None) {
-                push_diagnostic(result.diagnostics, DiagnosticSeverity::Error,
-                                "SUBTRACT requires an operand", inst.lineNumber, 0);
+            if (inst.operand_.kind_ == OperandKind::None) {
+                pushDiagnostic(result.diagnostics_, DiagnosticSeverity::Error,
+                               "SUBTRACT requires an operand", inst.lineNumber_, 0);
                 return false;
             }
-            accumulator_ -= load_operand_value(inst.operand, inst.lineNumber, result);
-            if (!result.diagnostics.empty()) {
+            accumulator_ -= loadOperandValue(inst.operand_, inst.lineNumber_, result);
+            if (!result.diagnostics_.empty()) {
                 return false;
             }
             ++pc_;
             break;
         }
         case OpCode::Multiply: {
-            if (inst.operand.kind == OperandKind::None) {
-                push_diagnostic(result.diagnostics, DiagnosticSeverity::Error,
-                                "MULTIPLY requires an operand", inst.lineNumber, 0);
+            if (inst.operand_.kind_ == OperandKind::None) {
+                pushDiagnostic(result.diagnostics_, DiagnosticSeverity::Error,
+                               "MULTIPLY requires an operand", inst.lineNumber_, 0);
                 return false;
             }
-            accumulator_ *= load_operand_value(inst.operand, inst.lineNumber, result);
-            if (!result.diagnostics.empty()) {
+            accumulator_ *= loadOperandValue(inst.operand_, inst.lineNumber_, result);
+            if (!result.diagnostics_.empty()) {
                 return false;
             }
             ++pc_;
             break;
         }
         case OpCode::Divide: {
-            if (inst.operand.kind == OperandKind::None) {
-                push_diagnostic(result.diagnostics, DiagnosticSeverity::Error,
-                                "DIVIDE requires an operand", inst.lineNumber, 0);
+            if (inst.operand_.kind_ == OperandKind::None) {
+                pushDiagnostic(result.diagnostics_, DiagnosticSeverity::Error,
+                               "DIVIDE requires an operand", inst.lineNumber_, 0);
                 return false;
             }
-            const int divisor = load_operand_value(inst.operand, inst.lineNumber, result);
-            if (!result.diagnostics.empty()) {
+            const int divisor = loadOperandValue(inst.operand_, inst.lineNumber_, result);
+            if (!result.diagnostics_.empty()) {
                 return false;
             }
             if (divisor == 0) {
-                io_.write_string("*** DIVISION BY ZERO ***");
-                push_diagnostic(result.diagnostics, DiagnosticSeverity::Error, "division by zero",
-                                inst.lineNumber, 0);
+                io_.writeString("*** DIVISION BY ZERO ***");
+                pushDiagnostic(result.diagnostics_, DiagnosticSeverity::Error, "division by zero",
+                               inst.lineNumber_, 0);
                 return false;
             }
             accumulator_ /= divisor;
@@ -166,10 +166,10 @@ bool Interpreter::execute_current(bool& halted, RunResult& result) {
             break;
         }
         case OpCode::Jump: {
-            if (!require_symbol(inst.operand)) {
+            if (!requireSymbol(inst.operand_)) {
                 return false;
             }
-            const std::size_t target = resolve_jump_target(inst.operand.symbol, inst.lineNumber, result);
+            const std::size_t target = resolveJumpTarget(inst.operand_.symbol_, inst.lineNumber_, result);
             if (target == std::numeric_limits<std::size_t>::max()) {
                 return false;
             }
@@ -177,12 +177,12 @@ bool Interpreter::execute_current(bool& halted, RunResult& result) {
             break;
         }
         case OpCode::JiZero: {
-            if (!require_symbol(inst.operand)) {
+            if (!requireSymbol(inst.operand_)) {
                 return false;
             }
             if (accumulator_ == 0) {
                 const std::size_t target =
-                    resolve_jump_target(inst.operand.symbol, inst.lineNumber, result);
+                    resolveJumpTarget(inst.operand_.symbol_, inst.lineNumber_, result);
                 if (target == std::numeric_limits<std::size_t>::max()) {
                     return false;
                 }
@@ -193,12 +193,12 @@ bool Interpreter::execute_current(bool& halted, RunResult& result) {
             break;
         }
         case OpCode::JiNeg: {
-            if (!require_symbol(inst.operand)) {
+            if (!requireSymbol(inst.operand_)) {
                 return false;
             }
             if (accumulator_ < 0) {
                 const std::size_t target =
-                    resolve_jump_target(inst.operand.symbol, inst.lineNumber, result);
+                    resolveJumpTarget(inst.operand_.symbol_, inst.lineNumber_, result);
                 if (target == std::numeric_limits<std::size_t>::max()) {
                     return false;
                 }
@@ -209,20 +209,20 @@ bool Interpreter::execute_current(bool& halted, RunResult& result) {
             break;
         }
         case OpCode::Out:
-            io_.write_int(accumulator_);
+            io_.writeInt(accumulator_);
             ++pc_;
             break;
         case OpCode::Line:
-            io_.write_line();
+            io_.writeLine();
             ++pc_;
             break;
         case OpCode::Print: {
-            if (inst.operand.kind != OperandKind::Symbolic) {
-                push_diagnostic(result.diagnostics, DiagnosticSeverity::Error,
-                                "PRINT requires a quoted string operand", inst.lineNumber, 0);
+            if (inst.operand_.kind_ != OperandKind::Symbolic) {
+                pushDiagnostic(result.diagnostics_, DiagnosticSeverity::Error,
+                               "PRINT requires a quoted string operand", inst.lineNumber_, 0);
                 return false;
             }
-            io_.write_string(inst.operand.symbol);
+            io_.writeString(inst.operand_.symbol_);
             ++pc_;
             break;
         }
@@ -237,38 +237,38 @@ bool Interpreter::execute_current(bool& halted, RunResult& result) {
 RunResult Interpreter::run() {
     RunResult result;
     if (program_.empty()) {
-        result.ok = true;
+        result.ok_ = true;
         return result;
     }
 
     while (pc_ < program_.size()) {
-        if (hooks_.before_instruction) {
-            hooks_.before_instruction(*this);
+        if (hooks_.beforeInstruction_) {
+            hooks_.beforeInstruction_(*this);
         }
         // TODO: map pc to source locations when breakpoint metadata exists (see ExecutionHooks).
-        if (hooks_.should_break && hooks_.should_break(pc_)) {
-            result.ok = true;
-            result.stopped_at_breakpoint = true;
+        if (hooks_.shouldBreak_ && hooks_.shouldBreak_(pc_)) {
+            result.ok_ = true;
+            result.stoppedAtBreakpoint_ = true;
             return result;
         }
 
         bool halted = false;
-        if (!execute_current(halted, result)) {
-            result.ok = false;
+        if (!executeCurrent(halted, result)) {
+            result.ok_ = false;
             return result;
         }
 
-        if (hooks_.after_instruction) {
-            hooks_.after_instruction(*this);
+        if (hooks_.afterInstruction_) {
+            hooks_.afterInstruction_(*this);
         }
 
         if (halted) {
-            result.ok = true;
+            result.ok_ = true;
             return result;
         }
     }
 
-    result.ok = true;
+    result.ok_ = true;
     return result;
 }
 

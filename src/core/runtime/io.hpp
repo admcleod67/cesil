@@ -13,16 +13,16 @@ class IoHost {
 
     /// Read the next integer from program input.
     /// \return The value read; implementations may block.
-    virtual int read_int() = 0;
+    virtual int readInt() = 0;
 
     /// Write integer \p value to program output.
-    virtual void write_int(int value) = 0;
+    virtual void writeInt(int value) = 0;
 
     /// Write \p text without an implicit newline.
-    virtual void write_string(const std::string& text) = 0;
+    virtual void writeString(const std::string& text) = 0;
 
     /// Write a newline to program output.
-    virtual void write_line() = 0;
+    virtual void writeLine() = 0;
 };
 
 }  // namespace cesil

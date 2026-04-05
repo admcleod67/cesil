@@ -13,15 +13,15 @@ namespace cesil {
 /// - Word 0: low byte = static_cast<std::uint8_t>(opcode); remaining bits may pack
 ///   a small immediate or flags once the ISA is frozen.
 /// - Word 1: immediate extension or zero when not used.
-/// - Symbol table (out-of-band): index referring to \p operand.symbol when
-///   \p operand.kind == OperandKind::Symbolic.
+/// - Symbol table (out-of-band): index referring to \p operand_.symbol_ when
+///   \p operand_.kind_ == OperandKind::Symbolic.
 ///
 /// The in-memory \ref Instruction struct is the source of truth until an encoder exists.
 struct Instruction {
-    OpCode opcode{OpCode::Halt};
-    Operand operand{};
+    OpCode opcode_{OpCode::Halt};
+    Operand operand_{};
     /// Source line number (1-based), or 0 if unknown.
-    int lineNumber{0};
+    int lineNumber_{0};
 };
 
 }  // namespace cesil

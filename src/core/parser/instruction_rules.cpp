@@ -3,12 +3,12 @@
 #include <string>
 #include <unordered_map>
 
-namespace cesil::instruction_rules {
+namespace cesil::instructionRules {
 
 namespace {
 
-const std::unordered_map<std::string, OpCode>& opcode_map() {
-    static const std::unordered_map<std::string, OpCode> kMap = {
+const std::unordered_map<std::string, OpCode>& opcodeMap() {
+    static const std::unordered_map<std::string, OpCode> OPCODE_MAP = {
         {"LOAD", OpCode::Load},
         {"STORE", OpCode::Store},
         {"IN", OpCode::In},
@@ -24,13 +24,13 @@ const std::unordered_map<std::string, OpCode>& opcode_map() {
         {"PRINT", OpCode::Print},
         {"HALT", OpCode::Halt},
     };
-    return kMap;
+    return OPCODE_MAP;
 }
 
 }  // namespace
 
-bool lookup_opcode(std::string_view upper, OpCode& out) {
-    const auto& map = opcode_map();
+bool lookupOpcode(std::string_view upper, OpCode& out) {
+    const auto& map = opcodeMap();
     const std::string key{upper};
     const auto it = map.find(key);
     if (it == map.end()) {
@@ -40,7 +40,7 @@ bool lookup_opcode(std::string_view upper, OpCode& out) {
     return true;
 }
 
-bool needs_operand(OpCode op) {
+bool needsOperand(OpCode op) {
     switch (op) {
         case OpCode::In:
         case OpCode::Out:
@@ -52,7 +52,7 @@ bool needs_operand(OpCode op) {
     }
 }
 
-bool operand_must_be_label(OpCode op) {
+bool operandMustBeLabel(OpCode op) {
     switch (op) {
         case OpCode::Jump:
         case OpCode::JiZero:
@@ -63,4 +63,4 @@ bool operand_must_be_label(OpCode op) {
     }
 }
 
-}  // namespace cesil::instruction_rules
+}  // namespace cesil::instructionRules

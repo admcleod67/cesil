@@ -11,10 +11,10 @@ namespace {
 
 class CaptureIoHost final : public cesil::IoHost {
    public:
-    int read_int() override { return 0; }
-    void write_int(int value) override { buffer_ << value; }
-    void write_string(const std::string& text) override { buffer_ << text; }
-    void write_line() override { buffer_ << '\n'; }
+    int readInt() override { return 0; }
+    void writeInt(int value) override { buffer_ << value; }
+    void writeString(const std::string& text) override { buffer_ << text; }
+    void writeLine() override { buffer_ << '\n'; }
     std::string captured() const { return buffer_.str(); }
 
    private:
@@ -23,10 +23,10 @@ class CaptureIoHost final : public cesil::IoHost {
 
 class NullIoHost final : public cesil::IoHost {
    public:
-    int read_int() override { return 0; }
-    void write_int(int) override {}
-    void write_string(const std::string&) override {}
-    void write_line() override {}
+    int readInt() override { return 0; }
+    void writeInt(int) override {}
+    void writeString(const std::string&) override {}
+    void writeLine() override {}
 };
 
 }  // namespace
@@ -36,32 +36,32 @@ TEST_CASE("Smoke tests and integration", "[smoke]") {
 
     SECTION("Empty and whitespace programs") {
         const cesil::ParseResult blank = parser.parse("");
-        CHECK(blank.ok);
-        CHECK(blank.instructions.empty());
-        CHECK(blank.diagnostics.empty());
+        CHECK(blank.ok_);
+        CHECK(blank.instructions_.empty());
+        CHECK(blank.diagnostics_.empty());
 
         const cesil::ParseResult spaces = parser.parse("   \n\t  ");
-        CHECK(spaces.ok);
-        CHECK(spaces.instructions.empty());
+        CHECK(spaces.ok_);
+        CHECK(spaces.instructions_.empty());
     }
 
     SECTION("Simple program execution") {
-        cesil::ParseResult load_line = parser.parse("LOAD +1\nHALT\n");
-        REQUIRE(load_line.ok);
-        CHECK(load_line.instructions.size() == 2);
+        cesil::ParseResult loadLine = parser.parse("LOAD +1\nHALT\n");
+        REQUIRE(loadLine.ok_);
+        CHECK(loadLine.instructions_.size() == 2);
 
-        NullIoHost null_io;
-        cesil::Interpreter interpreter(null_io);
-        interpreter.load(std::move(load_line.instructions), {}, std::move(load_line.label_indices));
+        NullIoHost nullIo;
+        cesil::Interpreter interpreter(nullIo);
+        interpreter.load(std::move(loadLine.instructions_), {}, std::move(loadLine.labelIndices_));
         const cesil::RunResult ran = interpreter.run();
-        CHECK(ran.ok);
+        CHECK(ran.ok_);
         CHECK(interpreter.accumulator() == 1);
     }
 
     SECTION("Invalid program") {
         const cesil::ParseResult bad = parser.parse("NOTANINSTRUCTION");
-        CHECK_FALSE(bad.ok);
-        CHECK_FALSE(bad.diagnostics.empty());
+        CHECK_FALSE(bad.ok_);
+        CHECK_FALSE(bad.diagnostics_.empty());
     }
 
     SECTION("Wiki example - sum sequence") {
@@ -87,13 +87,13 @@ DONE    PRINT   "The total is: "
 *
 )";
         cesil::ParseResult total = parser.parse(wiki);
-        REQUIRE(total.ok);
+        REQUIRE(total.ok_);
         CaptureIoHost cap;
-        cesil::Interpreter run_total(cap);
-        run_total.load(std::move(total.instructions), std::move(total.data),
-                       std::move(total.label_indices));
-        const cesil::RunResult wiki_run = run_total.run();
-        CHECK(wiki_run.ok);
+        cesil::Interpreter runTotal(cap);
+        runTotal.load(std::move(total.instructions_), std::move(total.data_),
+                      std::move(total.labelIndices_));
+        const cesil::RunResult wikiRun = runTotal.run();
+        CHECK(wikiRun.ok_);
         CHECK(cap.captured() == "The total is: 6\n");
     }
 }

@@ -7,22 +7,22 @@ namespace cesil {
 
 Lexer::Lexer(std::string_view source) : buffer_(source) {}
 
-bool Lexer::at_end() const { return pos_ >= buffer_.size(); }
+bool Lexer::atEnd() const { return pos_ >= buffer_.size(); }
 
-char Lexer::peek_char() const {
-    if (at_end()) {
+char Lexer::peekChar() const {
+    if (atEnd()) {
         return '\0';
     }
     return buffer_[pos_];
 }
 
-void Lexer::advance_one() {
-    if (at_end()) {
+void Lexer::advanceOne() {
+    if (atEnd()) {
         return;
     }
     const char c = buffer_[pos_++];
     if (c == '\r') {
-        if (!at_end() && peek_char() == '\n') {
+        if (!atEnd() && peekChar() == '\n') {
             ++pos_;
         }
         ++line_;
@@ -37,77 +37,77 @@ void Lexer::advance_one() {
     }
 }
 
-void Lexer::skip_horizontal_space() {
-    while (!at_end()) {
-        const char c = peek_char();
+void Lexer::skipHorizontalSpace() {
+    while (!atEnd()) {
+        const char c = peekChar();
         if (c == ' ' || c == '\t') {
-            advance_one();
+            advanceOne();
         } else {
             break;
         }
     }
 }
 
-Token Lexer::make_token(TokenType type, std::string text, int line, int col) const {
+Token Lexer::makeToken(TokenType type, std::string text, int line, int col) const {
     return Token{type, std::move(text), line, col};
 }
 
-Token Lexer::read_token_impl() {
+Token Lexer::readTokenImpl() {
     for (;;) {
-        skip_horizontal_space();
+        skipHorizontalSpace();
 
-        if (at_end()) {
-            return make_token(TokenType::EndOfFile, {}, line_, column_);
+        if (atEnd()) {
+            return makeToken(TokenType::EndOfFile, {}, line_, column_);
         }
 
-        if (!line_has_started_token_ && peek_char() == '(') {
-            advance_one();
-            while (!at_end() && peek_char() != '\r' && peek_char() != '\n') {
-                advance_one();
+        if (!lineHasStartedToken_ && peekChar() == '(') {
+            advanceOne();
+            while (!atEnd() && peekChar() != '\r' && peekChar() != '\n') {
+                advanceOne();
             }
-            if (!at_end()) {
-                const int nl_line = line_;
-                const int nl_col = column_;
-                advance_one();
-                line_has_started_token_ = false;
-                return make_token(TokenType::Newline, "\n", nl_line, nl_col);
+            if (!atEnd()) {
+                const int nlLine = line_;
+                const int nlCol = column_;
+                advanceOne();
+                lineHasStartedToken_ = false;
+                return makeToken(TokenType::Newline, "\n", nlLine, nlCol);
             }
-            line_has_started_token_ = false;
-            return make_token(TokenType::EndOfFile, {}, line_, column_);
+            lineHasStartedToken_ = false;
+            return makeToken(TokenType::EndOfFile, {}, line_, column_);
         }
 
-        const char c = peek_char();
+        const char c = peekChar();
         if (c == '\r' || c == '\n') {
-            const int nl_line = line_;
-            const int nl_col = column_;
-            advance_one();
-            line_has_started_token_ = false;
-            return make_token(TokenType::Newline, "\n", nl_line, nl_col);
+            const int nlLine = line_;
+            const int nlCol = column_;
+            advanceOne();
+            lineHasStartedToken_ = false;
+            return makeToken(TokenType::Newline, "\n", nlLine, nlCol);
         }
 
-        const int tok_line = line_;
-        const int tok_col = column_;
-        line_has_started_token_ = true;
+        const int tokLine = line_;
+        const int tokCol = column_;
+        lineHasStartedToken_ = true;
 
         if (c == '%') {
-            advance_one();
-            return make_token(TokenType::Percent, "%", tok_line, tok_col);
+            advanceOne();
+            return makeToken(TokenType::Percent, "%", tokLine, tokCol);
         }
         if (c == '*') {
-            advance_one();
-            return make_token(TokenType::Star, "*", tok_line, tok_col);
+            advanceOne();
+            return makeToken(TokenType::Star, "*", tokLine, tokCol);
         }
 
         if (c == '"') {
-            advance_one();
+            advanceOne();
             std::string value;
-            while (!at_end()) {
-                char ch = peek_char();
+            while (!atEnd()) {
+                char ch = peekChar();
                 if (ch == '\\' && pos_ + 1 < buffer_.size()) {
-                    advance_one();
-                    const char next = peek_char();
+                    advanceOne();
+                    const char next = peekChar();
                     if (next == '"' || next == '\\') {
-                        advance_one();
+                        advanceOne();
                         value.push_back(next);
                         continue;
                     }
@@ -115,68 +115,68 @@ Token Lexer::read_token_impl() {
                     continue;
                 }
                 if (ch == '"') {
-                    advance_one();
-                    return make_token(TokenType::String, std::move(value), tok_line, tok_col);
+                    advanceOne();
+                    return makeToken(TokenType::String, std::move(value), tokLine, tokCol);
                 }
-                advance_one();
+                advanceOne();
                 value.push_back(ch);
             }
-            return make_token(TokenType::Unknown, std::move(value), tok_line, tok_col);
+            return makeToken(TokenType::Unknown, std::move(value), tokLine, tokCol);
         }
 
         if (std::isalpha(static_cast<unsigned char>(c))) {
             std::string ident;
-            while (!at_end()) {
-                const char ch = peek_char();
+            while (!atEnd()) {
+                const char ch = peekChar();
                 if (!std::isalnum(static_cast<unsigned char>(ch))) {
                     break;
                 }
                 ident.push_back(ch);
-                advance_one();
+                advanceOne();
             }
-            if (!at_end() && peek_char() == ':') {
-                advance_one();
-                return make_token(TokenType::Label, std::move(ident), tok_line, tok_col);
+            if (!atEnd() && peekChar() == ':') {
+                advanceOne();
+                return makeToken(TokenType::Label, std::move(ident), tokLine, tokCol);
             }
-            return make_token(TokenType::Identifier, std::move(ident), tok_line, tok_col);
+            return makeToken(TokenType::Identifier, std::move(ident), tokLine, tokCol);
         }
 
         if (c == '+' || c == '-' || std::isdigit(static_cast<unsigned char>(c))) {
             std::string num;
             if (c == '+' || c == '-') {
                 num.push_back(c);
-                advance_one();
+                advanceOne();
             }
-            if (at_end() || !std::isdigit(static_cast<unsigned char>(peek_char()))) {
-                return make_token(TokenType::Unknown, std::move(num), tok_line, tok_col);
+            if (atEnd() || !std::isdigit(static_cast<unsigned char>(peekChar()))) {
+                return makeToken(TokenType::Unknown, std::move(num), tokLine, tokCol);
             }
-            while (!at_end() && std::isdigit(static_cast<unsigned char>(peek_char()))) {
-                num.push_back(peek_char());
-                advance_one();
+            while (!atEnd() && std::isdigit(static_cast<unsigned char>(peekChar()))) {
+                num.push_back(peekChar());
+                advanceOne();
             }
-            return make_token(TokenType::Number, std::move(num), tok_line, tok_col);
+            return makeToken(TokenType::Number, std::move(num), tokLine, tokCol);
         }
 
         std::string u(1, c);
-        advance_one();
-        return make_token(TokenType::Unknown, std::move(u), tok_line, tok_col);
+        advanceOne();
+        return makeToken(TokenType::Unknown, std::move(u), tokLine, tokCol);
     }
 }
 
 Token Lexer::getNextToken() {
-    if (peek_buffer_) {
-        Token t = std::move(*peek_buffer_);
-        peek_buffer_.reset();
+    if (peekBuffer_) {
+        Token t = std::move(*peekBuffer_);
+        peekBuffer_.reset();
         return t;
     }
-    return read_token_impl();
+    return readTokenImpl();
 }
 
 Token Lexer::peekToken() {
-    if (!peek_buffer_) {
-        peek_buffer_ = read_token_impl();
+    if (!peekBuffer_) {
+        peekBuffer_ = readTokenImpl();
     }
-    return *peek_buffer_;
+    return *peekBuffer_;
 }
 
 }  // namespace cesil
