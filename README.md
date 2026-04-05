@@ -23,10 +23,10 @@ This repository provides a reusable **core library**, a **command-line runner**,
 
 | Path | Description |
 |------|-------------|
-| `core/` | Static library **cesil-core**: public headers under `core/include/cesil/`, sources under `core/src/` |
-| `cli/` | Executable target **cesil-cli**; the built binary is named **`cesil`** |
+| `src/core/` | Static library **cesil-core**: sources and public headers grouped under `lexer/`, `parser/`, `runtime/`, and `errors/` (each contributes a `cesil/…` include root). Legacy `#include` paths are preserved via symlinks under `src/core/include/cesil/`. |
+| `src/cli/` | Executable target **cesil-cli**; the built binary is named **`cesil`** |
 | `examples/` | Sample `.ces` sources |
-| `core/tests/` | Test executable **cesil_tests** (Catch2) |
+| `tests/core/` | Test executable **cesil_tests** (Catch2) |
 
 ## Build
 
@@ -57,11 +57,11 @@ CTest registers one test, **`cesil_tests`**, which runs the Catch2-linked binary
 After a successful build, run a CESIL source file with:
 
 ```bash
-./build/cli/cesil run examples/hello.ces
-./build/cli/cesil run examples/total.ces
+./build/src/cli/cesil run examples/hello.ces
+./build/src/cli/cesil run examples/total.ces
 ```
 
-The exact path to the `cesil` binary matches CMake’s output directory for the `cli` target; with a default Ninja or Makefile build it is typically **`build/cli/cesil`** (on Windows, `build/cli/cesil.exe` or under `build/cli/Debug/` depending on the generator).
+The exact path to the `cesil` binary matches CMake’s output directory for the `cli` target; with a default Ninja or Makefile build it is typically **`build/src/cli/cesil`** (on Windows, `build/src/cli/cesil.exe` or under `build/src/cli/Debug/` depending on the generator).
 
 Usage:
 
@@ -78,7 +78,7 @@ Runtime numeric input for `IN` is read from standard input; output uses standard
 3. **SemanticValidator** resolves operands, validates data integers and jump targets, and fills final `Operand` values on each `Instruction`.
 4. **Interpreter** runs the resolved IR against an `IoHost`.
 
-Public API entry points for embedding include `cesil/parser/parser.hpp`, `cesil/interpreter/interpreter.hpp`, `cesil/lexer/lexer.hpp`, and related headers under `core/include/cesil/`.
+Public API entry points for embedding use includes such as `cesil/parser/parser.hpp`, `cesil/interpreter/interpreter.hpp`, and `cesil/lexer/lexer.hpp`, resolved via the `cesil/…` trees under `src/core/lexer`, `parser`, `runtime`, and `errors`.
 
 ## Language reference
 

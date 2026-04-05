@@ -13,8 +13,8 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-add_subdirectory(core)
-add_subdirectory(cli)
+add_subdirectory(src/core)
+add_subdirectory(src/cli)
 
 enable_testing()
-add_subdirectory(core/tests)
+add_subdirectory(tests/core)
