@@ -1,5 +1,5 @@
 add_executable(cesil-cli
-    src/Main.cpp
+        Main.cpp
 )
 
 target_link_libraries(cesil-cli PRIVATE cesil-core)
