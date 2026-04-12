@@ -26,8 +26,8 @@
 
 namespace {
 
-constexpr int kErrorsTabIndex = 1;
-constexpr int kOutputTabIndex = 2;
+constexpr int kOutputTabIndex = 1;
+constexpr int kErrorsTabIndex = 2;
 
 /// Routes interpreter output to a \c QPlainTextEdit (program channel).
 ///
@@ -91,8 +91,8 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
     m_output->setReadOnly(true);
 
     m_tabs->addTab(m_editor, tr("Source"));
-    m_tabs->addTab(m_errorsList, tr("Errors"));
     m_tabs->addTab(m_output, tr("Output"));
+    m_tabs->addTab(m_errorsList, tr("Errors"));
     setCentralWidget(m_tabs);
 
     connect(m_editor->document(), &QTextDocument::modificationChanged, this,
