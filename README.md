@@ -107,7 +107,7 @@ cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
 cmake --build build
 ```
 
-**Qt IDE** (text editor with **File → Open / Save / Save As**; **Build → Check syntax** (F7) parses the current buffer via `cesil-core` and shows diagnostics on the **Errors** tab; no run yet):
+**Qt IDE** (text editor with **File → Open / Save / Save As**; **Build → Check syntax** (F7) parses the current buffer and lists diagnostics on **Errors**; **Run → Run** (F5) parses, runs the interpreter on the buffer like CLI `cesil run`, prints program output on **Output**, and parse/runtime errors on **Errors**):
 
 ```
 cmake -S . -B build -DCESIL_BUILD_IDE=ON -DCMAKE_PREFIX_PATH=/path/to/Qt/6.x/<kit>

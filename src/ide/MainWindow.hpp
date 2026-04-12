@@ -1,7 +1,11 @@
 #pragma once
 
+#include <errors/Diagnostic.hpp>
+
 #include <QMainWindow>
 #include <QString>
+
+#include <vector>
 
 class QCloseEvent;
 class QListWidget;
@@ -27,9 +31,14 @@ class MainWindow final : public QMainWindow {
     bool handleUnsavedChanges();
 
     void checkSyntax();
+    void runProgram();
+
+    static void addDiagnosticsToList(QListWidget* list,
+                                     const std::vector<cesil::Diagnostic>& diagnostics);
 
     QTabWidget* m_tabs{};
     QPlainTextEdit* m_editor{};
     QListWidget* m_errorsList{};
+    QPlainTextEdit* m_output{};
     QString m_filePath;
 };
