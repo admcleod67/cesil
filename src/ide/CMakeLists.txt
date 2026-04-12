@@ -1,5 +1,7 @@
 qt_add_executable(cesil-ide
         Main.cpp
+        MainWindow.cpp
+        MainWindow.hpp
 )
 
 target_link_libraries(cesil-ide PRIVATE Qt6::Widgets cesil-core)

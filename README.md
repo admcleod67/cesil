@@ -107,7 +107,7 @@ cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
 cmake --build build
 ```
 
-**Qt IDE** (empty desktop shell; links `cesil-core`):
+**Qt IDE** (text editor with **File → Open / Save / Save As**; links `cesil-core` for future features):
 
 ```
 cmake -S . -B build -DCESIL_BUILD_IDE=ON -DCMAKE_PREFIX_PATH=/path/to/Qt/6.x/<kit>
