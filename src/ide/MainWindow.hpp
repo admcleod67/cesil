@@ -4,7 +4,9 @@
 #include <QString>
 
 class QCloseEvent;
+class QListWidget;
 class QPlainTextEdit;
+class QTabWidget;
 
 class MainWindow final : public QMainWindow {
    public:
@@ -24,6 +26,10 @@ class MainWindow final : public QMainWindow {
     bool writeToPath(const QString& path);
     bool handleUnsavedChanges();
 
+    void checkSyntax();
+
+    QTabWidget* m_tabs{};
     QPlainTextEdit* m_editor{};
+    QListWidget* m_errorsList{};
     QString m_filePath;
 };
