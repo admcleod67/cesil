@@ -44,7 +44,12 @@
 CMakeFiles/
 CMakeCache.txt
 _deps/
-cmake-build-debug/
+
+# Out-of-tree CMake / IDE build directories (any folder named build, or
+# build-*, or CLion-style cmake-build-*)
+build/
+build-*/
+cmake-build-*/
 
 # CLion / JetBrains
 .idea/
