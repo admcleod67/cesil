@@ -40,5 +40,11 @@
 # debug information files
 *.dwo
 
+# CMake build artifacts
+CMakeFiles/
+CMakeCache.txt
+_deps/
+cmake-build-debug/
+
 # CLion / JetBrains
 .idea/
