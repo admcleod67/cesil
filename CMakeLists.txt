@@ -16,5 +16,12 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 add_subdirectory(src/core)
 add_subdirectory(src/cli)
 
+option(CESIL_BUILD_IDE "Build Qt desktop IDE" ON)
+if(CESIL_BUILD_IDE)
+    find_package(Qt6 6.5 REQUIRED COMPONENTS Core Widgets)
+    qt_standard_project_setup()
+    add_subdirectory(src/ide)
+endif()
+
 enable_testing()
 add_subdirectory(tests/core)

@@ -75,6 +75,7 @@ Run it with:
 - CMake **3.20+**
 - A C++20‑capable compiler (Clang, GCC, MSVC)
 - Network access on first configure (Catch2 is fetched automatically)
+- **Qt desktop IDE (optional):** Qt **6.5+** (`Core`, `Widgets`) when `-DCESIL_BUILD_IDE=ON`
 
 ---
 
@@ -84,6 +85,7 @@ Run it with:
 |------|-------------|
 | `src/core/` | Static library `cesil-core`: lexer, parser, runtime, errors |
 | `src/cli/` | CLI executable `cesil` |
+| `src/ide/` | Optional Qt desktop shell `cesil-ide` (see build flags below) |
 | `examples/` | Sample `.ces` programs |
 | `tests/core/` | Catch2 unit tests |
 
@@ -104,6 +106,15 @@ Release build:
 cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
 cmake --build build
 ```
+
+**Qt IDE** (empty desktop shell; links `cesil-core`):
+
+```
+cmake -S . -B build -DCESIL_BUILD_IDE=ON -DCMAKE_PREFIX_PATH=/path/to/Qt/6.x/<kit>
+cmake --build build --target cesil-ide
+```
+
+`CMAKE_PREFIX_PATH` should point at the Qt kit directory that contains `lib/cmake/Qt6` (for example `…/Qt/6.8.0/macos` on macOS or `…/Qt/6.8.0/gcc_64` on Linux).
 
 ---
 
