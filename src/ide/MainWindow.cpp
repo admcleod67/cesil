@@ -1,4 +1,6 @@
 #include "MainWindow.hpp"
+#include "QtIoHost.hpp"
+#include "DiagnosticUtils.hpp"
 
 #include <errors/Diagnostic.hpp>
 #include <parser/Parser.hpp>
@@ -29,56 +31,7 @@ namespace {
 constexpr int kOutputTabIndex = 1;
 constexpr int kErrorsTabIndex = 2;
 
-/// Routes interpreter output to a \c QPlainTextEdit (program channel).
-///
-/// Note: the current \c Interpreter reads \c IN values from the parsed data
-/// section, not from \ref readInt; \ref readInt remains for the interface.
-class QtIoHost final : public cesil::IoHost {
-   public:
-    explicit QtIoHost(QPlainTextEdit* output) : output_(output) {}
-
-    int readInt() override {
-        return 0;
-    }
-
-    void writeInt(int value) override {
-        append(QString::number(value));
-    }
-
-    void writeString(const std::string& text) override {
-        append(QString::fromStdString(text));
-    }
-
-    void writeLine() override { append(QStringLiteral("\n")); }
-
-   private:
-    void append(const QString& chunk) {
-        QTextCursor cursor(output_->document());
-        cursor.movePosition(QTextCursor::End);
-        cursor.insertText(chunk);
-    }
-
-    QPlainTextEdit* output_{};
-};
-
-QString formatDiagnosticLine(const cesil::Diagnostic& d) {
-    std::ostringstream line;
-    cesil::printDiagnostic(line, d);
-    QString text = QString::fromStdString(line.str());
-    if (text.endsWith(QLatin1Char('\n'))) {
-        text.chop(1);
-    }
-    return text;
-}
-
 }  // namespace
-
-void MainWindow::addDiagnosticsToList(QListWidget* list,
-                                      const std::vector<cesil::Diagnostic>& diagnostics) {
-    for (const cesil::Diagnostic& d : diagnostics) {
-        list->addItem(formatDiagnosticLine(d));
-    }
-}
 
 MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
     m_tabs = new QTabWidget(this);
@@ -143,7 +96,7 @@ void MainWindow::checkSyntax() {
     const cesil::ParseResult result = parser.parse(source);
 
     m_errorsList->clear();
-    addDiagnosticsToList(m_errorsList, result.diagnostics_);
+    ::addDiagnosticsToList(m_errorsList, result.diagnostics_);
 
     if (m_errorsList->count() == 0) {
         if (result.ok_) {
@@ -169,7 +122,7 @@ void MainWindow::runProgram() {
 
     if (!parsed.ok_) {
         m_errorsList->clear();
-        addDiagnosticsToList(m_errorsList, parsed.diagnostics_);
+        ::addDiagnosticsToList(m_errorsList, parsed.diagnostics_);
         if (m_errorsList->count() == 0) {
             m_errorsList->addItem(
                 tr("Compilation failed (no detailed diagnostics)."));
@@ -187,7 +140,7 @@ void MainWindow::runProgram() {
 
     if (!ran.ok_) {
         m_errorsList->clear();
-        addDiagnosticsToList(m_errorsList, ran.diagnostics_);
+        ::addDiagnosticsToList(m_errorsList, ran.diagnostics_);
         if (m_errorsList->count() == 0) {
             m_errorsList->addItem(tr("Run failed (no detailed diagnostics)."));
         }

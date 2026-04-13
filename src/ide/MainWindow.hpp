@@ -33,9 +33,6 @@ class MainWindow final : public QMainWindow {
     void checkSyntax();
     void runProgram();
 
-    static void addDiagnosticsToList(QListWidget* list,
-                                     const std::vector<cesil::Diagnostic>& diagnostics);
-
     QTabWidget* m_tabs{};
     QPlainTextEdit* m_editor{};
     QListWidget* m_errorsList{};
