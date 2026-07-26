@@ -15,10 +15,12 @@
 #include <QFileDialog>
 #include <QFileInfo>
 #include <QKeySequence>
+#include <QLabel>
 #include <QListWidget>
 #include <QMenuBar>
 #include <QMessageBox>
 #include <QPlainTextEdit>
+#include <QStatusBar>
 #include <QStyle>
 #include <QTabWidget>
 #include <QTextCursor>
@@ -52,10 +54,13 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
 
     connect(m_editor->document(), &QTextDocument::modificationChanged, this,
             &MainWindow::updateWindowTitle);
+    connect(m_editor, &QPlainTextEdit::cursorPositionChanged, this,
+            &MainWindow::updateCursorPosition);
 
     createActions();
     createMenus();
     createToolBar();
+    createStatusBar();
     updateWindowTitle();
 }
 
@@ -123,6 +128,20 @@ void MainWindow::createToolBar() {
     toolBar->addAction(m_runAction);
 }
 
+void MainWindow::createStatusBar() {
+    statusBar();
+    m_cursorLabel = new QLabel(tr("Ln 1, Col 1"));
+    statusBar()->addPermanentWidget(m_cursorLabel);
+    statusBar()->showMessage(tr("Ready"));
+}
+
+void MainWindow::updateCursorPosition() {
+    const QTextCursor cursor = m_editor->textCursor();
+    m_cursorLabel->setText(tr("Ln %1, Col %2")
+                               .arg(cursor.blockNumber() + 1)
+                               .arg(cursor.positionInBlock() + 1));
+}
+
 void MainWindow::newFile() {
     if (!handleUnsavedChanges()) {
         return;
@@ -134,6 +153,8 @@ void MainWindow::newFile() {
     m_output->clear();
     m_editor->document()->setModified(false);
     updateWindowTitle();
+    updateCursorPosition();
+    statusBar()->showMessage(tr("Ready"));
 }
 
 void MainWindow::checkSyntax() {
@@ -154,6 +175,16 @@ void MainWindow::checkSyntax() {
             m_errorsList->addItem(
                 tr("Compilation failed (no detailed diagnostics)."));
         }
+    }
+
+    if (result.ok_) {
+        statusBar()->showMessage(tr("No issues."));
+    } else if (result.diagnostics_.empty()) {
+        statusBar()->showMessage(tr("Compilation failed."));
+    } else {
+        const int count = static_cast<int>(result.diagnostics_.size());
+        statusBar()->showMessage(
+            tr("%n error(s).", nullptr, count));
     }
 
     m_tabs->setCurrentIndex(kErrorsTabIndex);
@@ -177,6 +208,7 @@ void MainWindow::runProgram() {
                 tr("Compilation failed (no detailed diagnostics)."));
         }
         m_tabs->setCurrentIndex(kErrorsTabIndex);
+        statusBar()->showMessage(tr("Compilation failed."));
         return;
     }
 
@@ -194,11 +226,13 @@ void MainWindow::runProgram() {
             m_errorsList->addItem(tr("Run failed (no detailed diagnostics)."));
         }
         m_tabs->setCurrentIndex(kErrorsTabIndex);
+        statusBar()->showMessage(tr("Run failed."));
         return;
     }
 
     m_errorsList->clear();
     m_tabs->setCurrentIndex(kOutputTabIndex);
+    statusBar()->showMessage(tr("Program finished."));
 }
 
 QString MainWindow::displayFileName() const {
@@ -232,6 +266,7 @@ bool MainWindow::writeToPath(const QString& path) {
     m_filePath = path;
     m_editor->document()->setModified(false);
     updateWindowTitle();
+    statusBar()->showMessage(tr("Saved."));
     return true;
 }
 
@@ -275,6 +310,8 @@ void MainWindow::openFile() {
     m_filePath = path;
     m_editor->document()->setModified(false);
     updateWindowTitle();
+    updateCursorPosition();
+    statusBar()->showMessage(tr("Ready"));
 }
 
 bool MainWindow::handleUnsavedChanges() {

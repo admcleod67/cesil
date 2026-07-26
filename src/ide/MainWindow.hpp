@@ -9,6 +9,7 @@
 
 class QAction;
 class QCloseEvent;
+class QLabel;
 class QListWidget;
 class QPlainTextEdit;
 class QTabWidget;
@@ -24,6 +25,8 @@ class MainWindow final : public QMainWindow {
     void createActions();
     void createMenus();
     void createToolBar();
+    void createStatusBar();
+    void updateCursorPosition();
     void updateWindowTitle();
     QString displayFileName() const;
 
@@ -41,6 +44,7 @@ class MainWindow final : public QMainWindow {
     QPlainTextEdit* m_editor{};
     QListWidget* m_errorsList{};
     QPlainTextEdit* m_output{};
+    QLabel* m_cursorLabel{};
     QString m_filePath;
 
     QAction* m_newAction{};
