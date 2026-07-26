@@ -19,8 +19,10 @@
 #include <QMenuBar>
 #include <QMessageBox>
 #include <QPlainTextEdit>
+#include <QStyle>
 #include <QTabWidget>
 #include <QTextCursor>
+#include <QToolBar>
 
 #include <sstream>
 #include <string>
@@ -28,8 +30,8 @@
 
 namespace {
 
-constexpr int kOutputTabIndex = 1;
-constexpr int kErrorsTabIndex = 2;
+constexpr int kErrorsTabIndex = 1;
+constexpr int kOutputTabIndex = 2;
 
 }  // namespace
 
@@ -44,47 +46,94 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
     m_output->setReadOnly(true);
 
     m_tabs->addTab(m_editor, tr("Source"));
-    m_tabs->addTab(m_output, tr("Output"));
     m_tabs->addTab(m_errorsList, tr("Errors"));
+    m_tabs->addTab(m_output, tr("Output"));
     setCentralWidget(m_tabs);
 
     connect(m_editor->document(), &QTextDocument::modificationChanged, this,
             &MainWindow::updateWindowTitle);
 
-    setupMenu();
+    createActions();
+    createMenus();
+    createToolBar();
     updateWindowTitle();
 }
 
-void MainWindow::setupMenu() {
+void MainWindow::createActions() {
+    m_newAction = new QAction(tr("&New"), this);
+    m_newAction->setShortcut(QKeySequence::New);
+    m_newAction->setIcon(style()->standardIcon(QStyle::SP_FileIcon));
+    connect(m_newAction, &QAction::triggered, this, &MainWindow::newFile);
+
+    m_openAction = new QAction(tr("&Open..."), this);
+    m_openAction->setShortcut(QKeySequence::Open);
+    m_openAction->setIcon(style()->standardIcon(QStyle::SP_DirOpenIcon));
+    connect(m_openAction, &QAction::triggered, this, &MainWindow::openFile);
+
+    m_saveAction = new QAction(tr("&Save"), this);
+    m_saveAction->setShortcut(QKeySequence::Save);
+    m_saveAction->setIcon(style()->standardIcon(QStyle::SP_DialogSaveButton));
+    connect(m_saveAction, &QAction::triggered, this,
+            [this]() { static_cast<void>(saveFile()); });
+
+    m_saveAsAction = new QAction(tr("Save &As..."), this);
+    m_saveAsAction->setShortcut(QKeySequence::SaveAs);
+    connect(m_saveAsAction, &QAction::triggered, this,
+            [this]() { static_cast<void>(saveFileAs()); });
+
+    m_quitAction = new QAction(tr("&Quit"), this);
+    m_quitAction->setShortcut(QKeySequence::Quit);
+    connect(m_quitAction, &QAction::triggered, this, &QWidget::close);
+
+    m_checkAction = new QAction(tr("Check &syntax"), this);
+    m_checkAction->setShortcut(QKeySequence(Qt::Key_F7));
+    m_checkAction->setIcon(style()->standardIcon(QStyle::SP_DialogApplyButton));
+    connect(m_checkAction, &QAction::triggered, this, &MainWindow::checkSyntax);
+
+    m_runAction = new QAction(tr("&Run"), this);
+    m_runAction->setShortcut(QKeySequence(Qt::Key_F5));
+    m_runAction->setIcon(style()->standardIcon(QStyle::SP_MediaPlay));
+    connect(m_runAction, &QAction::triggered, this, &MainWindow::runProgram);
+}
+
+void MainWindow::createMenus() {
     QMenu* fileMenu = menuBar()->addMenu(tr("&File"));
-
-    QAction* openAction = fileMenu->addAction(tr("&Open..."));
-    openAction->setShortcut(QKeySequence::Open);
-    connect(openAction, &QAction::triggered, this, &MainWindow::openFile);
-
-    QAction* saveAction = fileMenu->addAction(tr("&Save"));
-    saveAction->setShortcut(QKeySequence::Save);
-    connect(saveAction, &QAction::triggered, this, [this]() { static_cast<void>(saveFile()); });
-
-    QAction* saveAsAction = fileMenu->addAction(tr("Save &As..."));
-    saveAsAction->setShortcut(QKeySequence::SaveAs);
-    connect(saveAsAction, &QAction::triggered, this, [this]() { static_cast<void>(saveFileAs()); });
-
+    fileMenu->addAction(m_newAction);
+    fileMenu->addAction(m_openAction);
+    fileMenu->addAction(m_saveAction);
+    fileMenu->addAction(m_saveAsAction);
     fileMenu->addSeparator();
-
-    QAction* quitAction = fileMenu->addAction(tr("&Quit"));
-    quitAction->setShortcut(QKeySequence::Quit);
-    connect(quitAction, &QAction::triggered, this, &QWidget::close);
+    fileMenu->addAction(m_quitAction);
 
     QMenu* buildMenu = menuBar()->addMenu(tr("&Build"));
-    QAction* checkAction = buildMenu->addAction(tr("Check &syntax"));
-    checkAction->setShortcut(QKeySequence(Qt::Key_F7));
-    connect(checkAction, &QAction::triggered, this, &MainWindow::checkSyntax);
+    buildMenu->addAction(m_checkAction);
 
     QMenu* runMenu = menuBar()->addMenu(tr("&Run"));
-    QAction* runAction = runMenu->addAction(tr("&Run"));
-    runAction->setShortcut(QKeySequence(Qt::Key_F5));
-    connect(runAction, &QAction::triggered, this, &MainWindow::runProgram);
+    runMenu->addAction(m_runAction);
+}
+
+void MainWindow::createToolBar() {
+    QToolBar* toolBar = addToolBar(tr("Main"));
+    toolBar->setMovable(false);
+    toolBar->addAction(m_newAction);
+    toolBar->addAction(m_openAction);
+    toolBar->addAction(m_saveAction);
+    toolBar->addSeparator();
+    toolBar->addAction(m_checkAction);
+    toolBar->addAction(m_runAction);
+}
+
+void MainWindow::newFile() {
+    if (!handleUnsavedChanges()) {
+        return;
+    }
+
+    m_editor->clear();
+    m_filePath.clear();
+    m_errorsList->clear();
+    m_output->clear();
+    m_editor->document()->setModified(false);
+    updateWindowTitle();
 }
 
 void MainWindow::checkSyntax() {

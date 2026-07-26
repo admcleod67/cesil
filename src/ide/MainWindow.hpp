@@ -7,6 +7,7 @@
 
 #include <vector>
 
+class QAction;
 class QCloseEvent;
 class QListWidget;
 class QPlainTextEdit;
@@ -20,10 +21,13 @@ class MainWindow final : public QMainWindow {
     void closeEvent(QCloseEvent* event) override;
 
    private:
-    void setupMenu();
+    void createActions();
+    void createMenus();
+    void createToolBar();
     void updateWindowTitle();
     QString displayFileName() const;
 
+    void newFile();
     void openFile();
     bool saveFile();
     bool saveFileAs();
@@ -38,4 +42,12 @@ class MainWindow final : public QMainWindow {
     QListWidget* m_errorsList{};
     QPlainTextEdit* m_output{};
     QString m_filePath;
+
+    QAction* m_newAction{};
+    QAction* m_openAction{};
+    QAction* m_saveAction{};
+    QAction* m_saveAsAction{};
+    QAction* m_quitAction{};
+    QAction* m_checkAction{};
+    QAction* m_runAction{};
 };
