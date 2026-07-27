@@ -30,7 +30,8 @@ class ConsoleIoHost final : public cesil::IoHost {
 };
 
 void printUsage(const char* argv0) {
-    std::cerr << "Usage: " << argv0 << " run <file>\n";
+    std::cerr << "Usage: " << argv0 << " run <file>\n"
+              << "       " << argv0 << " --version\n";
 }
 
 bool readFile(const std::string& path, std::string& out, std::string& error) {
@@ -48,6 +49,14 @@ bool readFile(const std::string& path, std::string& out, std::string& error) {
 }  // namespace
 
 int main(int argc, char* argv[]) {
+    if (argc == 2) {
+        const std::string_view flag = argv[1];
+        if (flag == "--version" || flag == "-v") {
+            std::cout << "cesil " << CESIL_VERSION << '\n';
+            return 0;
+        }
+    }
+
     if (argc != 3 || std::string_view(argv[1]) != "run") {
         printUsage(argc > 0 ? argv[0] : "cesil");
         return 1;

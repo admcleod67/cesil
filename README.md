@@ -186,11 +186,10 @@ CESIL documentation and historical material:
 
 ## 🛣️ Roadmap
 
-- Visual debugger / stepping UI
-- Syntax highlighting
-- CESIL‑to‑IR visualisation
-- Hardware CESIL CPU
-- More examples & teaching materials
+See **[docs/milestones.md](docs/milestones.md)** for the milestone index.
+
+**Milestone 1 (0.1.0)** is complete (core, CLI, and IDE edit → check → run). Next up:
+Visual CESIL error-panel fidelity and related IDE polish.
 
 ---
 

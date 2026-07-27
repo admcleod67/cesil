@@ -1,4 +1,3 @@
-        LOAD    +0
-        OUT
+        PRINT	"Hello"
         LINE
         HALT
