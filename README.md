@@ -107,7 +107,7 @@ cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
 cmake --build build
 ```
 
-**Qt IDE** (text editor with **File → Open / Save / Save As**; **Build → Check syntax** (F7) parses the current buffer and lists diagnostics on **Errors**; **Run → Run** (F5) parses, runs the interpreter on the buffer like CLI `cesil run`, prints program output on **Output**, and parse/runtime errors on **Errors**):
+**Qt IDE** (text editor with **File → Open / Save / Save As**; **Build → Check syntax** (F7) parses the current buffer and lists diagnostics in a Line/Description **Errors** table — activate a row to jump to the source location; **Run → Run** (F5) parses, runs the interpreter on the buffer like CLI `cesil run`, prints program output on **Output**, and parse/runtime errors on **Errors**):
 
 ```
 cmake -S . -B build -DCESIL_BUILD_IDE=ON -DCMAKE_PREFIX_PATH=/path/to/Qt/6.x/<kit>
@@ -188,10 +188,11 @@ CESIL documentation and historical material:
 
 See **[docs/milestones.md](docs/milestones.md)** for the milestone index.
 
-**Milestone 1 (0.1.0)** is complete (core, CLI, and IDE edit → check → run).
-The planned path to **1.0.0** establishes Visual CESIL language parity, then IDE
-workflow and presentation parity, followed by cross-platform release validation.
-Improvements beyond Visual CESIL are intentionally deferred until after 1.0.
+**Milestone 2 (0.2.0)** is complete (structured Errors table, source navigation, and
+status lifecycle). Next up is Milestone 3 (editor ergonomics). The planned path to
+**1.0.0** continues through Visual CESIL language and IDE parity, followed by
+cross-platform release validation. Improvements beyond Visual CESIL are intentionally
+deferred until after 1.0.
 
 ---
 

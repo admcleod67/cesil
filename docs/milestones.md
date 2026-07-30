@@ -11,18 +11,17 @@ prefixes sort lexicographically).
 
 - [Milestone 0 — Core library and CLI (completed)](milestones/00-core-and-cli.md)
 - [Milestone 1 — IDE edit → check → run (completed)](milestones/01-ide-mvp.md)
-- [Milestone 2 — Diagnostic workflow (planned)](milestones/02-diagnostic-workflow.md)
+- [Milestone 2 — Diagnostic workflow (completed)](milestones/02-diagnostic-workflow.md)
 - [Milestone 3 — Editor ergonomics (planned)](milestones/03-editor-ergonomics.md)
 - [Milestone 6 — Visual CESIL language parity (planned landmark)](milestones/06-language-parity.md)
 - [Milestone 8 — Visual CESIL IDE parity (planned landmark)](milestones/08-ide-parity.md)
 - [Milestone 10 — Visual CESIL parity and 1.0 release (planned landmark)](milestones/10-version-1-release.md)
 
-**Release checkpoint:** Milestone 1 is complete. The CLI and IDE report `0.1.0`
-(`${PROJECT_VERSION}` from CMake).
+**Release checkpoint:** Milestone 2 is complete. The CLI and IDE report `0.2.0`
+(`${PROJECT_VERSION}` from CMake). Cut git tag `v0.2.0` when ready.
 
-**Next up:** Milestone 2 delivers a structured, source-navigable diagnostic workflow
-and makes status messages reflect whether the current source has changed. Milestone
-3 then establishes baseline editor commands and CESIL-aware indentation.
+**Next up:** Milestone 3 establishes baseline editor commands and CESIL-aware
+indentation.
 
 ## Path to version 1.0.0
 
@@ -42,7 +41,7 @@ documentation instead of relying on memory.
 
 The planned landmarks are:
 
-- **Milestone 2 / `0.2.0`:** diagnostic presentation and source navigation
+- **Milestone 2 / `0.2.0`:** diagnostic presentation and source navigation (completed)
 - **Milestone 3 / `0.3.0`:** editor commands and indentation
 - **Milestone 6:** language and runtime parity
 - **Milestone 8:** IDE workflow and presentation parity

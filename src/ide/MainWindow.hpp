@@ -7,11 +7,13 @@
 
 #include <vector>
 
+class DiagnosticModel;
 class QAction;
 class QCloseEvent;
 class QLabel;
-class QListWidget;
+class QModelIndex;
 class QPlainTextEdit;
+class QTableView;
 class QTabWidget;
 
 class MainWindow final : public QMainWindow {
@@ -28,6 +30,10 @@ class MainWindow final : public QMainWindow {
     void createStatusBar();
     void updateCursorPosition();
     void updateWindowTitle();
+    void onSourceContentsChanged();
+    void navigateToDiagnostic(const QModelIndex& index);
+    void showDiagnostics(const std::vector<cesil::Diagnostic>& diagnostics);
+    void showFallbackDiagnostic(const QString& message);
     QString displayFileName() const;
 
     void newFile();
@@ -42,7 +48,8 @@ class MainWindow final : public QMainWindow {
 
     QTabWidget* m_tabs{};
     QPlainTextEdit* m_editor{};
-    QListWidget* m_errorsList{};
+    QTableView* m_errorsView{};
+    DiagnosticModel* m_errorsModel{};
     QPlainTextEdit* m_output{};
     QLabel* m_cursorLabel{};
     QString m_filePath;

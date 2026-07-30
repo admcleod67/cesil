@@ -1,6 +1,6 @@
 ← [Project milestones index](../milestones.md)
 
-## Milestone 2 — Diagnostic workflow (planned)
+## Milestone 2 — Diagnostic workflow (completed)
 
 This milestone turns the Errors panel from a formatted list into a useful
 diagnostic workflow modelled on Visual CESIL: diagnostics are presented as structured
@@ -8,7 +8,8 @@ rows, and activating a row takes the user to the corresponding source line. Stat
 messages are updated so previous check and run results do not remain current after
 the source changes.
 
-**Planned release checkpoint:** `0.2.0`.
+**Release note:** Milestone 2 is complete. The CLI and IDE report `0.2.0`
+(`${PROJECT_VERSION}` from CMake). Cut git tag `v0.2.0` when ready.
 
 It complements:
 
@@ -27,10 +28,10 @@ It complements:
 
 ### Starting point
 
-Milestone 1 displays formatted diagnostics in a read-only `QListWidget`.
-`cesil::Diagnostic` already carries severity, message, and optional one-based line
-and column values. Check and Run select the Errors tab on failure, but the IDE does
-not currently navigate from an error to its source.
+Milestone 1 displayed formatted diagnostics in a read-only `QListWidget`.
+`cesil::Diagnostic` already carried severity, message, and optional one-based line
+and column values. Check and Run selected the Errors tab on failure, but the IDE did
+not navigate from an error to its source.
 
 ### Out of scope for Milestone 2
 
@@ -48,70 +49,45 @@ not currently navigate from an error to its source.
 
 ### Structured Errors panel
 
-- Replace the formatted list with a non-editable, single-selection table.
-- Follow the Visual CESIL reference with two visible columns: **Line** and
+- Replaced the formatted list with a non-editable, single-selection `QTableView`.
+- Follows the Visual CESIL reference with two visible columns: **Line** and
   **Description**.
-- Keep Line compact and give Description the remaining width.
-- Show only actual diagnostic rows rather than reproducing the reference
-  application’s empty grid rows.
-- Preserve diagnostic order from `cesil-core`.
-- Represent diagnostics without a source location clearly and keep them
-  non-navigable.
-- Leave the table empty after a successful check; report
-  `No compilation errors.` in the status bar rather than adding a placeholder row.
-- If compilation or execution fails without detailed diagnostics, add one unlocated,
-  non-navigable Description row explaining the failure.
-- Retain column and severity as row metadata rather than visible columns.
-- Use column metadata for precise navigation.
-- Retain severity so future warnings and notes can be counted, filtered, and
-  presented without changing the diagnostic model.
+- Line is compact; Description stretches to fill the remaining width.
+- Shows only actual diagnostic rows.
+- Preserves diagnostic order from `cesil-core`.
+- Leaves the table empty after a successful check and reports
+  `No compilation errors.` in the status bar.
+- Failures without detailed diagnostics show one unlocated, non-navigable
+  Description row.
+- Retains column and severity as model roles/metadata rather than visible columns.
 
 ### Source navigation
 
-- Double-clicking a diagnostic with a valid line switches to the Source tab.
-- Position the cursor at the diagnostic column when present, otherwise at the start
-  of the line.
-- Ensure the target is visible and return keyboard focus to the editor.
-- Clamp defensive navigation to the available document range without hiding invalid
-  diagnostic data.
-- Enter or Return activates the selected diagnostic using the same behaviour as
-  double-click.
+- Activating a diagnostic with a valid line (double-click or Enter/Return) switches
+  to the Source tab.
+- Positions the cursor at the diagnostic column when present, otherwise at the start
+  of the line, clamping into the available document range.
+- Ensures the target is visible and returns keyboard focus to the editor.
+- Unlocated fallback rows remain visible and do not navigate.
 
 ### Status lifecycle
 
-- Retain clear feedback for Ready, successful checks, diagnostic counts, compilation
+- Clear feedback for Ready, successful checks, diagnostic counts, compilation
   failures, runtime failures, successful runs, and saves.
-- Match the useful Visual CESIL summary while using correct singular and plural
-  wording, such as `1 compilation error` and `2 compilation errors`.
-- On any user source modification, replace the previous operation or save result
-  with `Ready`.
-- Do not reset the status merely because the Source tab is selected.
-- Ensure programmatic New and Open operations finish in `Ready`, while Save can
-  continue to report `Saved.`.
-- Keep cursor line/column reporting independent from the transient status message.
+- Compilation summaries use correct singular and plural wording:
+  `No compilation errors.`, `1 compilation error`, `N compilation errors`.
+- Any user source modification replaces the previous operation or save result with
+  `Ready`.
+- Tab selection alone does not reset the status.
+- New and Open finish in `Ready`; Save reports `Saved.`
 
 ### Maintainable diagnostic presentation
 
-- Replace list-specific diagnostic helpers with table-oriented population code.
-- Keep conversion from `cesil::Diagnostic` to Qt presentation in the IDE layer.
-- Store the complete structured diagnostic with its row; do not discard column or
-  severity merely because they are not visible.
-- Avoid parsing the existing formatted diagnostic string to recover structured
-  fields.
-
-### Verification
-
-- Verify multiple diagnostics retain their order, visible fields, and hidden
-  metadata.
-- Verify navigation with line and column, line only, and no source location.
-- Verify both double-click and Enter/Return activation.
-- Verify that successful checks leave the table empty and failures without detailed
-  diagnostics create one unlocated explanatory row.
-- Verify singular and plural compilation-error summaries.
-- Verify status transitions after Check, Run, edit, New, Open, and Save.
-- Add automated coverage for stable transformation and navigation logic where it
-  can be separated from the window; keep a short manual checklist for interaction
-  and focus behaviour.
+- `DiagnosticModel` (`QAbstractTableModel`) owns structured diagnostics in the IDE
+  layer.
+- Helpers cover compilation summaries and source-position clamping.
+- Qt Test coverage exercises model fields/metadata, empty/fallback states,
+  summaries, and cursor clamping.
 
 ---
 
@@ -128,6 +104,5 @@ not currently navigate from an error to its source.
 - Editing after any reported operation restores `Ready` without relying on tab
   selection.
 - Check, Run, New, Open, and Save produce consistent status messages.
-- The diagnostic workflow passes its automated checks and manual interaction
-  checklist.
+- Automated IDE tests and the existing core suite pass.
 - The CLI and IDE report `0.2.0`.

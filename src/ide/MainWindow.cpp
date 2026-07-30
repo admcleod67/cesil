@@ -14,24 +14,25 @@
 #include <QFile>
 #include <QFileDialog>
 #include <QFileInfo>
+#include <QHeaderView>
 #include <QKeySequence>
 #include <QLabel>
-#include <QListWidget>
 #include <QMenuBar>
 #include <QMessageBox>
 #include <QPlainTextEdit>
 #include <QStatusBar>
 #include <QStyle>
+#include <QTableView>
 #include <QTabWidget>
 #include <QTextCursor>
 #include <QToolBar>
 
-#include <sstream>
 #include <string>
 #include <string_view>
 
 namespace {
 
+constexpr int kSourceTabIndex = 0;
 constexpr int kErrorsTabIndex = 1;
 constexpr int kOutputTabIndex = 2;
 
@@ -40,22 +41,39 @@ constexpr int kOutputTabIndex = 2;
 MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
     m_tabs = new QTabWidget(this);
     m_editor = new QPlainTextEdit(m_tabs);
-    m_errorsList = new QListWidget(m_tabs);
-    m_errorsList->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    m_errorsList->setSelectionMode(QAbstractItemView::SingleSelection);
+
+    m_errorsModel = new DiagnosticModel(this);
+    m_errorsView = new QTableView(m_tabs);
+    m_errorsView->setModel(m_errorsModel);
+    m_errorsView->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    m_errorsView->setSelectionBehavior(QAbstractItemView::SelectRows);
+    m_errorsView->setSelectionMode(QAbstractItemView::SingleSelection);
+    m_errorsView->setShowGrid(true);
+    m_errorsView->setAlternatingRowColors(false);
+    m_errorsView->verticalHeader()->setVisible(false);
+    m_errorsView->horizontalHeader()->setStretchLastSection(true);
+    m_errorsView->horizontalHeader()->setSectionResizeMode(
+        static_cast<int>(DiagnosticColumn::Line), QHeaderView::ResizeToContents);
+    m_errorsView->horizontalHeader()->setSectionResizeMode(
+        static_cast<int>(DiagnosticColumn::Description), QHeaderView::Stretch);
+    m_errorsView->setWordWrap(false);
 
     m_output = new QPlainTextEdit(m_tabs);
     m_output->setReadOnly(true);
 
     m_tabs->addTab(m_editor, tr("Source"));
-    m_tabs->addTab(m_errorsList, tr("Errors"));
+    m_tabs->addTab(m_errorsView, tr("Errors"));
     m_tabs->addTab(m_output, tr("Output"));
     setCentralWidget(m_tabs);
 
     connect(m_editor->document(), &QTextDocument::modificationChanged, this,
             &MainWindow::updateWindowTitle);
+    connect(m_editor->document(), &QTextDocument::contentsChanged, this,
+            &MainWindow::onSourceContentsChanged);
     connect(m_editor, &QPlainTextEdit::cursorPositionChanged, this,
             &MainWindow::updateCursorPosition);
+    connect(m_errorsView, &QAbstractItemView::activated, this,
+            &MainWindow::navigateToDiagnostic);
 
     createActions();
     createMenus();
@@ -142,6 +160,33 @@ void MainWindow::updateCursorPosition() {
                                .arg(cursor.positionInBlock() + 1));
 }
 
+void MainWindow::onSourceContentsChanged() {
+    statusBar()->showMessage(tr("Ready"));
+}
+
+void MainWindow::navigateToDiagnostic(const QModelIndex& index) {
+    if (!index.isValid() || !m_errorsModel->isNavigable(index.row())) {
+        return;
+    }
+
+    const cesil::Diagnostic diagnostic = m_errorsModel->diagnosticAt(index.row());
+    QTextCursor cursor =
+        cursorForDiagnostic(m_editor->document(), diagnostic.line_, diagnostic.column_);
+    m_editor->setTextCursor(cursor);
+    m_editor->ensureCursorVisible();
+    m_tabs->setCurrentIndex(kSourceTabIndex);
+    m_editor->setFocus(Qt::OtherFocusReason);
+}
+
+void MainWindow::showDiagnostics(
+    const std::vector<cesil::Diagnostic>& diagnostics) {
+    m_errorsModel->setDiagnostics(diagnostics);
+}
+
+void MainWindow::showFallbackDiagnostic(const QString& message) {
+    m_errorsModel->setFallbackMessage(message);
+}
+
 void MainWindow::newFile() {
     if (!handleUnsavedChanges()) {
         return;
@@ -149,7 +194,7 @@ void MainWindow::newFile() {
 
     m_editor->clear();
     m_filePath.clear();
-    m_errorsList->clear();
+    m_errorsModel->clear();
     m_output->clear();
     m_editor->document()->setModified(false);
     updateWindowTitle();
@@ -165,26 +210,16 @@ void MainWindow::checkSyntax() {
     const cesil::Parser parser;
     const cesil::ParseResult result = parser.parse(source);
 
-    m_errorsList->clear();
-    ::addDiagnosticsToList(m_errorsList, result.diagnostics_);
-
-    if (m_errorsList->count() == 0) {
-        if (result.ok_) {
-            m_errorsList->addItem(tr("No issues."));
-        } else {
-            m_errorsList->addItem(
-                tr("Compilation failed (no detailed diagnostics)."));
-        }
-    }
-
     if (result.ok_) {
-        statusBar()->showMessage(tr("No issues."));
+        m_errorsModel->clear();
+        statusBar()->showMessage(compilationErrorSummary(0));
     } else if (result.diagnostics_.empty()) {
+        showFallbackDiagnostic(tr("Compilation failed (no detailed diagnostics)."));
         statusBar()->showMessage(tr("Compilation failed."));
     } else {
-        const int count = static_cast<int>(result.diagnostics_.size());
-        statusBar()->showMessage(
-            tr("%n error(s).", nullptr, count));
+        showDiagnostics(result.diagnostics_);
+        statusBar()->showMessage(compilationErrorSummary(
+            static_cast<int>(result.diagnostics_.size())));
     }
 
     m_tabs->setCurrentIndex(kErrorsTabIndex);
@@ -201,14 +236,16 @@ void MainWindow::runProgram() {
     cesil::ParseResult parsed = parser.parse(source);
 
     if (!parsed.ok_) {
-        m_errorsList->clear();
-        ::addDiagnosticsToList(m_errorsList, parsed.diagnostics_);
-        if (m_errorsList->count() == 0) {
-            m_errorsList->addItem(
+        if (parsed.diagnostics_.empty()) {
+            showFallbackDiagnostic(
                 tr("Compilation failed (no detailed diagnostics)."));
+            statusBar()->showMessage(tr("Compilation failed."));
+        } else {
+            showDiagnostics(parsed.diagnostics_);
+            statusBar()->showMessage(compilationErrorSummary(
+                static_cast<int>(parsed.diagnostics_.size())));
         }
         m_tabs->setCurrentIndex(kErrorsTabIndex);
-        statusBar()->showMessage(tr("Compilation failed."));
         return;
     }
 
@@ -220,17 +257,17 @@ void MainWindow::runProgram() {
     const cesil::RunResult ran = interpreter.run();
 
     if (!ran.ok_) {
-        m_errorsList->clear();
-        ::addDiagnosticsToList(m_errorsList, ran.diagnostics_);
-        if (m_errorsList->count() == 0) {
-            m_errorsList->addItem(tr("Run failed (no detailed diagnostics)."));
+        if (ran.diagnostics_.empty()) {
+            showFallbackDiagnostic(tr("Run failed (no detailed diagnostics)."));
+        } else {
+            showDiagnostics(ran.diagnostics_);
         }
         m_tabs->setCurrentIndex(kErrorsTabIndex);
         statusBar()->showMessage(tr("Run failed."));
         return;
     }
 
-    m_errorsList->clear();
+    m_errorsModel->clear();
     m_tabs->setCurrentIndex(kOutputTabIndex);
     statusBar()->showMessage(tr("Program finished."));
 }
@@ -308,6 +345,7 @@ void MainWindow::openFile() {
 
     m_editor->setPlainText(QString::fromUtf8(file.readAll()));
     m_filePath = path;
+    m_errorsModel->clear();
     m_editor->document()->setModified(false);
     updateWindowTitle();
     updateCursorPosition();
