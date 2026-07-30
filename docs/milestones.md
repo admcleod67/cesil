@@ -11,6 +11,8 @@ prefixes sort lexicographically).
 
 - [Milestone 0 — Core library and CLI (completed)](milestones/00-core-and-cli.md)
 - [Milestone 1 — IDE edit → check → run (completed)](milestones/01-ide-mvp.md)
+- [Milestone 2 — Diagnostic workflow (planned)](milestones/02-diagnostic-workflow.md)
+- [Milestone 3 — Editor ergonomics (planned)](milestones/03-editor-ergonomics.md)
 - [Milestone 6 — Visual CESIL language parity (planned landmark)](milestones/06-language-parity.md)
 - [Milestone 8 — Visual CESIL IDE parity (planned landmark)](milestones/08-ide-parity.md)
 - [Milestone 10 — Visual CESIL parity and 1.0 release (planned landmark)](milestones/10-version-1-release.md)
@@ -18,9 +20,9 @@ prefixes sort lexicographically).
 **Release checkpoint:** Milestone 1 is complete. The CLI and IDE report `0.1.0`
 (`${PROJECT_VERSION}` from CMake).
 
-**Next up:** Milestones 2–5 remain available for smaller, concrete steps toward the
-Milestone 6 language-parity landmark. Milestone 7 is available for integration work
-before IDE parity, and Milestone 9 for final release preparation.
+**Next up:** Milestone 2 delivers a structured, source-navigable diagnostic workflow
+and makes status messages reflect whether the current source has changed. Milestone
+3 then establishes baseline editor commands and CESIL-aware indentation.
 
 ## Path to version 1.0.0
 
@@ -40,14 +42,16 @@ documentation instead of relying on memory.
 
 The planned landmarks are:
 
+- **Milestone 2 / `0.2.0`:** diagnostic presentation and source navigation
+- **Milestone 3 / `0.3.0`:** editor commands and indentation
 - **Milestone 6:** language and runtime parity
 - **Milestone 8:** IDE workflow and presentation parity
 - **Milestone 10 / `1.0.0`:** integrated parity validation and release
 
-The intervening milestone numbers are deliberately unallocated. They can be used to
-turn these thought documents into smaller, testable increments as compatibility
-research reveals the actual work. Pre-1.0 release versions will be assigned when
-those milestones are defined.
+Milestones 4, 5, 7, and 9 remain deliberately unallocated. They can be used to turn
+the later thought documents into smaller, testable increments as compatibility
+research reveals the actual work. Their pre-1.0 release versions will be assigned
+when those milestones are defined.
 
 Features that deliberately extend Visual CESIL belong after `1.0.0`. This includes
 new language features, richer debugging, IR visualisation, and hardware-oriented
