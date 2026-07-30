@@ -44,8 +44,9 @@ QVariant DiagnosticModel::data(const QModelIndex& index, int role) const {
             }
             return {};
         case Qt::TextAlignmentRole:
-            if (index.column() == static_cast<int>(DiagnosticColumn::Line)) {
-                return QVariant::fromValue(Qt::AlignRight | Qt::AlignVCenter);
+            if (index.column() == static_cast<int>(DiagnosticColumn::Line) ||
+                index.column() == static_cast<int>(DiagnosticColumn::Description)) {
+                return QVariant::fromValue(Qt::AlignLeft | Qt::AlignVCenter);
             }
             return {};
         case LineRole:
@@ -65,7 +66,16 @@ QVariant DiagnosticModel::data(const QModelIndex& index, int role) const {
 
 QVariant DiagnosticModel::headerData(int section, Qt::Orientation orientation,
                                      int role) const {
-    if (orientation != Qt::Horizontal || role != Qt::DisplayRole) {
+    if (orientation != Qt::Horizontal) {
+        return {};
+    }
+    const bool isVisibleColumn =
+        section == static_cast<int>(DiagnosticColumn::Line) ||
+        section == static_cast<int>(DiagnosticColumn::Description);
+    if (role == Qt::TextAlignmentRole && isVisibleColumn) {
+        return QVariant::fromValue(Qt::AlignLeft | Qt::AlignVCenter);
+    }
+    if (role != Qt::DisplayRole) {
         return {};
     }
     if (section == static_cast<int>(DiagnosticColumn::Line)) {

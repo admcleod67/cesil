@@ -25,6 +25,11 @@ void DiagnosticUtilsTest::modelColumnsAndHeaders() {
     QCOMPARE(model.headerData(0, Qt::Horizontal).toString(), QStringLiteral("Line"));
     QCOMPARE(model.headerData(1, Qt::Horizontal).toString(),
              QStringLiteral("Description"));
+    const int leftAligned = static_cast<int>(Qt::AlignLeft | Qt::AlignVCenter);
+    QCOMPARE(model.headerData(0, Qt::Horizontal, Qt::TextAlignmentRole).toInt(),
+             leftAligned);
+    QCOMPARE(model.headerData(1, Qt::Horizontal, Qt::TextAlignmentRole).toInt(),
+             leftAligned);
     QCOMPARE(model.rowCount(), 0);
 }
 
@@ -41,6 +46,11 @@ void DiagnosticUtilsTest::modelDiagnosticsOrderAndMetadata() {
     QCOMPARE(model.data(model.index(0, 1)).toString(), QStringLiteral("first"));
     QCOMPARE(model.data(model.index(1, 0)).toString(), QStringLiteral("8"));
     QCOMPARE(model.data(model.index(1, 1)).toString(), QStringLiteral("second"));
+    const int leftAligned = static_cast<int>(Qt::AlignLeft | Qt::AlignVCenter);
+    QCOMPARE(model.data(model.index(0, 0), Qt::TextAlignmentRole).toInt(),
+             leftAligned);
+    QCOMPARE(model.data(model.index(0, 1), Qt::TextAlignmentRole).toInt(),
+             leftAligned);
 
     QCOMPARE(model.data(model.index(0, 0), DiagnosticModel::LineRole).toInt(), 3);
     QCOMPARE(model.data(model.index(0, 0), DiagnosticModel::ColumnRole).toInt(), 5);
