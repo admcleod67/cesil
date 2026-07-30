@@ -58,3 +58,33 @@ when those milestones are defined.
 Features that deliberately extend Visual CESIL belong after `1.0.0`. This includes
 new language features, richer debugging, IR visualisation, and hardware-oriented
 experiments unless a reference audit establishes that they are required for parity.
+
+## Testing strategy
+
+Automated tests grow with each milestone rather than through a separate coverage
+project. Today the suite is intentionally light:
+
+- **Core:** Catch2 smoke coverage for lexer, parser, a few semantic cases, and a
+  small runtime/integration path (including the classic sum example).
+- **IDE:** Qt Test coverage for Milestone 2 diagnostic-model helpers (table fields,
+  fallback/empty states, summaries, cursor clamping). MainWindow workflows remain
+  largely manual.
+
+That baseline is enough to protect basic parse/run and Errors-table helpers. It is
+not enough to pin Visual CESIL behaviour or full IDE workflows. Expanding tests in
+isolation risks inventing cases that later parity work will redefine.
+
+Planned growth:
+
+- **Milestone 3:** focused automated tests for Edit actions and Tab/Shift-Tab
+  behaviour, plus a short manual checklist for native menus and shortcuts.
+- **Milestone 4:** multi-error recovery, cascade suppression, ordering, and
+  diagnostic-limit tests in the core suite, with CLI/IDE checks that the full set
+  is presented.
+- **Milestone 6:** the deep layer — a Visual CESIL golden corpus and per-instruction
+  / edge-case regression suite that makes language parity testable.
+- **Milestones 8 and 10:** IDE workflow and cross-platform checklists; automate
+  stable state transitions where practical, keep fragile visual checks manual.
+
+Pause for a dedicated coverage pass only if regressions appear that current tests
+miss. Otherwise keep next work as Milestone 3 and grow tests with the feature.

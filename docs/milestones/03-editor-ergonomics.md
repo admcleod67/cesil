@@ -27,6 +27,9 @@ It complements:
 Milestone 1 uses `QPlainTextEdit`, so core undo, redo, clipboard, selection, and
 tab-insertion capabilities already exist. They are not exposed through an Edit menu,
 and the default Tab behaviour has not been deliberately configured for CESIL source.
+IDE automated tests currently cover diagnostic helpers only; this milestone extends
+`tests/ide/` with focused editor-behaviour coverage rather than opening a separate
+test-infrastructure project.
 
 ### Out of scope for Milestone 3
 
@@ -90,12 +93,17 @@ CESIL programs before implementation and then recorded in the editor tests.
 
 ### Verification
 
-- Exercise each Edit action through its menu and shortcut.
-- Verify enabled states with empty text, selection changes, clipboard changes, and
-  undo/redo history.
-- Test Tab and Shift-Tab at each configured source column.
-- Test indent/outdent with single and multiple selected lines.
+Automated coverage grows with this milestone's feature work (see the testing
+strategy in the [project milestones index](../milestones.md)):
+
+- Add IDE tests for Tab/Shift-Tab at each configured source column and for
+  indent/outdent with single and multiple selected lines.
+- Add automated checks for Edit action enabled states where they can be exercised
+  without fragile full-window UI automation.
+- Exercise each Edit action through its menu and shortcut on a short manual
+  checklist.
 - Manually verify native menu labels and shortcuts on macOS, Linux, and Windows.
+- Keep MainWindow wiring tests light unless a helper can be extracted cleanly.
 
 ---
 

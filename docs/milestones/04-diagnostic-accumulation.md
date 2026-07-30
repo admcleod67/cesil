@@ -29,7 +29,9 @@ It complements:
 
 Milestone 2 provides a structured Errors table capable of displaying and navigating
 multiple diagnostics. The parser and semantic validator currently return after their
-first error, so the table normally receives only one row.
+first error, so the table normally receives only one row. Existing core tests are
+smoke-level and assume fail-fast compilation; this milestone is where multi-error
+behaviour becomes the testable contract rather than a separate coverage exercise.
 
 ### Out of scope for Milestone 4
 
@@ -96,14 +98,18 @@ first error, so the table normally receives only one row.
 
 ### Verification
 
+Grow the Catch2 core suite as the acceptance criteria for this milestone (see the
+testing strategy in the [project milestones index](../milestones.md)):
+
 - Add parser tests with multiple malformed instruction lines.
 - Add semantic tests with multiple independent operand, label, and jump failures.
 - Add data-section tests with multiple invalid rows mixed with valid rows.
 - Add mixed syntax/semantic cases that verify recovery without cascades.
 - Test deterministic ordering, duplicate suppression, the diagnostic limit, and
   unsuccessful results with partial internal state.
-- Run the existing core and IDE suites to guard single-error behaviour and
-  presentation.
+- Confirm CLI and IDE surfaces show the complete ordered set and correct counts.
+- Keep existing single-error and diagnostic-presentation tests green as a
+  regression baseline.
 
 ---
 

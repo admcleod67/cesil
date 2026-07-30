@@ -87,7 +87,10 @@ not navigate from an error to its source.
   layer.
 - Helpers cover compilation summaries and source-position clamping.
 - Qt Test coverage exercises model fields/metadata, empty/fallback states,
-  summaries, and cursor clamping.
+  summaries, and cursor clamping. This is the IDE automated-test baseline;
+  broader coverage continues with later milestones rather than a standalone
+  coverage project (see the testing strategy in the
+  [project milestones index](../milestones.md)).
 
 ---
 

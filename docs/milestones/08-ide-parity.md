@@ -78,6 +78,10 @@ Milestone 6 provides the language-compatible engine beneath it.
 
 ### UI regression coverage
 
+Follow the testing strategy in the [project milestones index](../milestones.md):
+grow automated checks with this milestone's workflow work; do not treat coverage
+as a separate goal.
+
 - Add focused tests for state transitions that can be exercised without fragile
   pixel comparisons.
 - Maintain a short manual parity checklist for visual layout and platform-specific

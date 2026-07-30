@@ -29,6 +29,10 @@ case-normalised identifiers, a data section, structured multi-error diagnostics,
 an interpreter used by both the CLI and IDE. Existing behaviour must be audited
 before being treated as a gap.
 
+Core tests before this milestone remain mostly smoke-level plus multi-error recovery
+from Milestone 4. This milestone is where coverage becomes deep: Visual CESIL is the
+oracle, and the golden corpus pins language and runtime behaviour.
+
 ### Out of scope for Milestone 6
 
 - IDE layout or error-panel presentation
@@ -87,12 +91,18 @@ Verify and, where necessary, correct:
 
 ### Parity regression suite
 
+This is the project's main language-coverage expansion (see the testing strategy in
+the [project milestones index](../milestones.md)). Prefer golden fixtures derived
+from Visual CESIL over inventing independent edge cases ahead of the audit.
+
 - Add end-to-end fixtures for Visual CESIL example programs.
 - Compare captured program output byte for byte after normalising only host-native
   line endings where required.
-- Add focused tests for every instruction and each established edge case.
+- Add focused tests for every instruction and each established edge case
+  (`OUT` formatting, divide-by-zero, `IN` exhaustion, overflow, and similar).
 - Add negative fixtures for parser, semantic, and runtime failures.
 - Exercise the same core behaviour through the CLI-facing execution path.
+- Record each matrix entry's covering test so gaps stay visible.
 
 ---
 
