@@ -12,6 +12,7 @@ It complements:
 
 - [Project milestones](../milestones.md)
 - [Milestone 2 — Diagnostic workflow](02-diagnostic-workflow.md)
+- [Milestone 4 — Diagnostic accumulation and parser recovery](04-diagnostic-accumulation.md)
 - [Milestone 8 — Visual CESIL IDE parity](08-ide-parity.md)
 
 ### Goals
@@ -34,6 +35,7 @@ and the default Tab behaviour has not been deliberately configured for CESIL sou
 - Multiple documents, projects, or split editors
 - Automatic source reformatting
 - Diagnostic presentation and navigation (owned by Milestone 2)
+- Multiple-error compilation and parser recovery (owned by Milestone 4)
 
 ---
 

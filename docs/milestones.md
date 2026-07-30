@@ -13,6 +13,7 @@ prefixes sort lexicographically).
 - [Milestone 1 — IDE edit → check → run (completed)](milestones/01-ide-mvp.md)
 - [Milestone 2 — Diagnostic workflow (completed)](milestones/02-diagnostic-workflow.md)
 - [Milestone 3 — Editor ergonomics (planned)](milestones/03-editor-ergonomics.md)
+- [Milestone 4 — Diagnostic accumulation and parser recovery (planned)](milestones/04-diagnostic-accumulation.md)
 - [Milestone 6 — Visual CESIL language parity (planned landmark)](milestones/06-language-parity.md)
 - [Milestone 8 — Visual CESIL IDE parity (planned landmark)](milestones/08-ide-parity.md)
 - [Milestone 10 — Visual CESIL parity and 1.0 release (planned landmark)](milestones/10-version-1-release.md)
@@ -21,7 +22,8 @@ prefixes sort lexicographically).
 (`${PROJECT_VERSION}` from CMake). Cut git tag `v0.2.0` when ready.
 
 **Next up:** Milestone 3 establishes baseline editor commands and CESIL-aware
-indentation.
+indentation. Milestone 4 then enables the compiler to collect multiple independent
+errors in one pass.
 
 ## Path to version 1.0.0
 
@@ -43,11 +45,12 @@ The planned landmarks are:
 
 - **Milestone 2 / `0.2.0`:** diagnostic presentation and source navigation (completed)
 - **Milestone 3 / `0.3.0`:** editor commands and indentation
+- **Milestone 4 / `0.4.0`:** diagnostic accumulation and parser recovery
 - **Milestone 6:** language and runtime parity
 - **Milestone 8:** IDE workflow and presentation parity
 - **Milestone 10 / `1.0.0`:** integrated parity validation and release
 
-Milestones 4, 5, 7, and 9 remain deliberately unallocated. They can be used to turn
+Milestones 5, 7, and 9 remain deliberately unallocated. They can be used to turn
 the later thought documents into smaller, testable increments as compatibility
 research reveals the actual work. Their pre-1.0 release versions will be assigned
 when those milestones are defined.

@@ -12,6 +12,7 @@ It complements:
 
 - [Project milestones](../milestones.md)
 - [Milestone 1 — IDE edit → check → run](01-ide-mvp.md)
+- [Milestone 4 — Diagnostic accumulation and parser recovery](04-diagnostic-accumulation.md)
 - [Milestone 8 — Visual CESIL IDE parity](08-ide-parity.md)
 
 ### Goals
@@ -23,10 +24,10 @@ It complements:
 
 ### Starting point
 
-Milestone 1 provides all documented instruction opcodes, parsing and validation,
-case-normalised identifiers, a data section, structured diagnostics, and an
-interpreter used by both the CLI and IDE. Existing behaviour must be audited before
-being treated as a gap.
+Milestones 1–4 provide all documented instruction opcodes, parsing and validation,
+case-normalised identifiers, a data section, structured multi-error diagnostics, and
+an interpreter used by both the CLI and IDE. Existing behaviour must be audited
+before being treated as a gap.
 
 ### Out of scope for Milestone 6
 
