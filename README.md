@@ -188,8 +188,10 @@ CESIL documentation and historical material:
 
 See **[docs/milestones.md](docs/milestones.md)** for the milestone index.
 
-**Milestone 1 (0.1.0)** is complete (core, CLI, and IDE edit → check → run). Next up:
-Visual CESIL error-panel fidelity and related IDE polish.
+**Milestone 1 (0.1.0)** is complete (core, CLI, and IDE edit → check → run).
+The planned path to **1.0.0** establishes Visual CESIL language parity, then IDE
+workflow and presentation parity, followed by cross-platform release validation.
+Improvements beyond Visual CESIL are intentionally deferred until after 1.0.
 
 ---
 
