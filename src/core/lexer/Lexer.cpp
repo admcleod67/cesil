@@ -1,6 +1,5 @@
 #include "lexer/Lexer.hpp"
 
-#include <cctype>
 #include <utility>
 
 namespace cesil {

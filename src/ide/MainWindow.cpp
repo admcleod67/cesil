@@ -7,11 +7,8 @@
 #include <runtime/Interpreter.hpp>
 #include <runtime/Io.hpp>
 
-#include <QAbstractItemView>
 #include <QAction>
 #include <QByteArray>
-#include <QCloseEvent>
-#include <QFile>
 #include <QFileDialog>
 #include <QFileInfo>
 #include <QHeaderView>
@@ -27,7 +24,6 @@
 #include <QTextCursor>
 #include <QToolBar>
 
-#include <string>
 #include <string_view>
 
 namespace {

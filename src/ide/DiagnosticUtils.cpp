@@ -5,7 +5,6 @@
 #include <QTextDocument>
 
 #include <algorithm>
-#include <utility>
 
 DiagnosticModel::DiagnosticModel(QObject* parent) : QAbstractTableModel(parent) {}
 

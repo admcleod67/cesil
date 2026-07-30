@@ -1,7 +1,5 @@
 #include "lexer/TokenUtils.hpp"
 
-#include <cctype>
-
 namespace cesil::lexer {
 
 std::string_view trimView(std::string_view s) {
