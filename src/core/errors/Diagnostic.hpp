@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstddef>
 #include <ostream>
 #include <string>
 #include <vector>
@@ -23,6 +24,9 @@ struct Diagnostic {
     int column_{0};
 };
 
+/// Maximum compilation diagnostics retained after finalization (Milestone 4).
+inline constexpr std::size_t kMaxCompilationDiagnostics = 100;
+
 /// Append a diagnostic to \p out (typically stderr).
 ///
 /// \param out Output stream.
@@ -38,5 +42,9 @@ void printDiagnostic(std::ostream& out, const Diagnostic& d);
 /// \param column Optional 1-based column (0 = omit from output).
 void pushDiagnostic(std::vector<Diagnostic>& sink, DiagnosticSeverity severity,
                     std::string message, int line = 0, int column = 0);
+
+/// Sort by source location, drop exact duplicates, and enforce
+/// \ref kMaxCompilationDiagnostics (appending a suppression diagnostic when truncated).
+void finalizeDiagnostics(std::vector<Diagnostic>& diagnostics);
 
 }  // namespace cesil

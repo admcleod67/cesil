@@ -1,5 +1,6 @@
 #include <catch2/catch_test_macros.hpp>
 
+#include "errors/Diagnostic.hpp"
 #include "lexer/Lexer.hpp"
 #include "parser/Parser.hpp"
 #include "runtime/Opcode.hpp"
@@ -9,6 +10,7 @@
 #include <sstream>
 #include <string>
 #include <string_view>
+#include <vector>
 
 namespace {
 
@@ -133,5 +135,78 @@ TEST_CASE("Diagnostic accumulation fixtures", "[parser][diagnostics]") {
         CHECK(r.diagnostics_.empty());
         REQUIRE(r.instructions_.size() == 1);
         CHECK(r.instructions_[0].opcode_ == cesil::OpCode::Halt);
+    }
+}
+
+TEST_CASE("Diagnostic finalization ordering from parse", "[parser][diagnostics]") {
+    // Semantic error on an earlier line; syntax error later. Without finalize,
+    // syntax-pass order would list the late error first.
+    constexpr std::string_view source =
+        "        JUMP    GHOST\n"
+        "        LINE\n"
+        "        NOPE\n"
+        "        HALT\n"
+        "\n"
+        "%\n"
+        "*\n";
+    const auto r = cesil::Parser{}.parse(std::string(source));
+    CHECK_FALSE(r.ok_);
+    REQUIRE(r.diagnostics_.size() >= 2);
+    CHECK(hasMessageContaining(r, "undefined label"));
+    CHECK(hasMessageContaining(r, "unknown instruction"));
+
+    int lastLine = 0;
+    for (const auto& d : r.diagnostics_) {
+        if (d.line_ > 0) {
+            CHECK(d.line_ >= lastLine);
+            lastLine = d.line_;
+        }
+    }
+    REQUIRE(r.diagnostics_[0].line_ > 0);
+    REQUIRE(r.diagnostics_[1].line_ > 0);
+    CHECK(r.diagnostics_[0].line_ < r.diagnostics_[1].line_);
+    CHECK(r.diagnostics_[0].message_.find("undefined label") != std::string::npos);
+    CHECK(r.diagnostics_[1].message_.find("unknown instruction") != std::string::npos);
+}
+
+TEST_CASE("finalizeDiagnostics sorts, dedupes, and limits", "[diagnostics]") {
+    SECTION("stable source order with unlocated last") {
+        std::vector<cesil::Diagnostic> diags;
+        cesil::pushDiagnostic(diags, cesil::DiagnosticSeverity::Error, "late", 5, 1);
+        cesil::pushDiagnostic(diags, cesil::DiagnosticSeverity::Error, "early", 2, 3);
+        cesil::pushDiagnostic(diags, cesil::DiagnosticSeverity::Error, "unlocated", 0, 0);
+        cesil::pushDiagnostic(diags, cesil::DiagnosticSeverity::Error, "same-line-later-col", 2, 9);
+        cesil::finalizeDiagnostics(diags);
+        REQUIRE(diags.size() == 4);
+        CHECK(diags[0].message_ == "early");
+        CHECK(diags[1].message_ == "same-line-later-col");
+        CHECK(diags[2].message_ == "late");
+        CHECK(diags[3].message_ == "unlocated");
+    }
+
+    SECTION("exact duplicates removed") {
+        std::vector<cesil::Diagnostic> diags;
+        cesil::pushDiagnostic(diags, cesil::DiagnosticSeverity::Error, "dup", 3, 4);
+        cesil::pushDiagnostic(diags, cesil::DiagnosticSeverity::Error, "other", 1, 1);
+        cesil::pushDiagnostic(diags, cesil::DiagnosticSeverity::Error, "dup", 3, 4);
+        cesil::finalizeDiagnostics(diags);
+        REQUIRE(diags.size() == 2);
+        CHECK(diags[0].message_ == "other");
+        CHECK(diags[1].message_ == "dup");
+    }
+
+    SECTION("limit truncates with suppression diagnostic") {
+        std::vector<cesil::Diagnostic> diags;
+        for (std::size_t i = 0; i < cesil::kMaxCompilationDiagnostics + 25; ++i) {
+            cesil::pushDiagnostic(diags, cesil::DiagnosticSeverity::Error,
+                                  "err " + std::to_string(i), static_cast<int>(i + 1), 1);
+        }
+        cesil::finalizeDiagnostics(diags);
+        REQUIRE(diags.size() == cesil::kMaxCompilationDiagnostics);
+        CHECK(diags.back().message_ == "further compilation errors suppressed");
+        CHECK(diags.back().line_ == 0);
+        CHECK(diags.back().column_ == 0);
+        CHECK(diags[cesil::kMaxCompilationDiagnostics - 2].message_ ==
+              "err " + std::to_string(cesil::kMaxCompilationDiagnostics - 2));
     }
 }

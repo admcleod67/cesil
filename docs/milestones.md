@@ -13,17 +13,15 @@ prefixes sort lexicographically).
 - [Milestone 1 — IDE edit → check → run (completed)](milestones/01-ide-mvp.md)
 - [Milestone 2 — Diagnostic workflow (completed)](milestones/02-diagnostic-workflow.md)
 - [Milestone 3 — Editor ergonomics (completed)](milestones/03-editor-ergonomics.md)
-- [Milestone 4 — Diagnostic accumulation and parser recovery (planned)](milestones/04-diagnostic-accumulation.md)
+- [Milestone 4 — Diagnostic accumulation and parser recovery (completed)](milestones/04-diagnostic-accumulation.md)
 - [Milestone 6 — Visual CESIL language parity (planned landmark)](milestones/06-language-parity.md)
 - [Milestone 8 — Visual CESIL IDE parity (planned landmark)](milestones/08-ide-parity.md)
 - [Milestone 10 — Visual CESIL parity and 1.0 release (planned landmark)](milestones/10-version-1-release.md)
 
-**Release checkpoint:** Milestone 3 is complete. The CLI and IDE report `0.3.0`
-(`${PROJECT_VERSION}` from CMake). Cut git tag `v0.3.0` when ready.
+**Release checkpoint:** Milestone 4 is complete. The CLI and IDE report `0.4.0`
+(`${PROJECT_VERSION}` from CMake). Cut git tag `v0.4.0` when ready.
 
-**Next up:** Milestone 4 enables the compiler to collect multiple independent errors
-in one pass. Stage 1 (fixtures + Visual CESIL probe) is done; Stage 2 is core
-recovery and accumulation.
+**Next up:** Milestone 6 (Visual CESIL language parity).
 
 ## Path to version 1.0.0
 
@@ -45,7 +43,7 @@ The planned landmarks are:
 
 - **Milestone 2 / `0.2.0`:** diagnostic presentation and source navigation (completed)
 - **Milestone 3 / `0.3.0`:** editor commands and indentation (completed)
-- **Milestone 4 / `0.4.0`:** diagnostic accumulation and parser recovery
+- **Milestone 4 / `0.4.0`:** diagnostic accumulation and parser recovery (completed)
 - **Milestone 6:** language and runtime parity
 - **Milestone 8:** IDE workflow and presentation parity
 - **Milestone 10 / `1.0.0`:** integrated parity validation and release
@@ -81,11 +79,11 @@ Planned growth:
   (completed).
 - **Milestone 4:** multi-error recovery, cascade suppression, ordering, and
   diagnostic-limit tests in the core suite, with CLI/IDE checks that the full set
-  is presented.
+  is presented (completed).
 - **Milestone 6:** the deep layer — a Visual CESIL golden corpus and per-instruction
   / edge-case regression suite that makes language parity testable.
 - **Milestones 8 and 10:** IDE workflow and cross-platform checklists; automate
   stable state transitions where practical, keep fragile visual checks manual.
 
 Pause for a dedicated coverage pass only if regressions appear that current tests
-miss. Otherwise keep next work as Milestone 4 and grow tests with the feature.
+miss. Otherwise keep next work as Milestone 6 and grow tests with the feature.

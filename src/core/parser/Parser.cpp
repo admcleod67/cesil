@@ -286,6 +286,7 @@ ParseResult Parser::parse(Lexer& lexer) const {
     static_cast<void>(parseSyntax(lexer, result));
     SemanticValidator validator;
     static_cast<void>(validator.run(result));
+    finalizeDiagnostics(result.diagnostics_);
     result.ok_ = result.diagnostics_.empty();
     return result;
 }

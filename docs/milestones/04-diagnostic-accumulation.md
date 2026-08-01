@@ -1,13 +1,14 @@
 ← [Project milestones index](../milestones.md)
 
-## Milestone 4 — Diagnostic accumulation and parser recovery (planned)
+## Milestone 4 — Diagnostic accumulation and parser recovery (completed)
 
 This milestone changes compilation from fail-fast reporting to collecting multiple
 independent errors in one pass. Syntax parsing recovers at safe line boundaries,
 semantic validation continues where results remain meaningful, and both the CLI and
 IDE receive the same deterministic diagnostic set.
 
-**Planned release checkpoint:** `0.4.0`.
+**Release note:** Milestone 4 is complete. The CLI and IDE report `0.4.0`
+(`${PROJECT_VERSION}` from CMake). Cut git tag `v0.4.0` when ready.
 
 It complements:
 
@@ -32,12 +33,11 @@ It complements:
 ### Starting point
 
 Milestone 2 provides a structured Errors table capable of displaying and navigating
-multiple diagnostics. The parser and semantic validator currently return after their
-first error, so the table normally receives only one row. Existing core tests are
-smoke-level and assume fail-fast compilation; this milestone is where multi-error
-behaviour becomes the testable contract rather than a separate coverage exercise.
-This project keeps its own clear diagnostic messages rather than cloning Jacobs
-wording.
+multiple diagnostics. Before this milestone the parser and semantic validator
+returned after their first error, so the table normally received only one row.
+Existing core tests were smoke-level and assumed fail-fast compilation; this
+milestone made multi-error behaviour the testable contract. This project keeps its
+own clear diagnostic messages rather than cloning Jacobs wording.
 
 ### Out of scope for Milestone 4
 
@@ -51,9 +51,9 @@ wording.
 
 ### Implementation stages
 
-Ship as one milestone and one `0.4.0` checkpoint. Work lands in ordered stages.
+Shipped as one milestone and one `0.4.0` checkpoint. Work landed in ordered stages.
 Unlike Milestone 3's independent Edit and Tab tracks, syntax recovery and semantic
-accumulation share one compiler pipeline and ship together in stage 2:
+accumulation share one compiler pipeline and shipped together in stage 2:
 
 1. **Reference fixtures and probe** (done) —
    Curated multi-error programs live under [`testdata/diagnostics/`](../../testdata/diagnostics/).
@@ -68,13 +68,12 @@ accumulation share one compiler pipeline and ship together in stage 2:
    never executes when any error was recorded. Implements the Jacobs floor and the
    documented deliberate exceedances (trailing junk, bare `STORE`, `PRINT`/`STORE`
    shapes, syntax-then-semantic pair).
-3. **Close-out** (next) — Deterministic ordering, duplicate suppression, and the
-   documented diagnostic limit; confirm CLI and IDE present the full set and correct
-   counts; keep the Jacobs floor and deliberate differences documented; bump CLI and
-   IDE to `0.4.0`.
+3. **Close-out** (done) — `finalizeDiagnostics` sorts by source location, drops exact
+   duplicates, and enforces `kMaxCompilationDiagnostics` (100) with a suppression
+   diagnostic; CLI and IDE present the full finalized set; version remains `0.4.0`.
 
-Stage 2 depends on stage 1 (complete). Stage 3 runs once the core multi-error
-contract and its tests are in place.
+Stage 2 depended on stage 1. Stage 3 ran once the core multi-error contract and its
+tests were in place.
 
 **Out of scope reminder:** undefined *variables* (never-stored names) are not a
 Stage 2 decision. Jacobs rejects undefined *labels* at compile time; whether an
@@ -102,7 +101,7 @@ unset store name is legal (often read as `0`) belongs to
 
 ### Syntax recovery
 
-- Replace immediate parser termination with line-oriented recovery for malformed
+- Replaced immediate parser termination with line-oriented recovery for malformed
   instruction lines.
 - After recording a line error, discard only the unconsumed remainder of that line
   and resume at the next source line.
@@ -127,36 +126,54 @@ unset store name is legal (often read as `0`) belongs to
 
 ### Diagnostic ordering and limits
 
-- Return diagnostics in deterministic source order, using line and column where
-  available while preserving stable order for equal or unlocated positions.
-- Emit each underlying source problem once.
-- Apply a documented upper diagnostic limit to protect against pathological input;
-  report when further diagnostics have been suppressed.
+- Return diagnostics in deterministic source order via `finalizeDiagnostics`, using
+  line and column where available (unlocated positions sort after located ones)
+  while preserving stable order for ties.
+- Emit each underlying source problem once (exact `(line, column, message)`
+  duplicates are dropped).
+- Cap retained diagnostics at `kMaxCompilationDiagnostics` (100). When truncated,
+  keep the first 99 finalized items and append
+  `further compilation errors suppressed` (line/column 0).
 - Keep `DiagnosticSeverity::Error` for all diagnostics in this milestone.
 
 ### CLI and IDE integration
 
 - Keep `ParseResult::diagnostics_` as the shared result consumed by both front ends.
-- Confirm the CLI prints every collected diagnostic in order.
-- Confirm the IDE displays every row, reports the correct compilation-error count,
-  and navigates each located error.
+- The CLI prints every collected diagnostic in order.
+- The IDE displays every row via `showDiagnostics` / `DiagnosticModel`, reports the
+  correct compilation-error count, and navigates each located error.
 - Keep runtime failures fail-fast and separate from compilation-error counts.
 
 ### Verification
 
-Grow the Catch2 core suite as the acceptance criteria for this milestone (see the
+Grew the Catch2 core suite as the acceptance criteria for this milestone (see the
 testing strategy in the [project milestones index](../milestones.md)):
 
 - Drive multi-error tests from the stage 1 fixture collection where practical.
-- Add parser tests with multiple malformed instruction lines.
-- Add semantic tests with multiple independent operand, label, and jump failures.
-- Add data-section tests with multiple invalid rows mixed with valid rows.
-- Add mixed syntax/semantic cases that verify recovery without cascades.
-- Test deterministic ordering, duplicate suppression, the diagnostic limit, and
-  unsuccessful results with partial internal state.
+- Parser tests with multiple malformed instruction lines.
+- Semantic tests with multiple independent operand, label, and jump failures.
+- Data-section tests with multiple invalid rows mixed with valid rows.
+- Mixed syntax/semantic cases that verify recovery without cascades.
+- Deterministic ordering, duplicate suppression, the diagnostic limit, and
+  unsuccessful results with partial internal state (`finalizeDiagnostics` unit
+  coverage plus a parse ordering case).
 - Confirm CLI and IDE surfaces show the complete ordered set and correct counts.
 - Keep existing single-error and diagnostic-presentation tests green as a
   regression baseline.
+
+### Manual checklist
+
+Exercise on each supported platform (macOS, Linux, Windows):
+
+- [ ] `cesil --version` reports `cesil 0.4.0`.
+- [ ] `cesil run` on a multi-error fixture (e.g. `testdata/diagnostics/mixed-syntax-then-semantic.ces`)
+      prints every diagnostic in source order on stderr.
+- [ ] IDE Check on the same fixture fills the Errors table with every row and a status
+      count matching the row count.
+- [ ] IDE Run on a multi-error program does not execute; Errors table and count match Check.
+- [ ] Double-click / activate a located Errors row navigates Source to that line/column.
+- [ ] A clean program still Checks/Runs successfully; runtime failures remain separate
+      from compilation-error counts.
 
 ---
 
