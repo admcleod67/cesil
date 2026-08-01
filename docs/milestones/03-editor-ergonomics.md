@@ -40,6 +40,27 @@ test-infrastructure project.
 - Diagnostic presentation and navigation (owned by Milestone 2)
 - Multiple-error compilation and parser recovery (owned by Milestone 4)
 
+### Implementation stages
+
+Ship as one milestone and one `0.3.0` checkpoint. Split the work into ordered
+stages so Edit-menu wiring and CESIL Tab behaviour can land and be reviewed
+separately:
+
+1. **Confirm source columns** — Measure label, instruction, and operand column
+   positions against representative Visual CESIL programs. Record the chosen
+   columns and visual tab width for editor tests before changing Tab behaviour.
+2. **Edit actions and menu** — Shared Undo / Redo / Cut / Copy / Paste / Select All
+   actions, Edit menu with platform-standard shortcuts, and enabled-state wiring
+   that targets the Source editor only.
+3. **CESIL-aware Tab behaviour** — Single-line and multiline Tab / Shift-Tab
+   indentation against the confirmed columns, storing ordinary whitespace only.
+4. **Close-out** — Document, title, cursor, and status checks across the new edit
+   paths; automated editor-behaviour tests; cross-platform manual checklist; bump
+   CLI and IDE to `0.3.0`.
+
+Stages 2 and 3 are largely independent after stage 1. Stage 4 runs once both
+feature stages are in place.
+
 ---
 
 ## Deliverables
