@@ -2,6 +2,7 @@
 #include "DiagnosticUtils.hpp"
 #include "QtIoHost.hpp"
 #include "SourceEditActions.hpp"
+#include "SourceEditor.hpp"
 
 #include <errors/Diagnostic.hpp>
 #include <parser/Parser.hpp>
@@ -37,7 +38,7 @@ constexpr int kOutputTabIndex = 2;
 
 MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
     m_tabs = new QTabWidget(this);
-    m_editor = new QPlainTextEdit(m_tabs);
+    m_editor = new SourceEditor(m_tabs);
 
     m_errorsModel = new DiagnosticModel(this);
     m_errorsView = new QTableView(m_tabs);

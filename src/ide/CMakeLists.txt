@@ -8,7 +8,11 @@ qt_add_executable(cesil-ide
         DiagnosticUtils.hpp
         SourceEditActions.cpp
         SourceEditActions.hpp
+        SourceEditor.cpp
+        SourceEditor.hpp
         SourceEditorLayout.hpp
+        SourceIndent.cpp
+        SourceIndent.hpp
 )
 
 target_link_libraries(cesil-ide PRIVATE Qt6::Widgets cesil-core)

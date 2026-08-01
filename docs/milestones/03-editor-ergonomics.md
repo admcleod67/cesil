@@ -54,8 +54,9 @@ separately:
 2. **Edit actions and menu** (done) — Shared Undo / Redo / Cut / Copy / Paste /
    Select All actions with platform shortcuts, Edit menu after File, and enabled
    states wired to the Source editor only (`SourceEditActions`).
-3. **CESIL-aware Tab behaviour** — Single-line and multiline Tab / Shift-Tab
-   indentation against the confirmed columns, storing ordinary whitespace only.
+3. **CESIL-aware Tab behaviour** (done) — Tab / Shift-Tab advance to columns
+   `{1, 9, 17, …}` by inserting spaces (`SourceEditor` + `SourceIndent`); existing
+   tabs still display at width 8.
 4. **Close-out** — Document, title, cursor, and status checks across the new edit
    paths; automated editor-behaviour tests; cross-platform manual checklist; bump
    CLI and IDE to `0.3.0`.
@@ -100,6 +101,8 @@ feature stages are in place.
   mixed labels/instructions.
 - Store source as ordinary whitespace accepted by the CESIL parser; do not introduce
   editor-only formatting metadata.
+- Tab inserts **spaces** to the next stop (not tab characters). Existing `\t`
+  characters in files remain accepted and display at visual width 8.
 
 Confirmed source layout (1-based columns), recorded in
 `src/ide/SourceEditorLayout.hpp`:
