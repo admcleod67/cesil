@@ -59,6 +59,12 @@ class MainWindow final : public QMainWindow {
     QAction* m_saveAction{};
     QAction* m_saveAsAction{};
     QAction* m_quitAction{};
+    QAction* m_undoAction{};
+    QAction* m_redoAction{};
+    QAction* m_cutAction{};
+    QAction* m_copyAction{};
+    QAction* m_pasteAction{};
+    QAction* m_selectAllAction{};
     QAction* m_checkAction{};
     QAction* m_runAction{};
 };

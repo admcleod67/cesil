@@ -1,6 +1,7 @@
 #include "MainWindow.hpp"
-#include "QtIoHost.hpp"
 #include "DiagnosticUtils.hpp"
+#include "QtIoHost.hpp"
+#include "SourceEditActions.hpp"
 
 #include <errors/Diagnostic.hpp>
 #include <parser/Parser.hpp>
@@ -104,6 +105,22 @@ void MainWindow::createActions() {
     m_quitAction->setShortcut(QKeySequence::Quit);
     connect(m_quitAction, &QAction::triggered, this, &QWidget::close);
 
+    m_undoAction = new QAction(tr("&Undo"), this);
+    m_undoAction->setShortcut(QKeySequence::Undo);
+    m_redoAction = new QAction(tr("&Redo"), this);
+    m_redoAction->setShortcut(QKeySequence::Redo);
+    m_cutAction = new QAction(tr("Cu&t"), this);
+    m_cutAction->setShortcut(QKeySequence::Cut);
+    m_copyAction = new QAction(tr("&Copy"), this);
+    m_copyAction->setShortcut(QKeySequence::Copy);
+    m_pasteAction = new QAction(tr("&Paste"), this);
+    m_pasteAction->setShortcut(QKeySequence::Paste);
+    m_selectAllAction = new QAction(tr("Select &All"), this);
+    m_selectAllAction->setShortcut(QKeySequence::SelectAll);
+    bindSourceEditActions(m_editor,
+                          SourceEditActions{m_undoAction, m_redoAction, m_cutAction,
+                                            m_copyAction, m_pasteAction, m_selectAllAction});
+
     m_checkAction = new QAction(tr("Check &syntax"), this);
     m_checkAction->setShortcut(QKeySequence(Qt::Key_F7));
     m_checkAction->setIcon(style()->standardIcon(QStyle::SP_DialogApplyButton));
@@ -123,6 +140,16 @@ void MainWindow::createMenus() {
     fileMenu->addAction(m_saveAsAction);
     fileMenu->addSeparator();
     fileMenu->addAction(m_quitAction);
+
+    QMenu* editMenu = menuBar()->addMenu(tr("&Edit"));
+    editMenu->addAction(m_undoAction);
+    editMenu->addAction(m_redoAction);
+    editMenu->addSeparator();
+    editMenu->addAction(m_cutAction);
+    editMenu->addAction(m_copyAction);
+    editMenu->addAction(m_pasteAction);
+    editMenu->addSeparator();
+    editMenu->addAction(m_selectAllAction);
 
     QMenu* buildMenu = menuBar()->addMenu(tr("&Build"));
     buildMenu->addAction(m_checkAction);

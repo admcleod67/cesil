@@ -6,6 +6,8 @@ qt_add_executable(cesil-ide
         QtIoHost.hpp
         DiagnosticUtils.cpp
         DiagnosticUtils.hpp
+        SourceEditActions.cpp
+        SourceEditActions.hpp
         SourceEditorLayout.hpp
 )
 

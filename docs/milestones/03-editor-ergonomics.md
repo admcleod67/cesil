@@ -51,9 +51,9 @@ separately:
    matching [`examples/total.ces`](../../examples/total.ces),
    [`examples/hello.ces`](../../examples/hello.ces), and Obelisk layout practice.
    Values live in `src/ide/SourceEditorLayout.hpp` for Stage 3 and its tests.
-2. **Edit actions and menu** — Shared Undo / Redo / Cut / Copy / Paste / Select All
-   actions, Edit menu with platform-standard shortcuts, and enabled-state wiring
-   that targets the Source editor only.
+2. **Edit actions and menu** (done) — Shared Undo / Redo / Cut / Copy / Paste /
+   Select All actions with platform shortcuts, Edit menu after File, and enabled
+   states wired to the Source editor only (`SourceEditActions`).
 3. **CESIL-aware Tab behaviour** — Single-line and multiline Tab / Shift-Tab
    indentation against the confirmed columns, storing ordinary whitespace only.
 4. **Close-out** — Document, title, cursor, and status checks across the new edit
