@@ -1,0 +1,63 @@
+# Diagnostic fixtures (Milestone 4 Stage 1)
+
+Curated multi-error CESIL programs for locking recovery and accumulation
+behaviour. Jacobs tools (Visual CESIL 2.0 or his Java CLI) are a **behavioural
+minimum**, not a string catalog. This project keeps its own clear messages and may
+report more errors or suppress cascades more tightly when documented.
+
+See [Milestone 4](../../docs/milestones/04-diagnostic-accumulation.md).
+
+## Layout
+
+Programs use conventional CESIL columns (label / instruction / operand) with spaces,
+matching `examples/total.ces`.
+
+## Windows probe
+
+1. Prefer **Visual CESIL 2.0** on Windows. Jacobs' separate **Java command-line
+   CESIL** is acceptable if that is the practical option — record which tool and
+   version/date you used (the Java CLI is not Visual CESIL 2.0).
+2. Open or run each `.ces` file below.
+3. Note which error *conditions* appear (not exact wording), their order, and
+   whether later lines still seem to be considered after an earlier error.
+4. Fill in [`PROBE.md`](PROBE.md).
+
+## Fixture index
+
+| File | Intent |
+|------|--------|
+| `syntax-multi-unknown.ces` | Two unknown mnemonics with a valid `LINE` between them |
+| `syntax-missing-operands.ces` | `LOAD` / `ADD` / `STORE` without operands, then `HALT` |
+| `syntax-junk-after-mnemonic.ces` | Extra tokens after `LINE` / `HALT`, then a clean `HALT` |
+| `semantic-multi-undefined-jump.ces` | Two jumps to distinct missing labels |
+| `semantic-duplicate-labels.ces` | Duplicate `HERE` label plus jump to `MISSING` |
+| `semantic-bad-operands.ces` | Independent operand-shape failures (`PRINT`, `STORE`, `JUMP`, `ADD`) |
+| `data-multi-invalid.ces` | Invalid data rows mixed with valid integers |
+| `mixed-syntax-then-semantic.ces` | Unknown mnemonic then undefined jump |
+| `mixed-recover-then-valid.ces` | Bad mnemonic then a valid short program |
+| `structural-percent-boundary.ces` | `%` / `*` boundary with trailing tokens after data |
+| `structural-empty-ish.ces` | Minimal `HALT` + empty data section |
+
+## Draft project contract (Stage 2 target)
+
+After recovery/accumulation lands, a single parse should report **all independently
+recoverable** conditions below (wording may differ). Fail-fast today only surfaces
+the first. Cascades from discarded bad lines should be suppressed. Any recorded
+error ⇒ `ok_ == false` (no execution).
+
+| File | Intended conditions (this project) | May exceed Jacobs? |
+|------|------------------------------------|--------------------|
+| `syntax-multi-unknown.ces` | Two `unknown instruction` (or equivalent); still see later lines including `HALT` | Yes if Jacobs stops at first |
+| `syntax-missing-operands.ces` | Missing operand on each of `LOAD`, `ADD`, `STORE` | Yes if Jacobs stops at first |
+| `syntax-junk-after-mnemonic.ces` | Unexpected trailing tokens on the junk lines; later clean `HALT` still parsed | Yes if Jacobs stops at first |
+| `semantic-multi-undefined-jump.ces` | Two undefined-label / jump-target failures | Yes if Jacobs stops at first |
+| `semantic-duplicate-labels.ces` | Duplicate label + undefined jump target | Yes if only one is reported |
+| `semantic-bad-operands.ces` | Separate operand-shape errors per bad line (quoted `PRINT`, store name, jump label, numeric/`ADD` shape) | Prefer independent reports |
+| `data-multi-invalid.ces` | Invalid data integer for each bad row; valid `1`/`2`/`3` still collected when recoverable | Yes if Jacobs stops at first bad data row |
+| `mixed-syntax-then-semantic.ces` | Unknown instruction + undefined jump (both) | Yes if Jacobs stops at first |
+| `mixed-recover-then-valid.ces` | One unknown instruction; remaining valid instructions still enter IR for validation | Recovery must not drop the good tail |
+| `structural-percent-boundary.ces` | Data section accepted; trailing post-`*` tokens handled without treating data as code (or a deliberate structural diagnostic) | Document Jacobs behaviour |
+| `structural-empty-ish.ces` | Successful compile of minimal program, or a single clear structural issue if the reference rejects empty data | Use as control / baseline |
+
+Stage 2 Catch2 tests should consume these files (or equivalent embedded sources)
+once the core accumulates diagnostics.

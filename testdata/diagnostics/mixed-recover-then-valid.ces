@@ -1,0 +1,8 @@
+        BADOP
+        LOAD    +0
+        OUT
+        LINE
+        HALT
+
+%
+*

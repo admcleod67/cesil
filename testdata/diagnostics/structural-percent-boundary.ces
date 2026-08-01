@@ -1,0 +1,6 @@
+        LOAD    +1
+        OUT
+%
+5
+*
+        HALT

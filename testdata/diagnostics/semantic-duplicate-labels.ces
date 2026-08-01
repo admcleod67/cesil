@@ -1,0 +1,7 @@
+HERE    HALT
+HERE    LINE
+        JUMP    MISSING
+        HALT
+
+%
+*

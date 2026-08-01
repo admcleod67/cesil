@@ -1,0 +1,6 @@
+        JUMP    NOWHERE
+        JUMP    ALSOGONE
+        HALT
+
+%
+*

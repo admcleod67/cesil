@@ -1,0 +1,8 @@
+        PRINT   HELLO
+        STORE   +1
+        JUMP    +0
+        ADD     XYZ
+        HALT
+
+%
+*

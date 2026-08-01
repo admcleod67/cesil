@@ -55,13 +55,13 @@ Ship as one milestone and one `0.4.0` checkpoint. Work lands in ordered stages.
 Unlike Milestone 3's independent Edit and Tab tracks, syntax recovery and semantic
 accumulation share one compiler pipeline and ship together in stage 2:
 
-1. **Reference fixtures and probe** — Author a small curated set of multi-error
-   `.ces` programs (syntax, semantic, data-section, mixed, and structural edges).
+1. **Reference fixtures and probe** (fixtures ready; Windows probe pending) —
+   Curated multi-error programs live under [`testdata/diagnostics/`](../../testdata/diagnostics/).
    Run that set on Windows against Visual CESIL 2.0 when available; Jacobs' separate
    Java command-line CESIL is an acceptable practical probe (note which tool was
-   used — it is not Visual CESIL 2.0). Record observed error *conditions*, ordering,
-   and recovery points as a minimum. Lock this project's contract (which may be
-   stricter or clearer) before changing the core.
+   used — it is not Visual CESIL 2.0). Fill [`PROBE.md`](../../testdata/diagnostics/PROBE.md)
+   with observed error *conditions*, ordering, and recovery points as a minimum.
+   Then lock this project's contract and mark this stage done before changing the core.
 2. **Core recovery and accumulation** — Line-oriented syntax recovery, semantic
    validation of independently checkable items, cascade suppression, and Catch2
    coverage driven by the stage 1 fixtures (plus focused unit cases). Partial IR
