@@ -9,9 +9,9 @@ namespace cesil {
 bool SemanticValidator::resolveOperand(const RawOperand& raw, Operand& out, std::vector<Diagnostic>& diags) {
     const OpCode op = raw.opcodeContext_;
     const Token& tok = raw.token_;
+    out = Operand{};
 
     if (!instructionRules::needsOperand(op)) {
-        out = Operand{};
         return true;
     }
 
@@ -90,18 +90,20 @@ bool SemanticValidator::resolveOperand(const RawOperand& raw, Operand& out, std:
 }
 
 bool SemanticValidator::validateLabelNames(const ParseResult& result, std::vector<Diagnostic>& diags) {
+    bool ok = true;
     for (const auto& entry : result.labelDefineLines_) {
         const std::string& name = entry.first;
         const int line = entry.second;
         if (!lexer::isValidIdentifier(name)) {
             pushDiagnostic(diags, DiagnosticSeverity::Error, "invalid label", line, 0);
-            return false;
+            ok = false;
         }
     }
-    return true;
+    return ok;
 }
 
 bool SemanticValidator::validateJumpTargets(const ParseResult& result, std::vector<Diagnostic>& diags) {
+    bool ok = true;
     for (const Instruction& inst : result.instructions_) {
         if (!instructionRules::operandMustBeLabel(inst.opcode_)) {
             continue;
@@ -110,33 +112,30 @@ bool SemanticValidator::validateJumpTargets(const ParseResult& result, std::vect
             continue;
         }
         if (result.labelIndices_.count(inst.operand_.symbol_) == 0) {
-            // TODO: forward references / multi-pass label resolution for assembler.
             pushDiagnostic(diags, DiagnosticSeverity::Error,
                            "undefined label '" + inst.operand_.symbol_ + "'", inst.lineNumber_, 0);
-            return false;
+            ok = false;
         }
     }
-    return true;
+    return ok;
 }
 
 bool SemanticValidator::run(ParseResult& result) const {
     result.semanticOk_ = false;
     result.data_.clear();
 
+    const std::size_t diagnosticsBefore = result.diagnostics_.size();
+
     if (result.instructions_.size() != result.rawOperands_.size()) {
         pushDiagnostic(result.diagnostics_, DiagnosticSeverity::Error, "internal parse state mismatch", 0, 0);
         return false;
     }
 
-    if (!validateLabelNames(result, result.diagnostics_)) {
-        return false;
-    }
+    static_cast<void>(validateLabelNames(result, result.diagnostics_));
 
     for (std::size_t i = 0; i < result.instructions_.size(); ++i) {
-        // TODO: relocatable symbols / assembler fixups in resolveOperand path.
-        if (!resolveOperand(result.rawOperands_[i], result.instructions_[i].operand_, result.diagnostics_)) {
-            return false;
-        }
+        static_cast<void>(
+            resolveOperand(result.rawOperands_[i], result.instructions_[i].operand_, result.diagnostics_));
     }
 
     for (const Token& t : result.rawDataTokens_) {
@@ -144,17 +143,15 @@ bool SemanticValidator::run(ParseResult& result) const {
         if (!lexer::parseSignedInteger(t.text_, value)) {
             pushDiagnostic(result.diagnostics_, DiagnosticSeverity::Error, "invalid data section integer", t.line_,
                            t.column_);
-            return false;
+            continue;
         }
         result.data_.push_back(value);
     }
 
-    if (!validateJumpTargets(result, result.diagnostics_)) {
-        return false;
-    }
+    static_cast<void>(validateJumpTargets(result, result.diagnostics_));
 
-    result.semanticOk_ = true;
-    return true;
+    result.semanticOk_ = result.diagnostics_.size() == diagnosticsBefore;
+    return result.semanticOk_;
 }
 
 }  // namespace cesil

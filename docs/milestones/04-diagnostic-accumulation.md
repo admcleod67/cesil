@@ -62,16 +62,16 @@ accumulation share one compiler pipeline and ship together in stage 2:
    [`PROBE.md`](../../testdata/diagnostics/PROBE.md); the Stage 2 contract is locked in
    [`testdata/diagnostics/README.md`](../../testdata/diagnostics/README.md). Version /
    host metadata in the probe log may still be filled in later.
-2. **Core recovery and accumulation** (next) — Line-oriented syntax recovery, semantic
+2. **Core recovery and accumulation** (done) — Line-oriented syntax recovery, semantic
    validation of independently checkable items, cascade suppression, and Catch2
-   coverage driven by the stage 1 fixtures (plus focused unit cases). Partial IR
-   must never execute when any error was recorded. Implement at least the Jacobs
-   floor and the documented deliberate exceedances (trailing junk, bare `STORE`,
-   `PRINT`/`STORE` shapes, syntax-then-semantic pair).
-3. **Close-out** — Deterministic ordering, duplicate suppression, and the documented
-   diagnostic limit; confirm CLI and IDE present the full set and correct counts;
-   keep the Jacobs floor and deliberate differences documented; bump CLI and IDE to
-   `0.4.0`.
+   coverage driven by the stage 1 fixtures (`DiagnosticAccumulationTest`). Partial IR
+   never executes when any error was recorded. Implements the Jacobs floor and the
+   documented deliberate exceedances (trailing junk, bare `STORE`, `PRINT`/`STORE`
+   shapes, syntax-then-semantic pair).
+3. **Close-out** (next) — Deterministic ordering, duplicate suppression, and the
+   documented diagnostic limit; confirm CLI and IDE present the full set and correct
+   counts; keep the Jacobs floor and deliberate differences documented; bump CLI and
+   IDE to `0.4.0`.
 
 Stage 2 depends on stage 1 (complete). Stage 3 runs once the core multi-error
 contract and its tests are in place.

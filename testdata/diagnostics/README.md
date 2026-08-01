@@ -36,8 +36,8 @@ Original procedure (kept for re-probes):
 | `syntax-multi-unknown.ces` | Two unknown mnemonics with a valid `LINE` between them |
 | `syntax-missing-operands.ces` | `LOAD` / `ADD` / `STORE` without operands, then `HALT` |
 | `syntax-junk-after-mnemonic.ces` | Extra tokens after `LINE` / `HALT`, then a clean `HALT` |
-| `semantic-multi-undefined-jump.ces` | Two jumps to distinct missing labels |
-| `semantic-duplicate-labels.ces` | Duplicate `HERE` label plus jump to `MISSING` |
+| `semantic-multi-undefined-jump.ces` | Two jumps to distinct missing labels (`FAR`, `AWAY`) |
+| `semantic-duplicate-labels.ces` | Duplicate `HERE` label plus jump to `MISS` |
 | `semantic-bad-operands.ces` | Operand-shape failures (`PRINT`, `STORE`, `JUMP`) plus a legal variable `ADD` |
 | `data-multi-invalid.ces` | Invalid data rows mixed with valid integers |
 | `mixed-syntax-then-semantic.ces` | Unknown mnemonic then undefined jump |
@@ -72,3 +72,7 @@ a Stage 2 accumulation requirement. See [`PROBE.md`](PROBE.md) open questions.
 
 Stage 2 Catch2 tests should consume these files (or equivalent embedded sources)
 once the core accumulates diagnostics.
+
+**Note:** Jump/label names in fixtures stay within the engine's 6-character identifier
+limit (`FAR` / `AWAY` / `MISS`). The Visual CESIL probe used longer names
+(`NOWHERE` / `ALSOGONE` / `MISSING`); conditions are the same.

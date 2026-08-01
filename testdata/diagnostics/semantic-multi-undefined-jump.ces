@@ -1,5 +1,5 @@
-        JUMP    NOWHERE
-        JUMP    ALSOGONE
+        JUMP    FAR
+        JUMP    AWAY
         HALT
 
 %

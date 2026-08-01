@@ -1,6 +1,6 @@
 HERE    HALT
 HERE    LINE
-        JUMP    MISSING
+        JUMP    MISS
         HALT
 
 %
