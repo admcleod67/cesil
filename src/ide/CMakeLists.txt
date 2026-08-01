@@ -6,6 +6,7 @@ qt_add_executable(cesil-ide
         QtIoHost.hpp
         DiagnosticUtils.cpp
         DiagnosticUtils.hpp
+        SourceEditorLayout.hpp
 )
 
 target_link_libraries(cesil-ide PRIVATE Qt6::Widgets cesil-core)

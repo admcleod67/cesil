@@ -46,9 +46,11 @@ Ship as one milestone and one `0.3.0` checkpoint. Split the work into ordered
 stages so Edit-menu wiring and CESIL Tab behaviour can land and be reviewed
 separately:
 
-1. **Confirm source columns** — Measure label, instruction, and operand column
-   positions against representative Visual CESIL programs. Record the chosen
-   columns and visual tab width for editor tests before changing Tab behaviour.
+1. **Confirm source columns** (confirmed) — Label, instruction, and operand
+   columns are locked at **1 / 9 / 17** (1-based) with visual tab width **8**,
+   matching [`examples/total.ces`](../../examples/total.ces),
+   [`examples/hello.ces`](../../examples/hello.ces), and Obelisk layout practice.
+   Values live in `src/ide/SourceEditorLayout.hpp` for Stage 3 and its tests.
 2. **Edit actions and menu** — Shared Undo / Redo / Cut / Copy / Paste / Select All
    actions, Edit menu with platform-standard shortcuts, and enabled-state wiring
    that targets the Source editor only.
@@ -99,9 +101,24 @@ feature stages are in place.
 - Store source as ordinary whitespace accepted by the CESIL parser; do not introduce
   editor-only formatting metadata.
 
-The initial source columns are the conventional CESIL layout: label, instruction,
-and operand. Their exact positions should be confirmed against representative Visual
-CESIL programs before implementation and then recorded in the editor tests.
+Confirmed source layout (1-based columns), recorded in
+`src/ide/SourceEditorLayout.hpp`:
+
+| Field | Column |
+|--------|--------|
+| Label | 1 |
+| Instruction | 9 |
+| Operand | 17 |
+| Visual tab width | 8 |
+
+Tab stops are `{1, 9, 17}` and then every +8 (25, 33, …). These match the
+conventional CESIL label / instruction / operand fields in
+[`examples/total.ces`](../../examples/total.ces) and
+[`examples/hello.ces`](../../examples/hello.ces) (spaces or tabs that expand under
+width 8). The lexer already expands tabs with width 8 for diagnostic columns;
+parsing remains whitespace-token based, so columns are an editor convention rather
+than a language rule. Visual CESIL 2.0 sample binaries are not vendored here; a
+full layout audit remains Milestone 6.
 
 ### Document behaviour
 
