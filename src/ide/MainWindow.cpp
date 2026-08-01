@@ -3,6 +3,7 @@
 #include "QtIoHost.hpp"
 #include "SourceEditActions.hpp"
 #include "SourceEditor.hpp"
+#include "SourceEditorLayout.hpp"
 
 #include <errors/Diagnostic.hpp>
 #include <parser/Parser.hpp>
@@ -23,6 +24,7 @@
 #include <QStyle>
 #include <QTableView>
 #include <QTabWidget>
+#include <QTextBlock>
 #include <QTextCursor>
 #include <QToolBar>
 
@@ -179,9 +181,12 @@ void MainWindow::createStatusBar() {
 
 void MainWindow::updateCursorPosition() {
     const QTextCursor cursor = m_editor->textCursor();
+    const QTextBlock block = cursor.block();
+    const int visualCol =
+        sourceEditorLayout::visualColumn(block.text().left(cursor.positionInBlock()));
     m_cursorLabel->setText(tr("Ln %1, Col %2")
                                .arg(cursor.blockNumber() + 1)
-                               .arg(cursor.positionInBlock() + 1));
+                               .arg(visualCol));
 }
 
 void MainWindow::onSourceContentsChanged() {

@@ -188,9 +188,9 @@ CESIL documentation and historical material:
 
 See **[docs/milestones.md](docs/milestones.md)** for the milestone index.
 
-**Milestone 2 (0.2.0)** is complete (structured Errors table, source navigation, and
-status lifecycle). Next up is Milestone 3 (editor ergonomics). The planned path to
-**1.0.0** continues through Visual CESIL language and IDE parity, followed by
+**Milestone 3 (0.3.0)** is complete (Edit menu, CESIL-aware Tab indentation, and
+status visual columns). Next up is Milestone 4 (diagnostic accumulation). The planned
+path to **1.0.0** continues through Visual CESIL language and IDE parity, followed by
 cross-platform release validation. Improvements beyond Visual CESIL are intentionally
 deferred until after 1.0.
 
