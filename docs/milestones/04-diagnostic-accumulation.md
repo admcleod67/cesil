@@ -15,6 +15,7 @@ It complements:
 - [Project milestones](../milestones.md)
 - [Milestone 2 — Diagnostic workflow](02-diagnostic-workflow.md)
 - [Milestone 3 — Editor ergonomics](03-editor-ergonomics.md)
+- [Milestone 5 — CESIL language reference](05-language-reference.md)
 - [Milestone 6 — Visual CESIL language parity](06-language-parity.md)
 
 ### Goals
@@ -78,7 +79,8 @@ tests were in place.
 **Out of scope reminder:** undefined *variables* (never-stored names) are not a
 Stage 2 decision. Jacobs rejects undefined *labels* at compile time; whether an
 unset store name is legal (often read as `0`) belongs to
-[Milestone 6](06-language-parity.md).
+[Milestone 5](05-language-reference.md) (document as open) and
+[Milestone 6](06-language-parity.md) (probe and settle).
 
 ---
 

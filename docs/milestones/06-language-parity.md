@@ -2,42 +2,49 @@
 
 ## Milestone 6 — Visual CESIL language parity (planned)
 
-This milestone brings the CESIL parser and runtime into behavioural parity with
-Andrew Jacobs' Visual CESIL 2.0. The current engine already implements the classic
-instruction set, so the work is to establish a reliable reference baseline, verify
-the implementation, and close observed gaps rather than reimplement every
-instruction.
+This milestone brings the CESIL parser and runtime into line with the project
+[language reference](05-language-reference.md) and with Andrew Jacobs' Visual CESIL
+2.0 example corpus. The engine already implements the classic instruction set; the
+work is to resolve open questions, close gaps, and pin behaviour with tests rather
+than reimplement every instruction.
 
 It complements:
 
 - [Project milestones](../milestones.md)
 - [Milestone 1 — IDE edit → check → run](01-ide-mvp.md)
 - [Milestone 4 — Diagnostic accumulation and parser recovery](04-diagnostic-accumulation.md)
+- [Milestone 5 — CESIL language reference](05-language-reference.md)
 - [Milestone 8 — Visual CESIL IDE parity](08-ide-parity.md)
 
 ### Goals
 
-- Define the documented Visual CESIL language and runtime behaviour precisely.
+- Verify the implementation against the Milestone 5 language reference.
 - Run Visual CESIL examples with matching control flow and program output.
-- Turn reference behaviour into automated regression tests.
+- Resolve **open** / **Jacobs-observed** items from the reference via probe, then
+  update the reference status and the compatibility matrix.
+- Turn settled behaviour into automated regression tests.
 - Record compatibility findings so later IDE work rests on a stable engine.
 
 ### Starting point
 
 Milestones 1–4 provide all documented instruction opcodes, parsing and validation,
 case-normalised identifiers, a data section, structured multi-error diagnostics, and
-an interpreter used by both the CLI and IDE. Existing behaviour must be audited
-before being treated as a gap.
+an interpreter used by both the CLI and IDE. Milestone 5 provides the written
+language reference, source citations, and the open-questions list. Existing
+behaviour must be audited against that reference before being treated as a gap.
 
 Core tests before this milestone remain mostly smoke-level plus multi-error recovery
-from Milestone 4. This milestone is where coverage becomes deep: Visual CESIL is the
-oracle, and the golden corpus pins language and runtime behaviour.
+from Milestone 4. This milestone is where coverage becomes deep: the language
+reference is the specification; Visual CESIL is the example-compatibility oracle;
+the golden corpus pins language and runtime behaviour.
 
 ### Out of scope for Milestone 6
 
+- Authoring the language reference from scratch (owned by Milestone 5)
 - IDE layout or error-panel presentation
 - Pixel-level reproduction of Visual CESIL
-- New instructions or language extensions not supported by Visual CESIL 2.0
+- New instructions or language extensions not in the Milestone 5 classic scope
+  (including CESIL “Plus”)
 - Rich debugger and stepping UI
 - Packaging / installers
 
@@ -45,15 +52,17 @@ oracle, and the golden corpus pins language and runtime behaviour.
 
 ## Deliverables
 
-### Reference baseline and compatibility matrix
+### Compatibility matrix against the language reference
 
+- Consume the Milestone 5 reference and its open-questions / conflicts table.
 - Collect the Visual CESIL 2.0 documentation and example programs used as the
-  compatibility reference.
+  compatibility corpus.
 - Record each documented lexical rule, instruction, operand form, and runtime edge
-  case as **match**, **gap**, or **not yet established**.
+  case as **match**, **gap**, or **not yet established** (and promote
+  **Jacobs-observed** / **open** reference statuses as probes complete).
 - Capture expected output and error conditions from the reference implementation.
 - Keep uncertain or undocumented behaviour explicit; do not infer it from the
-  current implementation.
+  current implementation. Update `docs/language/` when a probe settles a rule.
 
 ### Instruction and machine semantics
 
@@ -125,10 +134,12 @@ from Visual CESIL over inventing independent edge cases ahead of the audit.
 
 ## Done when
 
-- The compatibility matrix has no **not yet established** entries for the documented
-  Visual CESIL language.
+- The Milestone 5 language reference has no remaining **open** items that block the
+  documented classic scope (or each leftover is explicitly deferred post-1.0).
+- The compatibility matrix has no **not yet established** entries for that settled
+  scope, including Visual CESIL example compatibility.
 - Every documented instruction and operand form is covered by an automated test.
 - The reference example corpus produces matching output.
 - Established syntax, semantic, and runtime error conditions are covered by tests.
-- There are no known behavioural gaps within the documented Visual CESIL 2.0
-  language scope.
+- There are no known behavioural gaps within the documented classic CESIL scope that
+  Milestone 5 and this milestone agreed to cover for 1.0.

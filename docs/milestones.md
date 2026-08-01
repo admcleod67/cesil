@@ -14,6 +14,7 @@ prefixes sort lexicographically).
 - [Milestone 2 — Diagnostic workflow (completed)](milestones/02-diagnostic-workflow.md)
 - [Milestone 3 — Editor ergonomics (completed)](milestones/03-editor-ergonomics.md)
 - [Milestone 4 — Diagnostic accumulation and parser recovery (completed)](milestones/04-diagnostic-accumulation.md)
+- [Milestone 5 — CESIL language reference (planned)](milestones/05-language-reference.md)
 - [Milestone 6 — Visual CESIL language parity (planned landmark)](milestones/06-language-parity.md)
 - [Milestone 8 — Visual CESIL IDE parity (planned landmark)](milestones/08-ide-parity.md)
 - [Milestone 10 — Visual CESIL parity and 1.0 release (planned landmark)](milestones/10-version-1-release.md)
@@ -21,7 +22,8 @@ prefixes sort lexicographically).
 **Release checkpoint:** Milestone 4 is complete. The CLI and IDE report `0.4.0`
 (`${PROJECT_VERSION}` from CMake). Cut git tag `v0.4.0` when ready.
 
-**Next up:** Milestone 6 (Visual CESIL language parity).
+**Next up:** Milestone 5 (CESIL language reference), then Milestone 6 (language
+parity against that reference and Visual CESIL examples).
 
 ## Path to version 1.0.0
 
@@ -44,14 +46,15 @@ The planned landmarks are:
 - **Milestone 2 / `0.2.0`:** diagnostic presentation and source navigation (completed)
 - **Milestone 3 / `0.3.0`:** editor commands and indentation (completed)
 - **Milestone 4 / `0.4.0`:** diagnostic accumulation and parser recovery (completed)
-- **Milestone 6:** language and runtime parity
+- **Milestone 5:** CESIL language reference (documentation; version bump optional)
+- **Milestone 6:** language and runtime parity (engine + Visual CESIL corpus)
 - **Milestone 8:** IDE workflow and presentation parity
 - **Milestone 10 / `1.0.0`:** integrated parity validation and release
 
-Milestones 5, 7, and 9 remain deliberately unallocated. They can be used to turn
-the later thought documents into smaller, testable increments as compatibility
-research reveals the actual work. Their pre-1.0 release versions will be assigned
-when those milestones are defined.
+Milestones 7 and 9 remain deliberately unallocated. They can be used to turn later
+thought documents into smaller, testable increments as compatibility research
+reveals the actual work. Their pre-1.0 release versions will be assigned when those
+milestones are defined.
 
 Features that deliberately extend Visual CESIL belong after `1.0.0`. This includes
 new language features, richer debugging, IR visualisation, and hardware-oriented
@@ -80,10 +83,14 @@ Planned growth:
 - **Milestone 4:** multi-error recovery, cascade suppression, ordering, and
   diagnostic-limit tests in the core suite, with CLI/IDE checks that the full set
   is presented (completed).
+- **Milestone 5:** documentation-first language reference and open-questions list;
+  no new automated language suite required.
 - **Milestone 6:** the deep layer — a Visual CESIL golden corpus and per-instruction
-  / edge-case regression suite that makes language parity testable.
+  / edge-case regression suite that makes language parity testable against the
+  Milestone 5 reference.
 - **Milestones 8 and 10:** IDE workflow and cross-platform checklists; automate
   stable state transitions where practical, keep fragile visual checks manual.
 
 Pause for a dedicated coverage pass only if regressions appear that current tests
-miss. Otherwise keep next work as Milestone 6 and grow tests with the feature.
+miss. Otherwise keep next work as Milestone 5, then Milestone 6, and grow tests with
+the feature.
