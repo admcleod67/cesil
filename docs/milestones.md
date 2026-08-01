@@ -22,7 +22,8 @@ prefixes sort lexicographically).
 (`${PROJECT_VERSION}` from CMake). Cut git tag `v0.3.0` when ready.
 
 **Next up:** Milestone 4 enables the compiler to collect multiple independent errors
-in one pass.
+in one pass. Stage 1 (fixtures + Visual CESIL probe) is done; Stage 2 is core
+recovery and accumulation.
 
 ## Path to version 1.0.0
 

@@ -67,6 +67,23 @@ Verify and, where necessary, correct:
 - Literal and variable resolution, identifier case, and negative integers
 - Integer range / overflow and division semantics
 
+#### Undefined variables (explicit probe)
+
+Do **not** confuse undefined *labels* (compile-time errors in Visual CESIL and in
+the Milestone 4 fixtures) with undefined *variables* (never-stored names). Classic
+CESIL often allows `LOAD` / `ADD` / … of an unset name and reads it as `0`; this
+project's interpreter currently does the same. Treat the rule as **not yet
+established** until Visual CESIL is probed, for example:
+
+- `LOAD UNSET` then `OUT` with no prior `STORE` — compile success? output `0`?
+- `LOAD +0` then `ADD UNSET` — same questions
+- `STORE Foo` then `LOAD FOO` — case folding of store names
+
+Only after that probe should the compatibility matrix mark “unset variable” as
+match, gap, or deliberate post-1.0 extension. Milestone 4 must not invent a
+compile-time undefined-variable diagnostic from the diagnostic fixtures alone
+(see [`PROBE.md`](../../testdata/diagnostics/PROBE.md) open questions).
+
 ### Source, data, and labels
 
 Verify and, where necessary, correct:

@@ -5,7 +5,8 @@ behaviour. Jacobs tools (Visual CESIL 2.0 or his Java CLI) are a **behavioural
 minimum**, not a string catalog. This project keeps its own clear messages and may
 report more errors or suppress cascades more tightly when documented.
 
-See [Milestone 4](../../docs/milestones/04-diagnostic-accumulation.md).
+See [Milestone 4](../../docs/milestones/04-diagnostic-accumulation.md) and the
+completed probe log in [`PROBE.md`](PROBE.md).
 
 ## Layout
 
@@ -13,6 +14,12 @@ Programs use conventional CESIL columns (label / instruction / operand) with spa
 matching `examples/total.ces`.
 
 ## Windows probe
+
+**Status:** fixture set probed against **Visual CESIL** (2026-08-01). Observations
+and deliberate differences are recorded in [`PROBE.md`](PROBE.md). Version / host
+metadata still pending where screenshots did not show them.
+
+Original procedure (kept for re-probes):
 
 1. Prefer **Visual CESIL 2.0** on Windows. Jacobs' separate **Java command-line
    CESIL** is acceptable if that is the practical option — record which tool and
@@ -31,33 +38,37 @@ matching `examples/total.ces`.
 | `syntax-junk-after-mnemonic.ces` | Extra tokens after `LINE` / `HALT`, then a clean `HALT` |
 | `semantic-multi-undefined-jump.ces` | Two jumps to distinct missing labels |
 | `semantic-duplicate-labels.ces` | Duplicate `HERE` label plus jump to `MISSING` |
-| `semantic-bad-operands.ces` | Independent operand-shape failures (`PRINT`, `STORE`, `JUMP`, `ADD`) |
+| `semantic-bad-operands.ces` | Operand-shape failures (`PRINT`, `STORE`, `JUMP`) plus a legal variable `ADD` |
 | `data-multi-invalid.ces` | Invalid data rows mixed with valid integers |
 | `mixed-syntax-then-semantic.ces` | Unknown mnemonic then undefined jump |
 | `mixed-recover-then-valid.ces` | Bad mnemonic then a valid short program |
 | `structural-percent-boundary.ces` | `%` / `*` boundary with trailing tokens after data |
 | `structural-empty-ish.ces` | Minimal `HALT` + empty data section |
 
-## Draft project contract (Stage 2 target)
+## Project contract (Stage 2 target)
 
-After recovery/accumulation lands, a single parse should report **all independently
+Locked from the Visual CESIL probe. A single parse should report **all independently
 recoverable** conditions below (wording may differ). Fail-fast today only surfaces
 the first. Cascades from discarded bad lines should be suppressed. Any recorded
 error ⇒ `ok_ == false` (no execution).
 
-| File | Intended conditions (this project) | May exceed Jacobs? |
-|------|------------------------------------|--------------------|
-| `syntax-multi-unknown.ces` | Two `unknown instruction` (or equivalent); still see later lines including `HALT` | Yes if Jacobs stops at first |
-| `syntax-missing-operands.ces` | Missing operand on each of `LOAD`, `ADD`, `STORE` | Yes if Jacobs stops at first |
-| `syntax-junk-after-mnemonic.ces` | Unexpected trailing tokens on the junk lines; later clean `HALT` still parsed | Yes if Jacobs stops at first |
-| `semantic-multi-undefined-jump.ces` | Two undefined-label / jump-target failures | Yes if Jacobs stops at first |
-| `semantic-duplicate-labels.ces` | Duplicate label + undefined jump target | Yes if only one is reported |
-| `semantic-bad-operands.ces` | Separate operand-shape errors per bad line (quoted `PRINT`, store name, jump label, numeric/`ADD` shape) | Prefer independent reports |
-| `data-multi-invalid.ces` | Invalid data integer for each bad row; valid `1`/`2`/`3` still collected when recoverable | Yes if Jacobs stops at first bad data row |
-| `mixed-syntax-then-semantic.ces` | Unknown instruction + undefined jump (both) | Yes if Jacobs stops at first |
-| `mixed-recover-then-valid.ces` | One unknown instruction; remaining valid instructions still enter IR for validation | Recovery must not drop the good tail |
-| `structural-percent-boundary.ces` | Data section accepted; trailing post-`*` tokens handled without treating data as code (or a deliberate structural diagnostic) | Document Jacobs behaviour |
-| `structural-empty-ish.ces` | Successful compile of minimal program, or a single clear structural issue if the reference rejects empty data | Use as control / baseline |
+| File | Intended conditions (this project) | vs Jacobs |
+|------|------------------------------------|-----------|
+| `syntax-multi-unknown.ces` | Two unknown-instruction errors; still see later lines including `HALT` | Match floor (Jacobs reported both) |
+| `syntax-missing-operands.ces` | Missing operand on each of `LOAD`, `ADD`, `STORE` | **Exceed** — Jacobs missed bare `STORE` |
+| `syntax-junk-after-mnemonic.ces` | Unexpected trailing tokens on the junk lines; later clean `HALT` still parsed | **Exceed** — Jacobs accepted with no errors |
+| `semantic-multi-undefined-jump.ces` | Two undefined-label / jump-target failures | Match floor (Jacobs reported both) |
+| `semantic-duplicate-labels.ces` | Duplicate label + undefined jump target | Match floor (Jacobs reported both) |
+| `semantic-bad-operands.ces` | Shape errors for unquoted `PRINT`, numeric `STORE`, and non-label `JUMP`; `ADD XYZ` is a legal variable operand (not a shape error) | **Exceed** on `PRINT` / `STORE` shapes; Jacobs only flagged `JUMP` |
+| `data-multi-invalid.ces` | Invalid data integer for each bad row; valid `1`/`2`/`3` still collected when recoverable | Match floor (Jacobs reported both bad rows) |
+| `mixed-syntax-then-semantic.ces` | Unknown instruction + undefined jump (both) | **Exceed** — Jacobs stopped after the unknown mnemonic |
+| `mixed-recover-then-valid.ces` | One unknown instruction; remaining valid instructions still enter IR for validation | Match floor (single unknown; clean tail) |
+| `structural-percent-boundary.ces` | Trailing post-`*` content diagnosed without treating the data section as code | Match intent (Jacobs: invalid data on the trailing line) |
+| `structural-empty-ish.ces` | Successful compile of minimal `HALT` + empty data | Match (Jacobs accepted; control baseline) |
+
+Do **not** add compile-time “undefined variable” diagnostics from these fixtures.
+Whether a never-stored name reads as `0` is a Milestone 6 language-parity probe, not
+a Stage 2 accumulation requirement. See [`PROBE.md`](PROBE.md) open questions.
 
 Stage 2 Catch2 tests should consume these files (or equivalent embedded sources)
 once the core accumulates diagnostics.

@@ -55,24 +55,31 @@ Ship as one milestone and one `0.4.0` checkpoint. Work lands in ordered stages.
 Unlike Milestone 3's independent Edit and Tab tracks, syntax recovery and semantic
 accumulation share one compiler pipeline and ship together in stage 2:
 
-1. **Reference fixtures and probe** (fixtures ready; Windows probe pending) —
+1. **Reference fixtures and probe** (done) —
    Curated multi-error programs live under [`testdata/diagnostics/`](../../testdata/diagnostics/).
-   Run that set on Windows against Visual CESIL 2.0 when available; Jacobs' separate
-   Java command-line CESIL is an acceptable practical probe (note which tool was
-   used — it is not Visual CESIL 2.0). Fill [`PROBE.md`](../../testdata/diagnostics/PROBE.md)
-   with observed error *conditions*, ordering, and recovery points as a minimum.
-   Then lock this project's contract and mark this stage done before changing the core.
-2. **Core recovery and accumulation** — Line-oriented syntax recovery, semantic
+   The set was probed against **Visual CESIL** (2026-08-01). Observed error
+   *conditions*, ordering, recovery points, and deliberate differences are in
+   [`PROBE.md`](../../testdata/diagnostics/PROBE.md); the Stage 2 contract is locked in
+   [`testdata/diagnostics/README.md`](../../testdata/diagnostics/README.md). Version /
+   host metadata in the probe log may still be filled in later.
+2. **Core recovery and accumulation** (next) — Line-oriented syntax recovery, semantic
    validation of independently checkable items, cascade suppression, and Catch2
    coverage driven by the stage 1 fixtures (plus focused unit cases). Partial IR
-   must never execute when any error was recorded.
+   must never execute when any error was recorded. Implement at least the Jacobs
+   floor and the documented deliberate exceedances (trailing junk, bare `STORE`,
+   `PRINT`/`STORE` shapes, syntax-then-semantic pair).
 3. **Close-out** — Deterministic ordering, duplicate suppression, and the documented
    diagnostic limit; confirm CLI and IDE present the full set and correct counts;
-   document the Jacobs floor and any deliberate differences; bump CLI and IDE to
+   keep the Jacobs floor and deliberate differences documented; bump CLI and IDE to
    `0.4.0`.
 
-Stage 2 depends on stage 1. Stage 3 runs once the core multi-error contract and its
-tests are in place.
+Stage 2 depends on stage 1 (complete). Stage 3 runs once the core multi-error
+contract and its tests are in place.
+
+**Out of scope reminder:** undefined *variables* (never-stored names) are not a
+Stage 2 decision. Jacobs rejects undefined *labels* at compile time; whether an
+unset store name is legal (often read as `0`) belongs to
+[Milestone 6](06-language-parity.md).
 
 ---
 
@@ -80,17 +87,17 @@ tests are in place.
 
 ### Reference behaviour
 
-- Add a curated in-repo fixture collection (for example under `testdata/diagnostics/`)
-  of programs with multiple syntax, semantic, and data-section errors — roughly a
-  dozen focused files, not a fuzzer corpus.
-- Exercise that collection on Windows with Visual CESIL 2.0 when available, or with
-  Jacobs' Java CLI when that is the practical option; record which tool was used.
-- Record which error conditions the reference reports, their ordering, and where
-  parsing resumes. Treat that as a **minimum** for this project. Do not require
-  string-for-string message text.
-- Define this project's expected conditions and recovery rules from those findings
-  plus the deliverables below; document where this project intentionally reports
-  more, or suppresses cascades more tightly, than the reference.
+- Curated in-repo fixtures under `testdata/diagnostics/` (roughly a dozen focused
+  files, not a fuzzer corpus) — **done**.
+- Probe against Visual CESIL with conditions, ordering, and recovery recorded in
+  [`PROBE.md`](../../testdata/diagnostics/PROBE.md) — **done** (tool: Visual CESIL;
+  version/host metadata still pending). Treat that log as a **minimum**. Do not
+  require string-for-string message text.
+- Project contract and deliberate exceedances locked in
+  [`testdata/diagnostics/README.md`](../../testdata/diagnostics/README.md) — **done**.
+  Documented exceedances: trailing junk after zero-operand mnemonics; missing
+  operand on bare `STORE`; wrong `PRINT`/`STORE` operand shapes; unknown mnemonic
+  plus undefined jump in one pass.
 - Prefer clear existing wording over cloning Jacobs' message text.
 
 ### Syntax recovery
