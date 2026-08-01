@@ -30,13 +30,16 @@ It complements:
 Milestones 1–4 provide all documented instruction opcodes, parsing and validation,
 case-normalised identifiers, a data section, structured multi-error diagnostics, and
 an interpreter used by both the CLI and IDE. Milestone 5 provides the written
-language reference, source citations, and the open-questions list. Existing
-behaviour must be audited against that reference before being treated as a gap.
+language reference under [`docs/language/`](../language/README.md), source citations,
+and the [open-questions](../language/open-questions.md) list. Existing behaviour must
+be audited against that reference before being treated as a gap.
 
 Core tests before this milestone remain mostly smoke-level plus multi-error recovery
 from Milestone 4. This milestone is where coverage becomes deep: the language
-reference is the specification; Visual CESIL is the example-compatibility oracle;
-the golden corpus pins language and runtime behaviour.
+reference is the specification; Visual CESIL is the example-compatibility oracle
+(local corpus notes in
+[`compatibility-corpus.md`](../language/compatibility-corpus.md)); the golden corpus
+pins language and runtime behaviour.
 
 ### Out of scope for Milestone 6
 
@@ -54,9 +57,12 @@ the golden corpus pins language and runtime behaviour.
 
 ### Compatibility matrix against the language reference
 
-- Consume the Milestone 5 reference and its open-questions / conflicts table.
+- Consume [`docs/language/`](../language/README.md) and its
+  [open-questions](../language/open-questions.md) / conflicts table.
 - Collect the Visual CESIL 2.0 documentation and example programs used as the
-  compatibility corpus.
+  compatibility corpus (see
+  [`compatibility-corpus.md`](../language/compatibility-corpus.md) when online
+  docs are unavailable).
 - Record each documented lexical rule, instruction, operand form, and runtime edge
   case as **match**, **gap**, or **not yet established** (and promote
   **Jacobs-observed** / **open** reference statuses as probes complete).

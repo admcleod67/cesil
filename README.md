@@ -5,7 +5,10 @@
 
 ## 🕹️ What is CESIL?
 
-CESIL — *Computer Education in Schools Instruction Language* — was a small, assembly‑style teaching language used in UK schools in the 1970s. It introduced programming concepts using:
+CESIL — *Computer Education in Schools Instruction Language* — was a small,
+assembly‑style teaching language developed for ICL’s **Computer Education in
+Schools** (CES) programme and used in UK schools from the late 1960s onwards. It
+introduced programming concepts using:
 
 - a single accumulator
 - named store locations
@@ -188,11 +191,12 @@ CESIL documentation and historical material:
 
 See **[docs/milestones.md](docs/milestones.md)** for the milestone index.
 
-**Milestone 4 (0.4.0)** is complete (multi-error recovery, ordered diagnostics, and
-CLI/IDE presentation). Next up is Milestone 5 (CESIL language reference), then
-Milestone 6 (language parity). The planned path to **1.0.0** continues through
-language and IDE parity, followed by cross-platform release validation. Improvements
-beyond Visual CESIL are intentionally deferred until after 1.0.
+**Milestone 5** is complete (CESIL language reference under
+[`docs/language/`](docs/language/README.md)). Next up is Milestone 6 (language parity
+against that reference and Visual CESIL examples). The planned path to **1.0.0**
+continues through language and IDE parity, followed by cross-platform release
+validation. Improvements beyond Visual CESIL are intentionally deferred until after
+1.0.
 
 ---
 

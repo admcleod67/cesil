@@ -14,16 +14,19 @@ prefixes sort lexicographically).
 - [Milestone 2 — Diagnostic workflow (completed)](milestones/02-diagnostic-workflow.md)
 - [Milestone 3 — Editor ergonomics (completed)](milestones/03-editor-ergonomics.md)
 - [Milestone 4 — Diagnostic accumulation and parser recovery (completed)](milestones/04-diagnostic-accumulation.md)
-- [Milestone 5 — CESIL language reference (planned)](milestones/05-language-reference.md)
+- [Milestone 5 — CESIL language reference (completed)](milestones/05-language-reference.md)
 - [Milestone 6 — Visual CESIL language parity (planned landmark)](milestones/06-language-parity.md)
 - [Milestone 8 — Visual CESIL IDE parity (planned landmark)](milestones/08-ide-parity.md)
 - [Milestone 10 — Visual CESIL parity and 1.0 release (planned landmark)](milestones/10-version-1-release.md)
 
 **Release checkpoint:** Milestone 4 is complete. The CLI and IDE report `0.4.0`
-(`${PROJECT_VERSION}` from CMake). Cut git tag `v0.4.0` when ready.
+(`${PROJECT_VERSION}` from CMake). Cut git tag `v0.4.0` when ready. Milestone 5
+(language reference) is documentation-complete with no version bump.
 
-**Next up:** Milestone 5 (CESIL language reference), then Milestone 6 (language
-parity against that reference and Visual CESIL examples).
+**Next up:** Milestone 6 (language parity against
+[`docs/language/`](language/README.md) and Visual CESIL examples).
+
+Language reference: **[`docs/language/`](language/README.md)**.
 
 ## Path to version 1.0.0
 
@@ -46,7 +49,7 @@ The planned landmarks are:
 - **Milestone 2 / `0.2.0`:** diagnostic presentation and source navigation (completed)
 - **Milestone 3 / `0.3.0`:** editor commands and indentation (completed)
 - **Milestone 4 / `0.4.0`:** diagnostic accumulation and parser recovery (completed)
-- **Milestone 5:** CESIL language reference (documentation; version bump optional)
+- **Milestone 5:** CESIL language reference (completed; documentation; no version bump)
 - **Milestone 6:** language and runtime parity (engine + Visual CESIL corpus)
 - **Milestone 8:** IDE workflow and presentation parity
 - **Milestone 10 / `1.0.0`:** integrated parity validation and release
@@ -84,7 +87,7 @@ Planned growth:
   diagnostic-limit tests in the core suite, with CLI/IDE checks that the full set
   is presented (completed).
 - **Milestone 5:** documentation-first language reference and open-questions list;
-  no new automated language suite required.
+  no new automated language suite required (completed).
 - **Milestone 6:** the deep layer — a Visual CESIL golden corpus and per-instruction
   / edge-case regression suite that makes language parity testable against the
   Milestone 5 reference.
@@ -92,5 +95,4 @@ Planned growth:
   stable state transitions where practical, keep fragile visual checks manual.
 
 Pause for a dedicated coverage pass only if regressions appear that current tests
-miss. Otherwise keep next work as Milestone 5, then Milestone 6, and grow tests with
-the feature.
+miss. Otherwise keep next work as Milestone 6 and grow tests with the feature.
