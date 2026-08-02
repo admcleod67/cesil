@@ -1,0 +1,8 @@
+* Gate probe: star-style comment lines (Visual CESIL style)
+*
+        PRINT   "ok"
+        LINE
+        HALT
+
+%
+*

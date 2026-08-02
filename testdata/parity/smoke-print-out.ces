@@ -1,0 +1,8 @@
+        PRINT   "Hi"
+        LOAD    +1
+        OUT
+        LINE
+        HALT
+
+%
+*

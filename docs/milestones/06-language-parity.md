@@ -59,14 +59,15 @@ engine or golden-suite changes — several
 [open questions](../language/open-questions.md) (especially `*` comments, unsigned
 constants, and optional trailing `*`) block running the Visual CESIL example corpus.
 
-1. **Corpus gate and dialect probes** (next) — Against a local Visual CESIL 2.0 tree
-   (see [`compatibility-corpus.md`](../language/compatibility-corpus.md)), probe the
-   source-compatibility open questions that gate the examples (at least Q4–Q6:
-   unsigned constants, `*` comment lines vs end-of-data `*`, EOF vs trailing `*`).
-   Capture enough Jacobs output to know what must parse. Start the compatibility
-   matrix; promote or refine statuses in `docs/language/`. Do not invent rules from
-   current `cesil-core` behaviour.
-2. **Parser and source compatibility** — Implement the settled source-form rules so
+1. **Corpus gate and dialect probes** (done) — In-repo gate fixtures and probe log live
+   under [`testdata/parity/`](../../testdata/parity/). Evidence for Q4–Q6 was taken from
+   the Visual CESIL 2.0 distribution examples and `Release Notes.htm` (see
+   [`PROBE.md`](../../testdata/parity/PROBE.md) and
+   [`MATRIX.md`](../../testdata/parity/MATRIX.md)); live Windows Check/Run of the
+   fixtures is still recommended for UI confirmation. Language-reference statuses for
+   the gate items were updated so Stage 2 has an implement list. No engine changes in
+   this stage.
+2. **Parser and source compatibility** (next) — Implement the settled source-form rules so
    the Visual CESIL examples compile (comments, constants, data terminator, and any
    related case/identifier decisions from stage 1). Smoke that the example set parses;
    keep Milestone 4 deliberate diagnostic divergences unless a probe forces a rethink.

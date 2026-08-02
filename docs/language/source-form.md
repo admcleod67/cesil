@@ -22,8 +22,8 @@ writing convention ([Milestone 3](../milestones/03-editor-ergonomics.md)). Parsi
 not require those columns. **specified** (project editing convention); classic coding
 sheets are the historical inspiration.
 
-Blank lines (spaces/tabs only) are ignored. **Jacobs-observed** (Visual CESIL 1.1 release
-notes); treat as **specified** for this dialect.
+Blank lines (spaces/tabs only) are ignored. **specified** (Visual CESIL 1.1 release
+notes; blank lines ignored).
 
 ## Identifiers
 
@@ -35,15 +35,15 @@ Used for line labels and store names:
 | Continue with letters or digits | **specified** |
 | Maximum length **six** characters | **specified** (classic / cesil.org / Wikipedia) |
 | Case of mnemonics | Instructions are recognised case-insensitively | **specified** (practical dialect; matches common implementations) |
-| Case of labels and store names | Whether `FOO` and `foo` are the same name | **open** |
+| Case of labels and store names | Whether `FOO` and `foo` are the same name | **open** (Stage 3; `probe-case-fold.ces`) |
 
 ## Numeric constants
 
 | Rule | Status |
 |------|--------|
-| Classic CESIL often writes signed constants (`+0`, `-1`) | **specified** (classic materials / Wikipedia) |
-| Visual CESIL allows unsigned non-negative constants (`0`, `8`) and optional `+` | **Jacobs-observed** (examples; release notes allow `+`) |
-| Whether unsigned forms are accepted in this dialect | **open** (lean toward accepting them for Visual CESIL example compatibility) |
+| Signed constants (`+0`, `-1`) are accepted | **specified** (classic materials / Wikipedia) |
+| Unsigned non-negative constants (`0`, `8`) are accepted | **specified** (Visual CESIL corpus / Stage 1 gate; see [`testdata/parity/PROBE.md`](../../testdata/parity/PROBE.md)) |
+| Optional `+` on positive constants | **specified** (Jacobs 1.2 notes + corpus) |
 | `-0` | Disallowed in Visual CESIL 1.2 notes | **Jacobs-observed** |
 
 ## Strings
@@ -55,11 +55,12 @@ quoted payload are **open**.
 
 | Form | Status |
 |------|--------|
-| Line beginning with `(` — remainder of line is a comment (classic / Wikipedia) | **specified** (classic); this engine already recognises start-of-line `(` |
-| Line beginning with `*` as a comment (Visual CESIL examples) | **Jacobs-observed**; conflicts with `*` as end-of-data — **open** for this dialect |
-| Whether both forms will be accepted | **open** (needed for Visual CESIL example corpus compatibility) |
+| Line beginning with `(` — remainder of line is a comment (classic / Wikipedia) | **specified** |
+| Line beginning with `*` in the **code** section — remainder of line is a comment (Visual CESIL examples) | **specified** (Stage 1 corpus gate) |
+| `*` after `%` as end-of-data marker | **specified** (classic); must remain distinct from code-section `*` comments |
 
-Do not invent a third comment syntax in this milestone.
+Both comment forms are accepted in this dialect. Stage 2 must implement `*` comments
+without breaking data-section `*`. See [Program structure](program-structure.md).
 
 ## Mnemonics
 

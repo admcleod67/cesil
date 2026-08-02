@@ -24,15 +24,26 @@ Typical contents used when drafting this reference:
 | `Release Notes.htm` | Product notes through 2.0 (variable init to zero; `+` constants; `IN` past end errors; blank lines ignored) |
 | `Visual CESIL.exe` | Windows IDE binary |
 
-## Implications already reflected in the reference
+## In-repo probe fixtures (Milestone 6 Stage 1)
 
-From examples + release notes (all **Jacobs-observed** until promoted):
+Gate probes for Q4–Q6 (unsigned constants, `*` / `(` comments, data terminator) live
+under [`testdata/parity/`](../../testdata/parity/). See that directory’s
+[`README.md`](../../testdata/parity/README.md), [`PROBE.md`](../../testdata/parity/PROBE.md),
+and [`MATRIX.md`](../../testdata/parity/MATRIX.md). Do not vendor Jacobs sources into
+the repo; use an external Visual CESIL 2.0 tree for his examples.
 
-- `*` used as a full-line comment marker in source (conflicts with classic end-of-data `*`)
-- Unsigned numeric literals in code and data
-- Data sections that end at EOF without a final `*` line
-- Variables initialised to zero at run start (2.0)
-- Optional `+` on positive constants; `-0` disallowed (1.2 notes)
+## Implications for the dialect
+
+From Stage 1 probe evidence (shipped examples + release notes; see `PROBE.md`):
+
+- `*` full-line comments in the **code** section — **specified** (corpus); must not
+  break classic end-of-data `*`
+- Unsigned numeric literals in code and data — **specified** (corpus)
+- Data sections that end at EOF without a final `*` line — **specified** (corpus);
+  classic trailing `*` remains valid
+- Variables initialised to zero at run start (2.0) — still **Jacobs-observed** (Stage 3)
+- Optional `+` on positive constants; `-0` disallowed (1.2 notes) — **Jacobs-observed** /
+  keep accepting `+`; `-0` still **open** / **Jacobs-observed**
 
 ## In-repo examples
 

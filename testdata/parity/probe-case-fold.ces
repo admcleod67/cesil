@@ -1,0 +1,8 @@
+        STORE   Foo
+        LOAD    FOO
+        OUT
+        LINE
+        HALT
+
+%
+*

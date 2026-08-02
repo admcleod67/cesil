@@ -1,0 +1,9 @@
+        LOAD    +0
+        ADD     1
+        OUT
+        LINE
+        HALT
+
+%
+1
+2

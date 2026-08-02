@@ -1,0 +1,7 @@
+        LOAD    UNSET
+        OUT
+        LINE
+        HALT
+
+%
+*

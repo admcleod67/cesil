@@ -1,0 +1,7 @@
+( Gate probe: classic parenthesis comment line
+        PRINT   "ok"
+        LINE
+        HALT
+
+%
+*
