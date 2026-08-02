@@ -51,6 +51,44 @@ pins language and runtime behaviour.
 - Rich debugger and stepping UI
 - Packaging / installers
 
+### Implementation stages
+
+Ship as one milestone and one pre-1.0 checkpoint (version assigned at close-out).
+Work lands in ordered stages. Probe results must settle dialect rules before large
+engine or golden-suite changes — several
+[open questions](../language/open-questions.md) (especially `*` comments, unsigned
+constants, and optional trailing `*`) block running the Visual CESIL example corpus.
+
+1. **Corpus gate and dialect probes** (next) — Against a local Visual CESIL 2.0 tree
+   (see [`compatibility-corpus.md`](../language/compatibility-corpus.md)), probe the
+   source-compatibility open questions that gate the examples (at least Q4–Q6:
+   unsigned constants, `*` comment lines vs end-of-data `*`, EOF vs trailing `*`).
+   Capture enough Jacobs output to know what must parse. Start the compatibility
+   matrix; promote or refine statuses in `docs/language/`. Do not invent rules from
+   current `cesil-core` behaviour.
+2. **Parser and source compatibility** — Implement the settled source-form rules so
+   the Visual CESIL examples compile (comments, constants, data terminator, and any
+   related case/identifier decisions from stage 1). Smoke that the example set parses;
+   keep Milestone 4 deliberate diagnostic divergences unless a probe forces a rethink.
+3. **Runtime semantics and matrix** — Probe and settle remaining open questions
+   (undefined variables, identifier case, overflow, `DIVIDE` rounding, I/O bytes,
+   runtime banners, fall-off without `HALT`, and similar). Correct interpreter gaps;
+   keep the compatibility matrix and language-reference statuses current.
+4. **Golden suite and close-out** — End-to-end fixtures from the Visual CESIL corpus
+   with output compared after normalising host line endings where required; focused
+   per-instruction and edge-case tests; negative fixtures; CLI-facing path coverage.
+   Defer any leftover **open** items explicitly post-1.0 or mark them **specified** /
+   **deliberate diverge**. Assign the release checkpoint version and mark the
+   milestone completed.
+
+Stage 2 depends on stage 1. Stage 3 can overlap lightly with late stage 2 once
+examples parse, but runtime golden expectations should wait for stage 3 probes.
+Stage 4 depends on settled matrix entries from stages 1–3.
+
+**Out of scope reminder:** undefined *variables* (never-stored names) remain a probe
+item (stage 3), distinct from undefined *labels*. Do not add a compile-time undefined
+variable diagnostic from fixtures alone.
+
 ---
 
 ## Deliverables
