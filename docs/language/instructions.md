@@ -27,8 +27,7 @@ Results replace the accumulator.
 | `DIVIDE` | Store or constant | Accumulator ← accumulator ÷ operand (integer) | **specified** |
 
 `DIVIDE` by zero is a runtime error. Visual CESIL banner:
-`** ERROR: Attempted division by zero`. **specified** (engine still uses classic
-`*** DIVISION BY ZERO ***` → **gap**; see [Runtime](runtime.md))
+`** ERROR: Attempted division by zero`. **specified** (see [Runtime](runtime.md))
 
 Integer division truncates toward zero (e.g. `-7 / 2` → `-3`). **specified**
 (Jacobs live confirmed)

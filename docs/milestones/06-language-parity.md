@@ -1,12 +1,12 @@
 ← [Project milestones index](../milestones.md)
 
-## Milestone 6 — Visual CESIL language parity (planned)
+## Milestone 6 — Visual CESIL language parity (completed)
 
-This milestone brings the CESIL parser and runtime into line with the project
+This milestone brought the CESIL parser and runtime into line with the project
 [language reference](05-language-reference.md) and with Andrew Jacobs' Visual CESIL
-2.0 example corpus. The engine already implements the classic instruction set; the
-work is to resolve open questions, close gaps, and pin behaviour with tests rather
-than reimplement every instruction.
+2.0 behaviour for the classic instruction set. Open questions were settled via probe,
+engine gaps closed, and behaviour pinned with goldens rather than reimplementing every
+instruction from scratch.
 
 It complements:
 
@@ -19,27 +19,18 @@ It complements:
 ### Goals
 
 - Verify the implementation against the Milestone 5 language reference.
-- Run Visual CESIL examples with matching control flow and program output.
-- Resolve **open** / **Jacobs-observed** items from the reference via probe, then
-  update the reference status and the compatibility matrix.
+- Match Visual CESIL control flow and program output for settled classic scope.
+- Resolve **open** / **Jacobs-observed** items via probe, then update the reference
+  and compatibility matrix.
 - Turn settled behaviour into automated regression tests.
 - Record compatibility findings so later IDE work rests on a stable engine.
 
 ### Starting point
 
-Milestones 1–4 provide all documented instruction opcodes, parsing and validation,
-case-normalised identifiers, a data section, structured multi-error diagnostics, and
-an interpreter used by both the CLI and IDE. Milestone 5 provides the written
-language reference under [`docs/language/`](../language/README.md), source citations,
-and the [open-questions](../language/open-questions.md) list. Existing behaviour must
-be audited against that reference before being treated as a gap.
-
-Core tests before this milestone remain mostly smoke-level plus multi-error recovery
-from Milestone 4. This milestone is where coverage becomes deep: the language
-reference is the specification; Visual CESIL is the example-compatibility oracle
-(local corpus notes in
-[`compatibility-corpus.md`](../language/compatibility-corpus.md)); the golden corpus
-pins language and runtime behaviour.
+Milestones 1–4 provided the instruction opcodes, parsing and validation,
+case-sensitive identifiers, a data section, structured multi-error diagnostics, and
+an interpreter used by both the CLI and IDE. Milestone 5 provided the language
+reference under [`docs/language/`](../language/README.md).
 
 ### Out of scope for Milestone 6
 
@@ -50,51 +41,30 @@ pins language and runtime behaviour.
   (including CESIL “Plus”)
 - Rich debugger and stepping UI
 - Packaging / installers
+- Vendoring Jacobs Example `.ces` / `.exe` trees into the repo
+- Cutting git tag `v0.6.0` (optional; assign when ready)
 
 ### Implementation stages
 
-Ship as one milestone and one pre-1.0 checkpoint (version assigned at close-out).
-Work lands in ordered stages. Probe results must settle dialect rules before large
-engine or golden-suite changes — several
-[open questions](../language/open-questions.md) (especially `*` comments, unsigned
-constants, and optional trailing `*`) block running the Visual CESIL example corpus.
+Shipped as one milestone and pre-1.0 checkpoint **`0.6.0`** (`project(cesil VERSION 0.6.0)`).
 
-1. **Corpus gate and dialect probes** (done) — In-repo gate fixtures and probe log live
-   under [`testdata/parity/`](../../testdata/parity/). Evidence for Q4–Q6 comes from the
-   Visual CESIL 2.0 distribution examples / `Release Notes.htm` and a **live Check** of
-   the gate fixtures (2026-08-03; see [`PROBE.md`](../../testdata/parity/PROBE.md) and
-   [`MATRIX.md`](../../testdata/parity/MATRIX.md)). Notable live finding: Jacobs rejects
-   classic `(` comments (this dialect keeps them as a deliberate diverge) while accepting
-   `*` comments, unsigned constants, and EOF-or-`*` data termination. Language-reference
-   statuses for the gate items were updated so Stage 2 has an implement list. No engine
-   changes in this stage.
-2. **Parser and source compatibility** (done) — Code-section `*` comments skipped in
-   `Parser::parseSyntax` without changing data-section `*` termination. Unsigned
-   constants and EOF-or-`*` data end confirmed as already matching and locked by
-   `SourceCompatibilityTest` against [`testdata/parity/`](../../testdata/parity/) gate
-   fixtures. Classic `(` comments and case-sensitive store names preserved. Matrix
-   updated in [`MATRIX.md`](../../testdata/parity/MATRIX.md).
-3. **Runtime semantics and matrix** (done; live Jacobs Run recorded) — Runtime probe
-   fixtures under [`testdata/parity/`](../../testdata/parity/); Catch2
-   `RuntimeSemanticsTest` locks toward-zero `DIVIDE`, host-width overflow, `PRINT`/`OUT`
-   formatting, unset-as-zero, and max-6 identifiers. Live Visual CESIL Run (2026-08-03)
-   confirmed Q3/Q7/Q8 and revised Q9/Q10/Q11: Jacobs requires trailing `HALT` and uses
-   `** ERROR: …` banners (engine still fall-off-success + classic `*** … ***` → **gap**);
-   Jacobs accepts longer labels (max-6 kept as **deliberate diverge**). See
-   [`PROBE.md`](../../testdata/parity/PROBE.md) and
-   [`MATRIX.md`](../../testdata/parity/MATRIX.md).
-4. **Golden suite and close-out** (next) — End-to-end fixtures from the Visual CESIL corpus
-   with output compared after normalising host line endings where required; close Q9/Q10
-   engine gaps (require `HALT`; Jacobs banner text); focused per-instruction and edge-case
-   tests; negative fixtures; CLI-facing path coverage. Defer any leftover items explicitly
-   post-1.0 or mark them **specified** / **deliberate diverge**. Assign the release
-   checkpoint version and mark the milestone completed.
+1. **Corpus gate and dialect probes** (done) — Gate fixtures and probe log under
+   [`testdata/parity/`](../../testdata/parity/). Live Visual CESIL Check settled Q4–Q6
+   (`*` comments, unsigned constants, EOF-or-`*` data; `(` kept as deliberate diverge).
+2. **Parser and source compatibility** (done) — Code-section `*` comments in
+   `Parser::parseSyntax`; unsigned / EOF-or-`*` already matched; locked by
+   `SourceCompatibilityTest`.
+3. **Runtime semantics and matrix** (done) — Runtime fixtures and
+   `RuntimeSemanticsTest`; live Run confirmed Q3/Q7/Q8 and exposed Q9/Q10 gaps;
+   Q11 max-6 kept as deliberate diverge.
+4. **Golden suite and close-out** (done) — Closed Q9 (require `HALT`) and Q10 (Jacobs
+   `** ERROR: …` banners); project-owned goldens under
+   [`testdata/parity/golden/`](../../testdata/parity/golden/) with `GoldenCorpusTest`
+   (line-ending normalisation + CLI-path smoke); all fourteen opcodes covered;
+   milestone marked completed at `0.6.0`.
 
-Stage 2 depended on stage 1. Stage 3 locked most runtime rules; live Jacobs Run exposed
-Q9/Q10 gaps for Stage 4. Stage 4 builds the golden corpus on that baseline.
-
-**Out of scope reminder:** undefined *variables* (never-stored names) are settled as
-runtime reads of `0` (not compile errors), distinct from undefined *labels*.
+**Deferred (post-1.0 / later):** vendoring full Jacobs Example 3–5 trees; relaxing
+identifier max-6 to match longer Jacobs names.
 
 ---
 
@@ -102,95 +72,49 @@ runtime reads of `0` (not compile errors), distinct from undefined *labels*.
 
 ### Compatibility matrix against the language reference
 
-- Consume [`docs/language/`](../language/README.md) and its
-  [open-questions](../language/open-questions.md) / conflicts table.
-- Collect the Visual CESIL 2.0 documentation and example programs used as the
-  compatibility corpus (see
-  [`compatibility-corpus.md`](../language/compatibility-corpus.md) when online
-  docs are unavailable).
-- Record each documented lexical rule, instruction, operand form, and runtime edge
-  case as **match**, **gap**, or **not yet established** (and promote
-  **Jacobs-observed** / **open** reference statuses as probes complete).
-- Capture expected output and error conditions from the reference implementation.
-- Keep uncertain or undocumented behaviour explicit; do not infer it from the
-  current implementation. Update `docs/language/` when a probe settles a rule.
+Settled in [`testdata/parity/MATRIX.md`](../../testdata/parity/MATRIX.md): no **gap** or
+**not yet established** rows for the Milestone 6 classic scope (Q11 remains
+**deliberate diverge**).
 
 ### Instruction and machine semantics
 
-Verify and, where necessary, correct:
-
-- `LOAD`, `STORE`, `IN`, `ADD`, `SUBTRACT`, `MULTIPLY`, and `DIVIDE`
-- `JUMP`, `JIZERO`, and `JINEG`
-- `PRINT` with its documented quoted-string operand
-- `OUT`, `LINE`, and `HALT`
-- Initial accumulator and variable-store state
-- Literal and variable resolution, identifier case, and negative integers
-- Integer range / overflow and division semantics
-
-#### Undefined variables and identifier case
-
-Do **not** confuse undefined *labels* (compile-time errors in Visual CESIL and in
-the Milestone 4 fixtures) with undefined *variables* (never-stored names).
-
-Live evidence ([`testdata/parity/PROBE.md`](../../testdata/parity/PROBE.md)):
-
-- [`probe-unset-var.ces`](../../testdata/parity/probe-unset-var.ces): **no compile error**
-  for `LOAD UNSET`.
-- Distinctive case probe (`LOAD +42` / `STORE Foo` / `LOAD FOO` / `OUT`): output **`0`**
-  — store names are **case-sensitive**, and the unset name `FOO` reads as zero.
-
-Do not invent a compile-time undefined-variable diagnostic. Preserve identifier case in
-the store (and likely labels). Mnemonics remain case-insensitive separately.
-
-See also Milestone 4 [`PROBE.md`](../../testdata/diagnostics/PROBE.md) open questions.
+Verified and locked: all fourteen classic opcodes; unset stores as zero; case-sensitive
+names; toward-zero `DIVIDE`; host-width arithmetic; require trailing `HALT`; Jacobs
+runtime banners.
 
 ### Source, data, and labels
 
-Verify and, where necessary, correct:
-
-- Code/data separation and `%` data-section syntax
-- Sequential `IN` consumption and data-exhaustion behaviour
-- Integer parsing in the data section
-- Case-sensitive labels and variables (Jacobs store names; labels assumed same)
-- Forward label references
-- Duplicate and missing label diagnostics
-- Comment, whitespace, and column-layout rules
+Verified: `%` data section; EOF or `*` termination; `*` comments; unsigned constants;
+forward labels; max-6 identifiers (deliberate diverge vs Jacobs).
 
 ### Output and errors
 
-- Match Visual CESIL's spacing and line-ending behaviour for `PRINT`, `OUT`, and
-  `LINE`.
-- Match runtime error conditions such as division by zero and exhausted data.
-- Match syntax and semantic error conditions for invalid instructions, operands,
-  labels, and data.
-- Separate diagnostic meaning from IDE presentation; Milestone 8 owns the visual
-  error-panel layout.
+Pinned by goldens and runtime tests for `PRINT` / `OUT` / `LINE`, `IN` exhaustion,
+division by zero, and missing `HALT`. Compile-time diagnostic wording remains this
+project’s own (Milestone 4).
 
 ### Parity regression suite
 
-This is the project's main language-coverage expansion (see the testing strategy in
-the [project milestones index](../milestones.md)). Prefer golden fixtures derived
-from Visual CESIL over inventing independent edge cases ahead of the audit.
-
-- Add end-to-end fixtures for Visual CESIL example programs.
-- Compare captured program output byte for byte after normalising only host-native
-  line endings where required.
-- Add focused tests for every instruction and each established edge case
-  (`OUT` formatting, divide-by-zero, `IN` exhaustion, overflow, and similar).
-- Add negative fixtures for parser, semantic, and runtime failures.
-- Exercise the same core behaviour through the CLI-facing execution path.
-- Record each matrix entry's covering test so gaps stay visible.
+- Project-owned happy-path and error goldens (`GoldenCorpusTest`)
+- Focused parity runtime tests (`RuntimeSemanticsTest`)
+- Source-gate tests (`SourceCompatibilityTest`)
+- CLI-equivalent parse → interpret smoke (no shell-out required in CI)
 
 ---
 
 ## Done when
 
-- The Milestone 5 language reference has no remaining **open** items that block the
-  documented classic scope (or each leftover is explicitly deferred post-1.0).
-- The compatibility matrix has no **not yet established** entries for that settled
-  scope, including Visual CESIL example compatibility.
-- Every documented instruction and operand form is covered by an automated test.
-- The reference example corpus produces matching output.
-- Established syntax, semantic, and runtime error conditions are covered by tests.
-- There are no known behavioural gaps within the documented classic CESIL scope that
-  Milestone 5 and this milestone agreed to cover for 1.0.
+- [x] Language reference has no blocking **open** items for classic scope (leftovers
+      deferred or **deliberate diverge**).
+- [x] Compatibility matrix has no **not yet established** / **gap** rows for that scope.
+- [x] Every documented instruction covered by an automated test.
+- [x] Golden corpus pins happy-path and runtime-error stdout (with `\r\n` → `\n`
+      normalisation).
+- [x] Checkpoint version `0.6.0`; git tag optional.
+
+### Release note (`0.6.0`)
+
+Language-parity checkpoint: Visual CESIL-aligned source forms (`*` comments, unsigned
+constants, EOF-or-`*` data), runtime semantics (toward-zero divide, host-width ints,
+require `HALT`, Jacobs `** ERROR: …` banners), and an in-repo golden suite. Deliberate
+divergences: classic `(` comments, max-6 identifiers, own compile diagnostic text.

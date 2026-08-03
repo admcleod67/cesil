@@ -53,9 +53,8 @@ notes; see `PROBE.md`):
 - `PRINT` then `OUT` concatenate without an auto space (`Hi1`, `n=42 m=-3`) — **specified**
 - No 24-bit overflow clamp (`8388607×2` → `16777214`) — **specified**
 - Toward-zero `DIVIDE` (`-7/2` → `-3`) — **specified**
-- Trailing `HALT` required (Jacobs error if missing) — **specified**; engine **gap**
-- Runtime banners use Jacobs `** ERROR: …` text — **specified**; engine classic
-  `*** … ***` **gap**
+- Trailing `HALT` required (Jacobs error if missing) — **specified**; engine **match**
+- Runtime banners use Jacobs `** ERROR: …` text — **specified**; engine **match**
 - Identifier max length 6 — **deliberate diverge** (Jacobs allows longer)
 
 ## In-repo examples

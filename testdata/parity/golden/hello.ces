@@ -1,0 +1,6 @@
+        PRINT   "Hello"
+        LINE
+        HALT
+
+%
+*

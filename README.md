@@ -191,10 +191,10 @@ CESIL documentation and historical material:
 
 See **[docs/milestones.md](docs/milestones.md)** for the milestone index.
 
-**Milestone 5** is complete (CESIL language reference under
-[`docs/language/`](docs/language/README.md)). Next up is Milestone 6 (language parity
-against that reference and Visual CESIL examples). The planned path to **1.0.0**
-continues through language and IDE parity, followed by cross-platform release
+**Milestone 6** is complete (language parity checkpoint `0.6.0`: engine alignment with
+[`docs/language/`](docs/language/README.md) and in-repo goldens under
+`testdata/parity/`). Next up is Milestone 8 (Visual CESIL IDE parity). The planned
+path to **1.0.0** continues through IDE parity, followed by cross-platform release
 validation. Improvements beyond Visual CESIL are intentionally deferred until after
 1.0.
 

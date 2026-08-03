@@ -41,13 +41,11 @@ Undefined *variables* read as zero at runtime and are not compile-time errors
 
 ## Runtime banners
 
-Visual CESIL live Run (2026-08-03) — **specified** for Visual CESIL parity:
+Visual CESIL parity banners (**specified**):
 
 - `** ERROR: Attempt to read more data than was provided`
 - `** ERROR: Attempted division by zero`
-- `** ERROR: No HALT at end of program` (missing trailing `HALT`)
+- `** ERROR: No HALT at end of program`
 
-Classic / Wikipedia cite different `*** … ***` strings. The engine still emits those
-classic banners today → **gap** until Stage 4 aligns stdout with Jacobs (see
-[`testdata/parity/PROBE.md`](../../testdata/parity/PROBE.md)). Compile-time diagnostic
-wording remains this project's own (**specified** / deliberate diverge where noted).
+Compile-time diagnostic wording remains this project's own (**specified** / deliberate
+diverge where noted). Classic Wikipedia `*** … ***` strings are not used for stdout.

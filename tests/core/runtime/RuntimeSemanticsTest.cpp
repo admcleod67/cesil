@@ -64,23 +64,25 @@ TEST_CASE("Runtime semantics — PRINT/OUT adjacency", "[runtime][parity]") {
     CHECK(io.captured() == "Hi1\n");
 }
 
-TEST_CASE("Runtime semantics — fall off end without HALT", "[runtime][parity]") {
+TEST_CASE("Runtime semantics — no HALT at end of program", "[runtime][parity]") {
     const auto parsed = cesil::Parser{}.parse(readFixture("runtime-no-halt.ces"));
     REQUIRE(parsed.ok_);
     CaptureIoHost io;
     const auto ran = runParsed(parsed, io);
-    CHECK(ran.ok_);
-    CHECK(io.captured() == "5\n");
+    CHECK_FALSE(ran.ok_);
+    CHECK(io.captured().find("** ERROR: No HALT at end of program") != std::string::npos);
+    CHECK(io.captured().find("5\n") != std::string::npos);
 }
 
-TEST_CASE("Runtime semantics — classic runtime banners", "[runtime][parity]") {
+TEST_CASE("Runtime semantics — Jacobs runtime banners", "[runtime][parity]") {
     SECTION("IN exhaustion") {
         const auto parsed = cesil::Parser{}.parse(readFixture("runtime-in-exhaust.ces"));
         REQUIRE(parsed.ok_);
         CaptureIoHost io;
         const auto ran = runParsed(parsed, io);
         CHECK_FALSE(ran.ok_);
-        CHECK(io.captured().find("*** PROGRAM REQUIRES MORE DATA ***") != std::string::npos);
+        CHECK(io.captured().find("** ERROR: Attempt to read more data than was provided") !=
+              std::string::npos);
     }
 
     SECTION("division by zero") {
@@ -89,7 +91,7 @@ TEST_CASE("Runtime semantics — classic runtime banners", "[runtime][parity]") 
         CaptureIoHost io;
         const auto ran = runParsed(parsed, io);
         CHECK_FALSE(ran.ok_);
-        CHECK(io.captured().find("*** DIVISION BY ZERO ***") != std::string::npos);
+        CHECK(io.captured().find("** ERROR: Attempted division by zero") != std::string::npos);
     }
 }
 

@@ -3,7 +3,8 @@
 # Open questions and conflicts
 
 Evidence: [`testdata/parity/PROBE.md`](../../testdata/parity/PROBE.md).
-Remaining Stage 4 work: example goldens and closing engine **gaps** (Q9/Q10).
+Milestone 6 Stages 1–4 settle the checklist below for the 0.6.0 language-parity
+checkpoint. Deferred: vendoring full Jacobs Example trees; relaxing max-6 labels.
 
 ## Probe checklist
 
@@ -11,15 +12,15 @@ Remaining Stage 4 work: example goldens and closing engine **gaps** (Q9/Q10).
 |----|--------|--------|
 | Q1 | Undefined variables (never-stored) | **specified** — compile OK; read as `0` |
 | Q2 | Store-name case | **specified** — case-sensitive |
-| Q3 | Integer range / overflow | **specified** — no 24-bit clamp/trap (live Jacobs: `8388607×2` → `16777214`) |
+| Q3 | Integer range / overflow | **specified** — no 24-bit clamp/trap |
 | Q4 | Unsigned constants | **specified** |
 | Q5 | `*` / `(` comments | **specified** (`*`); `(` **deliberate diverge** |
 | Q6 | Data EOF or `*` | **specified** |
-| Q7 | `DIVIDE` rounding | **specified** — toward zero (live: `-7/2` → `-3`) |
-| Q8 | `OUT` / `PRINT` / `LINE` | **specified** — no auto space; bare decimal `OUT` (live: `n=42 m=-3`) |
-| Q9 | Fall off end without `HALT` | **specified** — Jacobs requires `HALT` (`** ERROR: No HALT at end of program`). Engine still allows fall-off → **gap** |
-| Q10 | Runtime banner text | **specified** — Jacobs live strings: `** ERROR: Attempt to read more data than was provided`; `** ERROR: Attempted division by zero`. Engine classic `*** … ***` → **gap** |
-| Q11 | Label length > 6 | **deliberate diverge** — keep classic max 6; Jacobs accepts longer (`NOWHERE` → undefined-label error) |
+| Q7 | `DIVIDE` rounding | **specified** — toward zero |
+| Q8 | `OUT` / `PRINT` / `LINE` | **specified** — no auto space; bare decimal `OUT` |
+| Q9 | Fall off end without `HALT` | **specified** — require `HALT`; Jacobs banner |
+| Q10 | Runtime banner text | **specified** — Jacobs `** ERROR: …` strings |
+| Q11 | Label length > 6 | **deliberate diverge** — keep classic max 6 |
 
 ## Settled divergences (not open)
 
@@ -40,9 +41,9 @@ Remaining Stage 4 work: example goldens and closing engine **gaps** (Q9/Q10).
 | Comments | `(` | `*` (rejects `(`) | Both (`(` diverge) |
 | Constants | Often signed | Unsigned OK | Both |
 | Data terminator | `*` | EOF or `*` | Either |
-| Integer width | 24-bit cited | Live: no clamp (`16777214`) | Host `int`, no trap |
-| Unset variables | Often `0` | Live: `0` | `0` |
+| Integer width | 24-bit cited | No clamp | Host `int`, no trap |
+| Unset variables | Often `0` | `0` | `0` |
 | Store case | Unclear | Case-sensitive | Case-sensitive |
-| End without `HALT` | Often OK | Error | Match Jacobs (engine **gap**) |
-| Runtime banners | `*** … ***` | `** ERROR: …` | Match Jacobs (engine **gap**) |
+| End without `HALT` | Often OK | Error | Match Jacobs |
+| Runtime banners | `*** … ***` | `** ERROR: …` | Match Jacobs |
 | Label length | Max 6 | Longer OK | Max 6 (diverge) |

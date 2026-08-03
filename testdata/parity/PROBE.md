@@ -69,9 +69,9 @@ Wikipedia banners and fall-off-without-`HALT` are **superseded** where Jacobs di
 | `runtime-divide-neg.ces` | Accept | `-3` | **Q7 specified** — toward-zero (`-7/2`); engine **match** |
 | `runtime-outdigits.ces` | Accept | `n=42 m=-3` | **Q8 specified** — bare decimal `OUT`; no auto spaces; engine **match** |
 | `runtime-overflow.ces` | Accept | `16777214` (`8388607×2`) | **Q3 specified** — no 24-bit clamp/trap; engine **match** |
-| `runtime-no-halt.ces` | Accept | `** ERROR: No HALT at end of program` | **Q9 specified** — programs must end with `HALT` (Jacobs). Engine currently allows fall-off success → **gap** |
-| `runtime-in-exhaust.ces` | Accept | `** ERROR: Attempt to read more data than was provided` | **Q10 specified** — match Jacobs banner text for Visual CESIL parity. Engine still prints classic `*** PROGRAM REQUIRES MORE DATA ***` → **gap** |
-| `runtime-divzero.ces` | Accept | `** ERROR: Attempted division by zero` | **Q10 specified** — match Jacobs banner. Engine still prints classic `*** DIVISION BY ZERO ***` → **gap** |
+| `runtime-no-halt.ces` | Accept | `** ERROR: No HALT at end of program` | **Q9 specified** — programs must end with `HALT` (Jacobs). Engine **match** (Stage 4) |
+| `runtime-in-exhaust.ces` | Accept | `** ERROR: Attempt to read more data than was provided` | **Q10 specified** — Jacobs banner text. Engine **match** (Stage 4) |
+| `runtime-divzero.ces` | Accept | `** ERROR: Attempted division by zero` | **Q10 specified** — Jacobs banner. Engine **match** (Stage 4) |
 | `runtime-long-label.ces` | Reject — undefined label (`JUMP NOWHERE`) | N/A | **Q11:** Jacobs accepts 7-char `NOWHERE` as a jump spelling then fails lookup. This dialect keeps classic **max 6** identifiers → **deliberate diverge** |
 
 | Q | Status after live runtime probe |
@@ -81,10 +81,10 @@ Wikipedia banners and fall-off-without-`HALT` are **superseded** where Jacobs di
 | Q3 | **specified** — host-width / no 24-bit clamp (live: `16777214`) |
 | Q7 | **specified** — toward-zero `DIVIDE` (live: `-3`) |
 | Q8 | **specified** — no auto space; bare digits (live: `n=42 m=-3`) |
-| Q9 | **specified** — require trailing `HALT`; missing `HALT` is an error (Jacobs). Engine **gap** |
-| Q10 | **specified** — Jacobs `** ERROR: …` banners (exact strings above). Engine classic `*** … ***` **gap** |
+| Q9 | **specified** — require trailing `HALT`; missing `HALT` is an error (Jacobs). Engine **match** (Stage 4) |
+| Q10 | **specified** — Jacobs `** ERROR: …` banners (exact strings above). Engine **match** (Stage 4) |
 | Q11 | **deliberate diverge** — keep max length 6; Jacobs allows longer names |
 
 Stage 2 source-form work (unsigned constants, `*` comments, EOF-or-`*` data) remains
-done. Stage 4 should close Q9/Q10 engine gaps for Visual CESIL output parity and keep
-Q11 as a documented diverge.
+done. Stage 4 closed Q9/Q10 engine gaps; Q11 stays a documented diverge. Project-owned
+goldens live under [`golden/`](golden/).

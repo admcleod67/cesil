@@ -1,14 +1,14 @@
 # Language-parity probe fixtures (Milestone 6)
 
 Curated CESIL programs for Visual CESIL 2.0 parity work: Stage 1 corpus gate,
-Stage 2 parser locks, and Stage 3 runtime probes.
+Stage 2 parser locks, Stage 3 runtime probes, and Stage 4 golden outputs.
 
 See [Milestone 6](../../docs/milestones/06-language-parity.md),
 [`docs/language/open-questions.md`](../../docs/language/open-questions.md),
 [`PROBE.md`](PROBE.md), and [`MATRIX.md`](MATRIX.md).
 
-**Do not treat current `cesil-core` behaviour as the oracle** for unsettled edges.
-Prefer Visual CESIL live Check/Run (or classic sources where cited).
+Prefer Visual CESIL live Check/Run (or classic sources where cited) when extending
+the corpus. Settled Stage 1–4 rules are locked by Catch2 tests.
 
 ## Layout
 
@@ -24,7 +24,7 @@ matching `examples/total.ces`. Identifiers stay within six characters except
 3. Fill [`PROBE.md`](PROBE.md); update [`MATRIX.md`](MATRIX.md) and `docs/language/`.
 
 Gate fixtures, stubs, and **runtime** fixtures were live-checked/run on Visual CESIL
-2026-08-03. Results are in [`PROBE.md`](PROBE.md); Q9/Q10 remain engine **gaps**.
+2026-08-03. Results are in [`PROBE.md`](PROBE.md). Q9/Q10 engine gaps closed in Stage 4.
 
 ## Fixture index
 
@@ -57,3 +57,8 @@ Gate fixtures, stubs, and **runtime** fixtures were live-checked/run on Visual C
 | `runtime-divzero.ces` | Q10 | Jacobs: `** ERROR: Attempted division by zero` |
 | `runtime-overflow.ces` | Q3 | `8388607 * 2` → `16777214` |
 | `runtime-long-label.ces` | Q11 | `JUMP NOWHERE` → undefined label (Jacobs allows 7-char name) |
+
+### Golden corpus (Stage 4)
+
+Project-owned programs and expected stdout under [`golden/`](golden/) (not Jacobs
+source trees). Covered by `GoldenCorpusTest`.

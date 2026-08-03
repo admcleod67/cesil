@@ -4,7 +4,7 @@ This directory is the project’s description of **classic CESIL** as this engin
 to implement it for the 1.0 path. It is not a copy of any vendor manual.
 
 **Milestone:** [Milestone 5 — CESIL language reference](../milestones/05-language-reference.md)  
-**Parity work:** [Milestone 6 — Visual CESIL language parity](../milestones/06-language-parity.md)
+**Parity:** [Milestone 6 — Visual CESIL language parity](../milestones/06-language-parity.md) (completed at `0.6.0`)
 
 ## How to read status labels
 
@@ -31,7 +31,7 @@ Where a whole section is mostly settled, individual bullets still call out **ope
 | [Program structure](program-structure.md) | Code, `%` data, `*`, `IN` consumption |
 | [Runtime](runtime.md) | Start state, arithmetic, jumps, I/O, runtime errors |
 | [Diagnostics](diagnostics.md) | Compile vs run; Milestone 4 accumulation rules |
-| [Open questions](open-questions.md) | Conflicts and Milestone 6 probe list |
+| [Open questions](open-questions.md) | Settled conflicts and deliberate divergences |
 | [Compatibility corpus](compatibility-corpus.md) | Visual CESIL examples (local tree) |
 
 ## Out of scope for 1.0

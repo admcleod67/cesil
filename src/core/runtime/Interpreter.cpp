@@ -96,7 +96,7 @@ bool Interpreter::executeCurrent(bool& halted, RunResult& result) {
         }
         case OpCode::In: {
             if (dataPtr_ >= data_.size()) {
-                io_.writeString("*** PROGRAM REQUIRES MORE DATA ***");
+                io_.writeString("** ERROR: Attempt to read more data than was provided");
                 pushDiagnostic(result.diagnostics_, DiagnosticSeverity::Error,
                                "program requires more data (IN past end of data section)",
                                inst.lineNumber_, 0);
@@ -156,7 +156,7 @@ bool Interpreter::executeCurrent(bool& halted, RunResult& result) {
                 return false;
             }
             if (divisor == 0) {
-                io_.writeString("*** DIVISION BY ZERO ***");
+                io_.writeString("** ERROR: Attempted division by zero");
                 pushDiagnostic(result.diagnostics_, DiagnosticSeverity::Error, "division by zero",
                                inst.lineNumber_, 0);
                 return false;
@@ -268,7 +268,10 @@ RunResult Interpreter::run() {
         }
     }
 
-    result.ok_ = true;
+    // Fell off the end without executing HALT (Visual CESIL requires a trailing HALT).
+    io_.writeString("** ERROR: No HALT at end of program");
+    pushDiagnostic(result.diagnostics_, DiagnosticSeverity::Error, "no HALT at end of program", 0, 0);
+    result.ok_ = false;
     return result;
 }
 

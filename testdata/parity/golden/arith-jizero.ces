@@ -1,0 +1,15 @@
+        LOAD    10
+        SUBTRACT 3
+        MULTIPLY 2
+        STORE   N
+        LOAD    N
+        JIZERO  Z
+        OUT
+        LINE
+        HALT
+Z       PRINT   "zero"
+        LINE
+        HALT
+
+%
+*
