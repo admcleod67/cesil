@@ -50,5 +50,5 @@ These are intentional and already documented:
 | Variable init / unset reads | Often treated as `0` | Compile OK; unset reads as `0` (live) | **Jacobs-observed** (Q1) |
 | Identifier case (stores) | Often unclear / folded in teaching materials | Case-sensitive (`Foo` ≠ `FOO`) | **specified** (Q2) |
 
-Engine implementation of Q4–Q6 is Stage 2; “this dialect” above is the specification,
-not a claim that `cesil-core` already matches.
+Engine implementation of Q4–Q6 is **done** (Milestone 6 Stage 2). Remaining **open** /
+**Jacobs-observed** rows belong to Stage 3+.

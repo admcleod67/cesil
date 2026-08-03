@@ -3,6 +3,7 @@ add_executable(cesil_tests
     parser/ParserTest.cpp
     parser/SemanticsTest.cpp
     parser/DiagnosticAccumulationTest.cpp
+    parser/SourceCompatibilityTest.cpp
     runtime/SmokeTest.cpp
 )
 

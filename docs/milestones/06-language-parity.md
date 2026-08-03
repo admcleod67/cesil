@@ -68,14 +68,16 @@ constants, and optional trailing `*`) block running the Visual CESIL example cor
    `*` comments, unsigned constants, and EOF-or-`*` data termination. Language-reference
    statuses for the gate items were updated so Stage 2 has an implement list. No engine
    changes in this stage.
-2. **Parser and source compatibility** (next) — Implement the settled source-form rules so
-   the Visual CESIL examples compile (comments, constants, data terminator, and any
-   related case/identifier decisions from stage 1). Smoke that the example set parses;
-   keep Milestone 4 deliberate diagnostic divergences unless a probe forces a rethink.
-3. **Runtime semantics and matrix** — Probe and settle remaining open questions
-   (undefined variables, identifier case, overflow, `DIVIDE` rounding, I/O bytes,
-   runtime banners, fall-off without `HALT`, and similar). Correct interpreter gaps;
-   keep the compatibility matrix and language-reference statuses current.
+2. **Parser and source compatibility** (done) — Code-section `*` comments skipped in
+   `Parser::parseSyntax` without changing data-section `*` termination. Unsigned
+   constants and EOF-or-`*` data end confirmed as already matching and locked by
+   `SourceCompatibilityTest` against [`testdata/parity/`](../../testdata/parity/) gate
+   fixtures. Classic `(` comments and case-sensitive store names preserved. Matrix
+   updated in [`MATRIX.md`](../../testdata/parity/MATRIX.md).
+3. **Runtime semantics and matrix** (next) — Probe and settle remaining open questions
+   (undefined variables, overflow, `DIVIDE` rounding, I/O bytes, runtime banners,
+   fall-off without `HALT`, and similar). Correct interpreter gaps; keep the
+   compatibility matrix and language-reference statuses current.
 4. **Golden suite and close-out** — End-to-end fixtures from the Visual CESIL corpus
    with output compared after normalising host line endings where required; focused
    per-instruction and edge-case tests; negative fixtures; CLI-facing path coverage.
@@ -83,7 +85,7 @@ constants, and optional trailing `*`) block running the Visual CESIL example cor
    **deliberate diverge**. Assign the release checkpoint version and mark the
    milestone completed.
 
-Stage 2 depends on stage 1. Stage 3 can overlap lightly with late stage 2 once
+Stage 2 depended on stage 1. Stage 3 can overlap lightly with late stage 2 once
 examples parse, but runtime golden expectations should wait for stage 3 probes.
 Stage 4 depends on settled matrix entries from stages 1–3.
 

@@ -253,6 +253,16 @@ bool Parser::parseSyntax(Lexer& lexer, ParseResult& result) const {
             }
             break;
         }
+        // Visual CESIL-style full-line comments: '*' at the start of a code line.
+        // Data-section '*' remains the end-of-data marker in parseDataSection.
+        if (t.type_ == TokenType::Star) {
+            lexer.getNextToken();
+            discardRestOfLine(lexer);
+            if (lexer.peekToken().type_ == TokenType::Newline) {
+                lexer.getNextToken();
+            }
+            continue;
+        }
         if (!parseInstructionLine(lexer, result)) {
             hadSyntaxError = true;
             continue;
