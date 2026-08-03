@@ -26,24 +26,32 @@ Typical contents used when drafting this reference:
 
 ## In-repo probe fixtures (Milestone 6 Stage 1)
 
-Gate probes for Q4–Q6 (unsigned constants, `*` / `(` comments, data terminator) live
-under [`testdata/parity/`](../../testdata/parity/). See that directory’s
-[`README.md`](../../testdata/parity/README.md), [`PROBE.md`](../../testdata/parity/PROBE.md),
-and [`MATRIX.md`](../../testdata/parity/MATRIX.md). Do not vendor Jacobs sources into
+Gate probes for Q4–Q6 (unsigned constants, `*` comments, data terminator; `(` as
+classic control) live under [`testdata/parity/`](../../testdata/parity/). See that
+directory’s [`README.md`](../../testdata/parity/README.md),
+[`PROBE.md`](../../testdata/parity/PROBE.md), and
+[`MATRIX.md`](../../testdata/parity/MATRIX.md). Do not vendor Jacobs sources into
 the repo; use an external Visual CESIL 2.0 tree for his examples.
 
 ## Implications for the dialect
 
-From Stage 1 probe evidence (shipped examples + release notes; see `PROBE.md`):
+From Stage 1 probe evidence (live Visual CESIL Check + shipped examples / release
+notes; see `PROBE.md`):
 
-- `*` full-line comments in the **code** section — **specified** (corpus); must not
-  break classic end-of-data `*`
-- Unsigned numeric literals in code and data — **specified** (corpus)
-- Data sections that end at EOF without a final `*` line — **specified** (corpus);
-  classic trailing `*` remains valid
-- Variables initialised to zero at run start (2.0) — still **Jacobs-observed** (Stage 3)
+- `*` full-line comments in the **code** section — **specified** (Jacobs live Check);
+  must not break classic end-of-data `*`
+- Classic `(` line comments — **deliberate diverge** (Jacobs rejects with an
+  unrecognised-instruction error; this dialect keeps them)
+- Unsigned numeric literals in code and data — **specified** (Jacobs live Check)
+- Data sections that end at EOF without a final `*` line — **specified** (Jacobs live
+  Check); classic trailing `*` remains valid (also live Check)
+- Variables initialised to zero at run start (2.0) — **Jacobs-observed**; never-stored
+  names are not compile errors and read as `0` (live)
+- Store names are **case-sensitive** (`Foo` ≠ `FOO`) — **specified** (live Run → `0`)
 - Optional `+` on positive constants; `-0` disallowed (1.2 notes) — **Jacobs-observed** /
   keep accepting `+`; `-0` still **open** / **Jacobs-observed**
+- `PRINT` then `OUT` concatenate without an auto space (`smoke-print-out.ces` → `Hi1`)
+  — **Jacobs-observed (partial)** for Q8
 
 ## In-repo examples
 

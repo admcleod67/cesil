@@ -8,7 +8,7 @@
 |------|------|--------|
 | Accumulator | Starts at zero | **specified** (common classic practice; confirm vs card if needed) |
 | Store locations | Visual CESIL 2.0 release notes: variables initialised to zero at start of execution | **Jacobs-observed** |
-| Never-stored name read via `LOAD` / arithmetic | Often treated as zero in classic CESIL teaching | **open** (do not invent a compile-time “undefined variable” error until probed) |
+| Never-stored name read via `LOAD` / arithmetic | Not a compile error; reads as zero (Jacobs live: unset `FOO` → `OUT` `0`) | **Jacobs-observed** / treat as dialect rule for Stage 3 |
 | Program counter | First instruction | **specified** |
 | Data pointer | First data value | **specified** |
 
@@ -32,8 +32,9 @@
 - `PRINT` writes its string; `OUT` writes the accumulator; `LINE` writes a newline.
   **specified**
 - No automatic spaces between adjacent `PRINT` / `OUT` fragments unless present in the
-  string. **specified** (classic I/O model)
-- Exact digit formatting (leading spaces, width) for `OUT`: **open**
+  string. **specified** / **Jacobs-observed** (`smoke-print-out.ces` live Run → `Hi1`)
+- Exact digit formatting (leading spaces, width) for `OUT`: **open** (single-digit bare
+  `1` observed; multi-digit / padding unprobed)
 
 ## Runtime vs compile-time
 

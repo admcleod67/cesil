@@ -18,6 +18,12 @@ matching `examples/total.ces`. Identifiers stay within six characters.
 
 ## Windows probe
 
+**Status:** gate fixtures checked live on Visual CESIL (2026-08-03). Stage 3 stubs and
+`smoke-print-out.ces` also probed the same day (see [`PROBE.md`](PROBE.md)). Matrix stub:
+[`MATRIX.md`](MATRIX.md).
+
+Original procedure (kept for re-probes):
+
 1. Prefer **Visual CESIL 2.0** on Windows (local distribution; not vendored here — see
    [`docs/language/compatibility-corpus.md`](../../docs/language/compatibility-corpus.md)).
 2. Check and/or Run each gate fixture below.
@@ -33,16 +39,16 @@ matching `examples/total.ces`. Identifiers stay within six characters.
 |------|--------|--------|
 | `gate-unsigned-constant.ces` | Q4 | Unsigned literals (`LOAD 0`, `ADD 8`) |
 | `gate-star-comment.ces` | Q5 | `*` full-line comments (Jacobs style) |
-| `gate-paren-comment.ces` | Q5 | Classic `(` comment line (control) |
+| `gate-paren-comment.ces` | Q5 | Classic `(` comment line (Jacobs rejects; deliberate diverge control) |
 | `gate-data-no-star.ces` | Q6 | Data section ending at EOF (no trailing `*`) |
 | `gate-data-with-star.ces` | Q6 | Classic trailing `*` (control) |
-| `smoke-print-out.ces` | Q8 seed | Tiny `PRINT` / `OUT` / `LINE` (optional stdout capture) |
+| `smoke-print-out.ces` | Q8 seed | Tiny `PRINT` / `OUT` / `LINE` (live Run: `Hi1`) |
 
 ### Stage 3-oriented stubs (optional in Stage 1)
 
 | File | Open Q | Intent |
 |------|--------|--------|
-| `probe-unset-var.ces` | Q1 | `LOAD` of a never-stored name |
-| `probe-case-fold.ces` | Q2 | `STORE Foo` then `LOAD FOO` |
+| `probe-unset-var.ces` | Q1 | `LOAD` of a never-stored name (compile OK; unset reads as `0`) |
+| `probe-case-fold.ces` | Q2 | `LOAD +42` / `STORE Foo` / `LOAD FOO` / `OUT` → `0` (case-sensitive stores) |
 
 These stubs do **not** block Stage 1 close-out.

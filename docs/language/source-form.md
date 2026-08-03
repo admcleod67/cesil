@@ -35,7 +35,7 @@ Used for line labels and store names:
 | Continue with letters or digits | **specified** |
 | Maximum length **six** characters | **specified** (classic / cesil.org / Wikipedia) |
 | Case of mnemonics | Instructions are recognised case-insensitively | **specified** (practical dialect; matches common implementations) |
-| Case of labels and store names | Whether `FOO` and `foo` are the same name | **open** (Stage 3; `probe-case-fold.ces`) |
+| Case of labels and store names | Store names are case-sensitive (`Foo` ≠ `FOO`) | **specified** (Jacobs live Run on `probe-case-fold.ces`). Label case assumed same pending a dedicated probe |
 
 ## Numeric constants
 
@@ -55,12 +55,15 @@ quoted payload are **open**.
 
 | Form | Status |
 |------|--------|
-| Line beginning with `(` — remainder of line is a comment (classic / Wikipedia) | **specified** |
-| Line beginning with `*` in the **code** section — remainder of line is a comment (Visual CESIL examples) | **specified** (Stage 1 corpus gate) |
-| `*` after `%` as end-of-data marker | **specified** (classic); must remain distinct from code-section `*` comments |
+| Line beginning with `(` — remainder of line is a comment (classic / Wikipedia) | **deliberate diverge** (Jacobs rejects; live Check on `gate-paren-comment.ces`) |
+| Line beginning with `*` in the **code** section — remainder of line is a comment (Visual CESIL) | **specified** (Stage 1; Jacobs live Check + corpus) |
+| `*` after `%` as end-of-data marker | **specified** (classic + Jacobs live Check); must remain distinct from code-section `*` comments |
 
-Both comment forms are accepted in this dialect. Stage 2 must implement `*` comments
-without breaking data-section `*`. See [Program structure](program-structure.md).
+This dialect accepts **both** forms: `*` for Visual CESIL corpus compatibility, and
+`(` for classic teaching materials. Stage 2 must implement `*` comments without
+breaking data-section `*` or existing `(` support. See
+[Program structure](program-structure.md) and
+[`testdata/parity/PROBE.md`](../../testdata/parity/PROBE.md).
 
 ## Mnemonics
 

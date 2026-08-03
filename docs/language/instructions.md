@@ -55,6 +55,8 @@ Missing jump targets are compile-time errors. **specified** (Jacobs and this pro
 
 Exact spacing around `OUT` values and host newline conventions (`\n` vs `\r\n`) are
 **open** for byte-identical golden tests (normalise line endings where required).
+Adjacent `PRINT` / `OUT` with no separator is **Jacobs-observed**
+(`smoke-print-out.ces` live Run → `Hi1`).
 
 ## Operand shape summary
 

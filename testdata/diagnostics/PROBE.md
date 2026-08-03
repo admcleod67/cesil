@@ -56,8 +56,8 @@ Jacobs remains the behavioural **minimum** for conditions he does report.
 ## Open questions (not Milestone 4 decisions)
 
 - **Undefined variables** — Distinct from undefined *labels* (which Jacobs does
-  reject at compile time). Classic CESIL often allows `LOAD`/`ADD` of a never-stored
-  name and reads it as `0`. Confirm with a Visual CESIL runtime probe under
-  Milestone 6 before adding any compile-time “undefined variable” diagnostic.
-  Candidates: `LOAD UNSET` / `OUT` with no prior `STORE`; `ADD UNSET` after
-  `LOAD +0`; case folding after `STORE Foo` / `LOAD FOO`.
+  reject at compile time). Live Check on `testdata/parity/probe-unset-var.ces`:
+  `LOAD UNSET` is **not** a compile error. Live Run evidence also shows unset names
+  read as `0`, and store names are case-sensitive (`Foo` ≠ `FOO`) — see
+  [`testdata/parity/PROBE.md`](../parity/PROBE.md). Do not add a compile-time
+  undefined-variable diagnostic in Milestone 4.

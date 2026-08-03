@@ -60,13 +60,14 @@ engine or golden-suite changes — several
 constants, and optional trailing `*`) block running the Visual CESIL example corpus.
 
 1. **Corpus gate and dialect probes** (done) — In-repo gate fixtures and probe log live
-   under [`testdata/parity/`](../../testdata/parity/). Evidence for Q4–Q6 was taken from
-   the Visual CESIL 2.0 distribution examples and `Release Notes.htm` (see
-   [`PROBE.md`](../../testdata/parity/PROBE.md) and
-   [`MATRIX.md`](../../testdata/parity/MATRIX.md)); live Windows Check/Run of the
-   fixtures is still recommended for UI confirmation. Language-reference statuses for
-   the gate items were updated so Stage 2 has an implement list. No engine changes in
-   this stage.
+   under [`testdata/parity/`](../../testdata/parity/). Evidence for Q4–Q6 comes from the
+   Visual CESIL 2.0 distribution examples / `Release Notes.htm` and a **live Check** of
+   the gate fixtures (2026-08-03; see [`PROBE.md`](../../testdata/parity/PROBE.md) and
+   [`MATRIX.md`](../../testdata/parity/MATRIX.md)). Notable live finding: Jacobs rejects
+   classic `(` comments (this dialect keeps them as a deliberate diverge) while accepting
+   `*` comments, unsigned constants, and EOF-or-`*` data termination. Language-reference
+   statuses for the gate items were updated so Stage 2 has an implement list. No engine
+   changes in this stage.
 2. **Parser and source compatibility** (next) — Implement the settled source-form rules so
    the Visual CESIL examples compile (comments, constants, data terminator, and any
    related case/identifier decisions from stage 1). Smoke that the example set parses;
@@ -121,22 +122,22 @@ Verify and, where necessary, correct:
 - Literal and variable resolution, identifier case, and negative integers
 - Integer range / overflow and division semantics
 
-#### Undefined variables (explicit probe)
+#### Undefined variables and identifier case
 
 Do **not** confuse undefined *labels* (compile-time errors in Visual CESIL and in
-the Milestone 4 fixtures) with undefined *variables* (never-stored names). Classic
-CESIL often allows `LOAD` / `ADD` / … of an unset name and reads it as `0`; this
-project's interpreter currently does the same. Treat the rule as **not yet
-established** until Visual CESIL is probed, for example:
+the Milestone 4 fixtures) with undefined *variables* (never-stored names).
 
-- `LOAD UNSET` then `OUT` with no prior `STORE` — compile success? output `0`?
-- `LOAD +0` then `ADD UNSET` — same questions
-- `STORE Foo` then `LOAD FOO` — case folding of store names
+Live evidence ([`testdata/parity/PROBE.md`](../../testdata/parity/PROBE.md)):
 
-Only after that probe should the compatibility matrix mark “unset variable” as
-match, gap, or deliberate post-1.0 extension. Milestone 4 must not invent a
-compile-time undefined-variable diagnostic from the diagnostic fixtures alone
-(see [`PROBE.md`](../../testdata/diagnostics/PROBE.md) open questions).
+- [`probe-unset-var.ces`](../../testdata/parity/probe-unset-var.ces): **no compile error**
+  for `LOAD UNSET`.
+- Distinctive case probe (`LOAD +42` / `STORE Foo` / `LOAD FOO` / `OUT`): output **`0`**
+  — store names are **case-sensitive**, and the unset name `FOO` reads as zero.
+
+Do not invent a compile-time undefined-variable diagnostic. Preserve identifier case in
+the store (and likely labels). Mnemonics remain case-insensitive separately.
+
+See also Milestone 4 [`PROBE.md`](../../testdata/diagnostics/PROBE.md) open questions.
 
 ### Source, data, and labels
 
@@ -145,7 +146,7 @@ Verify and, where necessary, correct:
 - Code/data separation and `%` data-section syntax
 - Sequential `IN` consumption and data-exhaustion behaviour
 - Integer parsing in the data section
-- Case-insensitive labels and variables
+- Case-sensitive labels and variables (Jacobs store names; labels assumed same)
 - Forward label references
 - Duplicate and missing label diagnostics
 - Comment, whitespace, and column-layout rules

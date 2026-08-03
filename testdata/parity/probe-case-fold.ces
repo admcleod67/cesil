@@ -1,3 +1,4 @@
+        LOAD    +42
         STORE   Foo
         LOAD    FOO
         OUT
