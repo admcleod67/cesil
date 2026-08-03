@@ -1,7 +1,8 @@
 # Compatibility matrix (Milestone 6 Stages 1–3)
 
-Evidence: [`PROBE.md`](PROBE.md). Engine locks: `SourceCompatibilityTest`,
-`RuntimeSemanticsTest`.
+Evidence: [`PROBE.md`](PROBE.md) (including live Visual CESIL runtime Run 2026-08-03).
+Engine locks: `SourceCompatibilityTest`, `RuntimeSemanticsTest` (may lag Jacobs where
+**gap** is noted).
 
 ## Source gate (Stages 1–2)
 
@@ -19,11 +20,11 @@ Evidence: [`PROBE.md`](PROBE.md). Engine locks: `SourceCompatibilityTest`,
 |-------|---|------------|-------------|----------------|
 | Never-stored variable | Q1 | `probe-unset-var.ces` | **specified** | **match** |
 | Store-name case | Q2 | `probe-case-fold.ces` | **specified** | **match** |
-| Host-width arithmetic / no 24-bit trap | Q3 | `runtime-overflow.ces` | **specified** | **match** (live Jacobs overflow Run deferred) |
-| `DIVIDE` toward zero | Q7 | `runtime-divide-neg.ces` | **specified** | **match** |
-| `PRINT`/`OUT` formatting | Q8 | `smoke-print-out.ces`, `runtime-outdigits.ces` | **specified** | **match** |
-| Fall off end without `HALT` | Q9 | `runtime-no-halt.ces` | **specified** | **match** |
-| Runtime banners | Q10 | `runtime-in-exhaust.ces`, `runtime-divzero.ces` | **specified** | **match** |
-| Identifier max length 6 | Q11 | `runtime-long-label.ces` | **specified** (classic; Jacobs may be laxer) | **match** |
+| Host-width arithmetic / no 24-bit trap | Q3 | `runtime-overflow.ces` | **specified** (live: `16777214`) | **match** |
+| `DIVIDE` toward zero | Q7 | `runtime-divide-neg.ces` | **specified** (live: `-3`) | **match** |
+| `PRINT`/`OUT` formatting | Q8 | `smoke-print-out.ces`, `runtime-outdigits.ces` | **specified** (live: `n=42 m=-3`) | **match** |
+| Require `HALT` at end | Q9 | `runtime-no-halt.ces` | **specified** (Jacobs error if missing) | **gap** (engine allows fall-off success) |
+| Runtime banners | Q10 | `runtime-in-exhaust.ces`, `runtime-divzero.ces` | **specified** (Jacobs `** ERROR: …` text) | **gap** (engine uses classic `*** … ***`) |
+| Identifier max length 6 | Q11 | `runtime-long-label.ces` | **deliberate diverge** (classic max 6; Jacobs accepts longer) | **match** (max 6) |
 
-Broader golden corpus rows land in Stage 4.
+Broader golden corpus rows land in Stage 4 (including closing Q9/Q10 gaps).

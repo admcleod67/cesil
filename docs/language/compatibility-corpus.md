@@ -50,8 +50,13 @@ notes; see `PROBE.md`):
 - Store names are **case-sensitive** (`Foo` ≠ `FOO`) — **specified** (live Run → `0`)
 - Optional `+` on positive constants; `-0` disallowed (1.2 notes) — **Jacobs-observed** /
   keep accepting `+`; `-0` still **open** / **Jacobs-observed**
-- `PRINT` then `OUT` concatenate without an auto space (`smoke-print-out.ces` → `Hi1`)
-  — **Jacobs-observed (partial)** for Q8
+- `PRINT` then `OUT` concatenate without an auto space (`Hi1`, `n=42 m=-3`) — **specified**
+- No 24-bit overflow clamp (`8388607×2` → `16777214`) — **specified**
+- Toward-zero `DIVIDE` (`-7/2` → `-3`) — **specified**
+- Trailing `HALT` required (Jacobs error if missing) — **specified**; engine **gap**
+- Runtime banners use Jacobs `** ERROR: …` text — **specified**; engine classic
+  `*** … ***` **gap**
+- Identifier max length 6 — **deliberate diverge** (Jacobs allows longer)
 
 ## In-repo examples
 

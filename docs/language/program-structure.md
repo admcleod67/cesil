@@ -29,9 +29,9 @@ end-of-data.
 ## `IN` and exhaustion
 
 `IN` reads the next unread data value into the accumulator. Reading past the last
-value is a **runtime** error condition. Classic / Wikipedia cite the banner
-`*** PROGRAM REQUIRES MORE DATA ***`. **specified** (condition); exact text **open**
-to match or paraphrase.
+value is a **runtime** error. Visual CESIL banner:
+`** ERROR: Attempt to read more data than was provided`. **specified**
+(engine still emits classic `*** PROGRAM REQUIRES MORE DATA ***` → **gap**)
 
 Visual CESIL 1.2 release notes: reading past end generates an error instead of
 crashing. **Jacobs-observed**

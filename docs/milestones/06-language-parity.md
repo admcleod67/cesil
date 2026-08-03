@@ -74,23 +74,24 @@ constants, and optional trailing `*`) block running the Visual CESIL example cor
    `SourceCompatibilityTest` against [`testdata/parity/`](../../testdata/parity/) gate
    fixtures. Classic `(` comments and case-sensitive store names preserved. Matrix
    updated in [`MATRIX.md`](../../testdata/parity/MATRIX.md).
-3. **Runtime semantics and matrix** (done) — Runtime probe fixtures under
-   [`testdata/parity/`](../../testdata/parity/); Catch2 `RuntimeSemanticsTest` locks
-   unset-as-zero, `PRINT`/`OUT` formatting, fall-off-without-`HALT`, classic banners,
-   toward-zero `DIVIDE`, host-width overflow behaviour, and max-6 identifiers.
-   Language reference and [`MATRIX.md`](../../testdata/parity/MATRIX.md) updated.
-   Live Visual CESIL Run of the new runtime fixtures remains recommended for Q3
-   overflow confirmation; dialect settled per Stage 3 plan defaults meanwhile.
+3. **Runtime semantics and matrix** (done; live Jacobs Run recorded) — Runtime probe
+   fixtures under [`testdata/parity/`](../../testdata/parity/); Catch2
+   `RuntimeSemanticsTest` locks toward-zero `DIVIDE`, host-width overflow, `PRINT`/`OUT`
+   formatting, unset-as-zero, and max-6 identifiers. Live Visual CESIL Run (2026-08-03)
+   confirmed Q3/Q7/Q8 and revised Q9/Q10/Q11: Jacobs requires trailing `HALT` and uses
+   `** ERROR: …` banners (engine still fall-off-success + classic `*** … ***` → **gap**);
+   Jacobs accepts longer labels (max-6 kept as **deliberate diverge**). See
+   [`PROBE.md`](../../testdata/parity/PROBE.md) and
+   [`MATRIX.md`](../../testdata/parity/MATRIX.md).
 4. **Golden suite and close-out** (next) — End-to-end fixtures from the Visual CESIL corpus
-   with output compared after normalising host line endings where required; focused
-   per-instruction and edge-case tests; negative fixtures; CLI-facing path coverage.
-   Re-check deferred live overflow behaviour if needed. Defer any leftover items
-   explicitly post-1.0 or mark them **specified** / **deliberate diverge**. Assign
-   the release checkpoint version and mark the milestone completed.
+   with output compared after normalising host line endings where required; close Q9/Q10
+   engine gaps (require `HALT`; Jacobs banner text); focused per-instruction and edge-case
+   tests; negative fixtures; CLI-facing path coverage. Defer any leftover items explicitly
+   post-1.0 or mark them **specified** / **deliberate diverge**. Assign the release
+   checkpoint version and mark the milestone completed.
 
-Stage 2 depended on stage 1. Stage 3 locked runtime rules with tests; Stage 4 builds
-the golden corpus on that baseline.
-Stage 4 depends on settled matrix entries from stages 1–3.
+Stage 2 depended on stage 1. Stage 3 locked most runtime rules; live Jacobs Run exposed
+Q9/Q10 gaps for Stage 4. Stage 4 builds the golden corpus on that baseline.
 
 **Out of scope reminder:** undefined *variables* (never-stored names) are settled as
 runtime reads of `0` (not compile errors), distinct from undefined *labels*.

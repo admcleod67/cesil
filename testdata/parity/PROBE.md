@@ -1,8 +1,8 @@
-# Jacobs probe log (Milestone 6 Stage 1)
+# Jacobs probe log (Milestone 6)
 
-Corpus-gate probe for Visual CESIL source forms (Q4–Q6), plus early Stage 3 stub
-and smoke observations. Treat results as behavioural evidence, not exact UI string
-catalogs.
+Corpus-gate and runtime probes for Visual CESIL 2.0. Treat results as behavioural
+evidence for dialect rules and engine gaps, not exact UI string catalogs unless
+quoted from a live Run.
 
 ## Tool
 
@@ -18,7 +18,7 @@ catalogs.
 1. Map each gate fixture to patterns in Jacobs’ shipped `.ces` examples or
    `Release Notes.htm`.
 2. Confirm with **live Visual CESIL Check** (and Run where noted) on in-repo fixtures.
-3. Record compile/run expectations for Stage 2 / Stage 3.
+3. Record compile/run expectations for Stage 2 / Stage 3 / Stage 4 gaps.
 4. External checklist: `Example 1.ces`, `Example 2.ces` (not vendored in this repo).
 
 ## Per-file observations (gate fixtures)
@@ -36,8 +36,8 @@ catalogs.
 
 | File | Compile | Runtime / notes | Implications |
 |------|---------|-----------------|--------------|
-| `probe-unset-var.ces` | **Accept** — live Check: no error (`LOAD UNSET`) | Reinforced by case-fold Run: distinct unset name `FOO` read as `0` | **Q1:** never-stored names are **not** compile errors; unset reads as **0** at runtime (**Jacobs-observed**) |
-| `probe-case-fold.ces` | **Accept** — live Check: no error | Live Run of distinctive probe (`LOAD +42` / `STORE Foo` / `LOAD FOO` / `OUT`): output **`0`** | **Q2 specified:** store names are **case-sensitive** (`Foo` ≠ `FOO`). Fixture updated to the `+42` form |
+| `probe-unset-var.ces` | **Accept** — live Check: no error (`LOAD UNSET`) | Reinforced by case-fold Run: distinct unset name `FOO` read as `0` | **Q1:** never-stored names are **not** compile errors; unset reads as **0** at runtime (**specified**) |
+| `probe-case-fold.ces` | **Accept** — live Check: no error | Live Run (`LOAD +42` / `STORE Foo` / `LOAD FOO` / `OUT`): output **`0`** | **Q2 specified:** store names are **case-sensitive** (`Foo` ≠ `FOO`) |
 
 ## External example checklist
 
@@ -53,41 +53,38 @@ catalogs.
 
 ## Stage 1 conclusions (gate)
 
-| Q | Conclusion for this dialect (pending Stage 2 implementation where noted) |
-|---|--------------------------------------------------------------------------|
+| Q | Conclusion for this dialect |
+|---|------------------------------|
 | Q4 | **Accept unsigned** non-negative constants (and optional `+`) — Jacobs live Check + corpus |
-| Q5 | **Accept `*` full-line comments** in the code section (Jacobs live Check + corpus). **Keep classic `(` comments** as a deliberate diverge — Jacobs rejects them. Data-section `*` remains the end-of-data marker |
+| Q5 | **Accept `*` full-line comments** in the code section. **Keep classic `(` comments** as a deliberate diverge — Jacobs rejects them |
 | Q6 | **Accept EOF** as end of data (no trailing `*`); **keep** classic trailing `*` — both confirmed by live Check |
 
-## Runtime probes (Milestone 6 Stage 3)
+## Runtime probes (Milestone 6 Stage 3) — live Visual CESIL 2026-08-03
 
-Fixtures under `runtime-*.ces`. Engine behaviour locked by Catch2
-(`RuntimeSemanticsTest`) against classic Wikipedia banners / toward-zero division
-and prior live Stage 1 notes. **Live Visual CESIL Run of these fixtures on Windows
-is still recommended** to confirm Q3/Q7/Q8 multi-digit / Q11; until then Stage 3
-settles the dialect as below (host-width arithmetic; classic max-6 labels).
+Live Windows Run/Check of `runtime-*.ces`. Earlier Stage 3 notes that assumed classic
+Wikipedia banners and fall-off-without-`HALT` are **superseded** where Jacobs differs.
 
-| File | Compile (this engine) | Runtime / output (this engine + classic) | Dialect conclusion |
-|------|----------------------|------------------------------------------|--------------------|
-| `runtime-divide-neg.ces` | Accept | `-3\n` (`-7/2` toward zero) | **Q7 specified** — toward-zero integer division (Wikipedia/classic; C++ `/=`) |
-| `runtime-outdigits.ces` | Accept | `n=42 m=-3\n` (no padding, no auto spaces) | **Q8 specified** — bare decimal `OUT`; concatenate with `PRINT` |
-| `runtime-no-halt.ces` | Accept | `5\n`, run succeeds | **Q9 specified** — fall off end is successful termination |
-| `runtime-in-exhaust.ces` | Accept | stdout contains `*** PROGRAM REQUIRES MORE DATA ***` | **Q10 specified** — classic banner text |
-| `runtime-divzero.ces` | Accept | stdout contains `*** DIVISION BY ZERO ***` | **Q10 specified** — classic banner text |
-| `runtime-overflow.ces` | Accept | `16777214\n` (8388607×2 on host `int`) | **Q3 specified** — host-width `int`, no 24-bit clamp/trap; historical 24-bit is non-enforced classic background. Live Jacobs overflow behaviour deferred to Stage 4 if needed |
-| `runtime-long-label.ces` | Reject (invalid jump target / label) | N/A | **Q11 specified** — max 6 characters (classic). Jacobs may accept longer names (M4 probe used `NOWHERE`); this dialect keeps classic max-6 (**deliberate diverge** if Jacobs is laxer) |
+| File | Jacobs compile | Jacobs runtime / output | Dialect conclusion |
+|------|----------------|-------------------------|--------------------|
+| `runtime-divide-neg.ces` | Accept | `-3` | **Q7 specified** — toward-zero (`-7/2`); engine **match** |
+| `runtime-outdigits.ces` | Accept | `n=42 m=-3` | **Q8 specified** — bare decimal `OUT`; no auto spaces; engine **match** |
+| `runtime-overflow.ces` | Accept | `16777214` (`8388607×2`) | **Q3 specified** — no 24-bit clamp/trap; engine **match** |
+| `runtime-no-halt.ces` | Accept | `** ERROR: No HALT at end of program` | **Q9 specified** — programs must end with `HALT` (Jacobs). Engine currently allows fall-off success → **gap** |
+| `runtime-in-exhaust.ces` | Accept | `** ERROR: Attempt to read more data than was provided` | **Q10 specified** — match Jacobs banner text for Visual CESIL parity. Engine still prints classic `*** PROGRAM REQUIRES MORE DATA ***` → **gap** |
+| `runtime-divzero.ces` | Accept | `** ERROR: Attempted division by zero` | **Q10 specified** — match Jacobs banner. Engine still prints classic `*** DIVISION BY ZERO ***` → **gap** |
+| `runtime-long-label.ces` | Reject — undefined label (`JUMP NOWHERE`) | N/A | **Q11:** Jacobs accepts 7-char `NOWHERE` as a jump spelling then fails lookup. This dialect keeps classic **max 6** identifiers → **deliberate diverge** |
 
-| Q | Stage 3 status |
-|---|----------------|
-| Q1 | **specified** — unset store reads as `0`; not a compile error (2026-08-03 live + tests) |
-| Q2 | **specified** — case-sensitive stores (unchanged) |
-| Q3 | **specified** — host `int`, no overflow diagnostic (live Jacobs overflow Run deferred) |
-| Q7 | **specified** — toward-zero `DIVIDE` |
-| Q8 | **specified** — no auto space; bare decimal digits (incl. multi-digit / negative) |
-| Q9 | **specified** — fall off end succeeds |
-| Q10 | **specified** — exact classic `*** … ***` banners |
-| Q11 | **specified** — identifiers ≤6 chars (classic) |
+| Q | Status after live runtime probe |
+|---|----------------------------------|
+| Q1 | **specified** — unset store reads as `0`; not a compile error |
+| Q2 | **specified** — case-sensitive stores |
+| Q3 | **specified** — host-width / no 24-bit clamp (live: `16777214`) |
+| Q7 | **specified** — toward-zero `DIVIDE` (live: `-3`) |
+| Q8 | **specified** — no auto space; bare digits (live: `n=42 m=-3`) |
+| Q9 | **specified** — require trailing `HALT`; missing `HALT` is an error (Jacobs). Engine **gap** |
+| Q10 | **specified** — Jacobs `** ERROR: …` banners (exact strings above). Engine classic `*** … ***` **gap** |
+| Q11 | **deliberate diverge** — keep max length 6; Jacobs allows longer names |
 
-Live gate Check of the in-repo fixtures is recorded above. Stage 2 implemented
-unsigned constants, code-section `*` comments, and EOF-or-`*` data termination without
-breaking existing `(` comment support.
+Stage 2 source-form work (unsigned constants, `*` comments, EOF-or-`*` data) remains
+done. Stage 4 should close Q9/Q10 engine gaps for Visual CESIL output parity and keep
+Q11 as a documented diverge.

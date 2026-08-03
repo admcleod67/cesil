@@ -26,11 +26,12 @@ Results replace the accumulator.
 | `MULTIPLY` | Store or constant | Accumulator ← accumulator × operand | **specified** |
 | `DIVIDE` | Store or constant | Accumulator ← accumulator ÷ operand (integer) | **specified** |
 
-`DIVIDE` by zero is a runtime error condition. Banner:
-`*** DIVISION BY ZERO ***`. **specified**
+`DIVIDE` by zero is a runtime error. Visual CESIL banner:
+`** ERROR: Attempted division by zero`. **specified** (engine still uses classic
+`*** DIVISION BY ZERO ***` → **gap**; see [Runtime](runtime.md))
 
-Integer division truncates toward zero (classic/Wikipedia wording; e.g. `-7 / 2`
-→ `-3`). **specified**
+Integer division truncates toward zero (e.g. `-7 / 2` → `-3`). **specified**
+(Jacobs live confirmed)
 
 ## Control
 

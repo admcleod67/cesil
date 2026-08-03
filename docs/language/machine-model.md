@@ -36,4 +36,6 @@ see [Open questions](open-questions.md).
 1. Start with accumulator and store state as defined under [Runtime](runtime.md).
 2. Execute instructions in order unless a jump redirects control.
 3. `IN` consumes the next data value; exhausting data is a runtime error condition.
-4. Stop on `HALT`, on falling off the end of the instruction list, or on a runtime error.
+4. Stop on `HALT`, on a runtime error, or (once the Q9 gap is closed) when the program
+   ends without `HALT`. Visual CESIL rejects fall-off without `HALT`; the engine still
+   treats fall-off as success today — see [Runtime](runtime.md).

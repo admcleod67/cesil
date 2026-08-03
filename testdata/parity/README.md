@@ -23,8 +23,8 @@ matching `examples/total.ces`. Identifiers stay within six characters except
 2. Check and/or Run fixtures; record exact output for runtime probes.
 3. Fill [`PROBE.md`](PROBE.md); update [`MATRIX.md`](MATRIX.md) and `docs/language/`.
 
-Gate fixtures and early stubs were live-checked 2026-08-03. Runtime fixtures below
-are for Stage 3 (re-probe on Windows when available).
+Gate fixtures, stubs, and **runtime** fixtures were live-checked/run on Visual CESIL
+2026-08-03. Results are in [`PROBE.md`](PROBE.md); Q9/Q10 remain engine **gaps**.
 
 ## Fixture index
 
@@ -48,12 +48,12 @@ are for Stage 3 (re-probe on Windows when available).
 
 ### Runtime probes (Stage 3)
 
-| File | Q | Intent |
-|------|---|--------|
-| `runtime-divide-neg.ces` | Q7 | `-7 / 2` toward-zero vs Jacobs |
-| `runtime-outdigits.ces` | Q8 | Multi-digit / negative `OUT` after `PRINT` |
-| `runtime-no-halt.ces` | Q9 | Fall off end without `HALT` |
-| `runtime-in-exhaust.ces` | Q10 | `IN` with no data — banner text |
-| `runtime-divzero.ces` | Q10 | `DIVIDE 0` — banner text |
-| `runtime-overflow.ces` | Q3 | `8388607 * 2` near/above 24-bit max |
-| `runtime-long-label.ces` | Q11 | Jump to 7-char label `NOWHERE` |
+| File | Q | Intent / Jacobs live |
+|------|---|----------------------|
+| `runtime-divide-neg.ces` | Q7 | `-7 / 2` → `-3` (toward zero) |
+| `runtime-outdigits.ces` | Q8 | `n=42 m=-3` |
+| `runtime-no-halt.ces` | Q9 | Jacobs: `** ERROR: No HALT at end of program` |
+| `runtime-in-exhaust.ces` | Q10 | Jacobs: `** ERROR: Attempt to read more data than was provided` |
+| `runtime-divzero.ces` | Q10 | Jacobs: `** ERROR: Attempted division by zero` |
+| `runtime-overflow.ces` | Q3 | `8388607 * 2` → `16777214` |
+| `runtime-long-label.ces` | Q11 | `JUMP NOWHERE` → undefined label (Jacobs allows 7-char name) |
