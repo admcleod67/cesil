@@ -1,24 +1,29 @@
-# Compatibility matrix stub (Milestone 6 Stage 1–2)
+# Compatibility matrix (Milestone 6 Stages 1–3)
 
-Gate topics. Status values: **match** (engine agrees with settled rule), **gap**,
-**Jacobs-observed** / **specified** / **deliberate diverge**.
+Evidence: [`PROBE.md`](PROBE.md). Engine locks: `SourceCompatibilityTest`,
+`RuntimeSemanticsTest`.
 
-Evidence: [`PROBE.md`](PROBE.md). Stage 2 implementation: code-section `*` comments
-in [`Parser::parseSyntax`](../../src/core/parser/Parser.cpp); unsigned literals and
-EOF data end confirmed by Catch2 (`SourceCompatibilityTest`).
+## Source gate (Stages 1–2)
 
-| Topic | Q | Fixture(s) | Rule status | Engine vs rule | Stage 2 action |
-|-------|---|------------|-------------|----------------|----------------|
-| Unsigned numeric constants | Q4 | `gate-unsigned-constant.ces` | **specified** | **match** | Done — lexer/parser already accepted; locked by test |
-| `*` full-line comments | Q5 | `gate-star-comment.ces` | **specified** | **match** | Done — skip `Star` lines in code section only |
-| `(` line comments | Q5 | `gate-paren-comment.ces` | **deliberate diverge** | **match** | Preserved (lexer); Jacobs rejects |
-| Data ends at EOF (no `*`) | Q6 | `gate-data-no-star.ces` | **specified** | **match** | Done — `parseDataSection` already allowed EOF; locked by test |
-| Data ends with `*` | Q6 | `gate-data-with-star.ces` | **specified** | **match** | Preserved |
+| Topic | Q | Fixture(s) | Rule status | Engine vs rule |
+|-------|---|------------|-------------|----------------|
+| Unsigned numeric constants | Q4 | `gate-unsigned-constant.ces` | **specified** | **match** |
+| `*` full-line comments | Q5 | `gate-star-comment.ces` | **specified** | **match** |
+| `(` line comments | Q5 | `gate-paren-comment.ces` | **deliberate diverge** | **match** (kept) |
+| Data ends at EOF | Q6 | `gate-data-no-star.ces` | **specified** | **match** |
+| Data ends with `*` | Q6 | `gate-data-with-star.ces` | **specified** | **match** |
 
-## Early Stage 3 observations (not Stage 1 gate)
+## Runtime (Stage 3)
 
-| Topic | Q | Fixture(s) | Rule status | Notes |
-|-------|---|------------|-------------|-------|
-| Never-stored variable (`LOAD`) | Q1 | `probe-unset-var.ces` | **Jacobs-observed** | Live Check: no error. Unset read as `0` confirmed via case-fold Run |
-| Store-name case | Q2 | `probe-case-fold.ces` | **specified** (case-sensitive) | Stage 2 smoke: parse + run → `0\n` (`STORE Foo` / `LOAD FOO`) |
-| `PRINT`/`OUT` adjacency | Q8 | `smoke-print-out.ces` | **Jacobs-observed (partial)** | Live Run: `Hi1` — no auto space between string and digit |
+| Topic | Q | Fixture(s) | Rule status | Engine vs rule |
+|-------|---|------------|-------------|----------------|
+| Never-stored variable | Q1 | `probe-unset-var.ces` | **specified** | **match** |
+| Store-name case | Q2 | `probe-case-fold.ces` | **specified** | **match** |
+| Host-width arithmetic / no 24-bit trap | Q3 | `runtime-overflow.ces` | **specified** | **match** (live Jacobs overflow Run deferred) |
+| `DIVIDE` toward zero | Q7 | `runtime-divide-neg.ces` | **specified** | **match** |
+| `PRINT`/`OUT` formatting | Q8 | `smoke-print-out.ces`, `runtime-outdigits.ces` | **specified** | **match** |
+| Fall off end without `HALT` | Q9 | `runtime-no-halt.ces` | **specified** | **match** |
+| Runtime banners | Q10 | `runtime-in-exhaust.ces`, `runtime-divzero.ces` | **specified** | **match** |
+| Identifier max length 6 | Q11 | `runtime-long-label.ces` | **specified** (classic; Jacobs may be laxer) | **match** |
+
+Broader golden corpus rows land in Stage 4.

@@ -59,14 +59,35 @@ catalogs.
 | Q5 | **Accept `*` full-line comments** in the code section (Jacobs live Check + corpus). **Keep classic `(` comments** as a deliberate diverge — Jacobs rejects them. Data-section `*` remains the end-of-data marker |
 | Q6 | **Accept EOF** as end of data (no trailing `*`); **keep** classic trailing `*` — both confirmed by live Check |
 
-## Early Stage 3 notes (not Stage 1 blockers)
+## Runtime probes (Milestone 6 Stage 3)
 
-| Q | Status after 2026-08-03 live probes |
-|---|-------------------------------------|
-| Q1 | **Jacobs-observed:** compile accepts unset `LOAD`; runtime read of never-stored name is `0` (seen via `LOAD FOO` after `STORE Foo` with 42) |
-| Q2 | **specified:** store names are case-sensitive (`STORE Foo` / `LOAD FOO` → `OUT` `0`, not `42`) |
-| Q8 | **Jacobs-observed (partial):** `PRINT "Hi"` + `OUT` of `+1` → `Hi1` (no auto space). Wider golden formatting still open |
+Fixtures under `runtime-*.ces`. Engine behaviour locked by Catch2
+(`RuntimeSemanticsTest`) against classic Wikipedia banners / toward-zero division
+and prior live Stage 1 notes. **Live Visual CESIL Run of these fixtures on Windows
+is still recommended** to confirm Q3/Q7/Q8 multi-digit / Q11; until then Stage 3
+settles the dialect as below (host-width arithmetic; classic max-6 labels).
 
-Live gate Check of the in-repo fixtures is recorded above. Stage 2 must implement
+| File | Compile (this engine) | Runtime / output (this engine + classic) | Dialect conclusion |
+|------|----------------------|------------------------------------------|--------------------|
+| `runtime-divide-neg.ces` | Accept | `-3\n` (`-7/2` toward zero) | **Q7 specified** — toward-zero integer division (Wikipedia/classic; C++ `/=`) |
+| `runtime-outdigits.ces` | Accept | `n=42 m=-3\n` (no padding, no auto spaces) | **Q8 specified** — bare decimal `OUT`; concatenate with `PRINT` |
+| `runtime-no-halt.ces` | Accept | `5\n`, run succeeds | **Q9 specified** — fall off end is successful termination |
+| `runtime-in-exhaust.ces` | Accept | stdout contains `*** PROGRAM REQUIRES MORE DATA ***` | **Q10 specified** — classic banner text |
+| `runtime-divzero.ces` | Accept | stdout contains `*** DIVISION BY ZERO ***` | **Q10 specified** — classic banner text |
+| `runtime-overflow.ces` | Accept | `16777214\n` (8388607×2 on host `int`) | **Q3 specified** — host-width `int`, no 24-bit clamp/trap; historical 24-bit is non-enforced classic background. Live Jacobs overflow behaviour deferred to Stage 4 if needed |
+| `runtime-long-label.ces` | Reject (invalid jump target / label) | N/A | **Q11 specified** — max 6 characters (classic). Jacobs may accept longer names (M4 probe used `NOWHERE`); this dialect keeps classic max-6 (**deliberate diverge** if Jacobs is laxer) |
+
+| Q | Stage 3 status |
+|---|----------------|
+| Q1 | **specified** — unset store reads as `0`; not a compile error (2026-08-03 live + tests) |
+| Q2 | **specified** — case-sensitive stores (unchanged) |
+| Q3 | **specified** — host `int`, no overflow diagnostic (live Jacobs overflow Run deferred) |
+| Q7 | **specified** — toward-zero `DIVIDE` |
+| Q8 | **specified** — no auto space; bare decimal digits (incl. multi-digit / negative) |
+| Q9 | **specified** — fall off end succeeds |
+| Q10 | **specified** — exact classic `*** … ***` banners |
+| Q11 | **specified** — identifiers ≤6 chars (classic) |
+
+Live gate Check of the in-repo fixtures is recorded above. Stage 2 implemented
 unsigned constants, code-section `*` comments, and EOF-or-`*` data termination without
 breaking existing `(` comment support.

@@ -26,12 +26,11 @@ Results replace the accumulator.
 | `MULTIPLY` | Store or constant | Accumulator ← accumulator × operand | **specified** |
 | `DIVIDE` | Store or constant | Accumulator ← accumulator ÷ operand (integer) | **specified** |
 
-`DIVIDE` by zero is a runtime error condition (message text may vary). **specified**
+`DIVIDE` by zero is a runtime error condition. Banner:
+`*** DIVISION BY ZERO ***`. **specified**
 
-Integer division rounding for negative dividends (classic wording: round down when
-positive, up when negative — toward zero in the usual school description) is
-**specified** as the classic rule; confirm Visual CESIL matches under Milestone 6
-(**open** until probed).
+Integer division truncates toward zero (classic/Wikipedia wording; e.g. `-7 / 2`
+→ `-3`). **specified**
 
 ## Control
 

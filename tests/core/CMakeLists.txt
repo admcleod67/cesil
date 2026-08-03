@@ -5,6 +5,7 @@ add_executable(cesil_tests
     parser/DiagnosticAccumulationTest.cpp
     parser/SourceCompatibilityTest.cpp
     runtime/SmokeTest.cpp
+    runtime/RuntimeSemanticsTest.cpp
 )
 
 target_link_libraries(cesil_tests PRIVATE cesil-core Catch2::Catch2WithMain)

@@ -1,0 +1,8 @@
+        LOAD    8388607
+        MULTIPLY 2
+        OUT
+        LINE
+        HALT
+
+%
+*

@@ -1,0 +1,8 @@
+        LOAD    1
+        DIVIDE  0
+        OUT
+        LINE
+        HALT
+
+%
+*

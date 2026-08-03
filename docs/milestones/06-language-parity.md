@@ -74,24 +74,26 @@ constants, and optional trailing `*`) block running the Visual CESIL example cor
    `SourceCompatibilityTest` against [`testdata/parity/`](../../testdata/parity/) gate
    fixtures. Classic `(` comments and case-sensitive store names preserved. Matrix
    updated in [`MATRIX.md`](../../testdata/parity/MATRIX.md).
-3. **Runtime semantics and matrix** (next) — Probe and settle remaining open questions
-   (undefined variables, overflow, `DIVIDE` rounding, I/O bytes, runtime banners,
-   fall-off without `HALT`, and similar). Correct interpreter gaps; keep the
-   compatibility matrix and language-reference statuses current.
-4. **Golden suite and close-out** — End-to-end fixtures from the Visual CESIL corpus
+3. **Runtime semantics and matrix** (done) — Runtime probe fixtures under
+   [`testdata/parity/`](../../testdata/parity/); Catch2 `RuntimeSemanticsTest` locks
+   unset-as-zero, `PRINT`/`OUT` formatting, fall-off-without-`HALT`, classic banners,
+   toward-zero `DIVIDE`, host-width overflow behaviour, and max-6 identifiers.
+   Language reference and [`MATRIX.md`](../../testdata/parity/MATRIX.md) updated.
+   Live Visual CESIL Run of the new runtime fixtures remains recommended for Q3
+   overflow confirmation; dialect settled per Stage 3 plan defaults meanwhile.
+4. **Golden suite and close-out** (next) — End-to-end fixtures from the Visual CESIL corpus
    with output compared after normalising host line endings where required; focused
    per-instruction and edge-case tests; negative fixtures; CLI-facing path coverage.
-   Defer any leftover **open** items explicitly post-1.0 or mark them **specified** /
-   **deliberate diverge**. Assign the release checkpoint version and mark the
-   milestone completed.
+   Re-check deferred live overflow behaviour if needed. Defer any leftover items
+   explicitly post-1.0 or mark them **specified** / **deliberate diverge**. Assign
+   the release checkpoint version and mark the milestone completed.
 
-Stage 2 depended on stage 1. Stage 3 can overlap lightly with late stage 2 once
-examples parse, but runtime golden expectations should wait for stage 3 probes.
+Stage 2 depended on stage 1. Stage 3 locked runtime rules with tests; Stage 4 builds
+the golden corpus on that baseline.
 Stage 4 depends on settled matrix entries from stages 1–3.
 
-**Out of scope reminder:** undefined *variables* (never-stored names) remain a probe
-item (stage 3), distinct from undefined *labels*. Do not add a compile-time undefined
-variable diagnostic from fixtures alone.
+**Out of scope reminder:** undefined *variables* (never-stored names) are settled as
+runtime reads of `0` (not compile errors), distinct from undefined *labels*.
 
 ---
 

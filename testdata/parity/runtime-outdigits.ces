@@ -1,0 +1,11 @@
+        PRINT   "n="
+        LOAD    42
+        OUT
+        PRINT   " m="
+        LOAD    -3
+        OUT
+        LINE
+        HALT
+
+%
+*

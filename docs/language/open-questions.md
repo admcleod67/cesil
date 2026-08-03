@@ -2,33 +2,26 @@
 
 # Open questions and conflicts
 
-Items below must **not** be closed by copying current `cesil-core` behaviour. Resolve
-remaining **open** rows in [Milestone 6](../milestones/06-language-parity.md) by
-probing Visual CESIL (and re-checking classic sources), then update this table and
-the relevant reference pages.
-
-Stage 1 corpus-gate evidence:
-[`testdata/parity/PROBE.md`](../../testdata/parity/PROBE.md).
+Stage 1–3 evidence: [`testdata/parity/PROBE.md`](../../testdata/parity/PROBE.md).
+Remaining work for full example goldens belongs to Milestone 6 Stage 4.
 
 ## Probe checklist
 
-| ID | Topic | Conflict / uncertainty | Suggested probe | Status |
-|----|--------|------------------------|-----------------|--------|
-| Q1 | Undefined variables | Classic teaching often reads never-stored names as `0`; Jacobs rejects undefined *labels* at compile time. Distinct issues. | `testdata/parity/probe-unset-var.ces` (+ case-fold Run) | **Jacobs-observed** — compile OK; unset name reads as `0` at runtime (Stage 3; promote to **specified** when wiring Stage 3 tests) |
-| Q2 | Identifier case | Whether `STORE Foo` / `LOAD FOO` alias | `testdata/parity/probe-case-fold.ces` | **specified** — case-sensitive store names (live Run: `LOAD +42` / `STORE Foo` / `LOAD FOO` / `OUT` → `0`) |
-| Q3 | Integer range / overflow | Classic 24-bit vs host-width arithmetic | Values near ±2²³; multiply overflow | **open** (Stage 3) |
-| Q4 | Signed vs unsigned constants | Classic prefers `+0`; Visual CESIL examples use `0`, `8`, etc. | `gate-unsigned-constant.ces` + Example 1 | **specified** — accept unsigned (Stage 1; Jacobs live Check: no error) |
-| Q5 | Comment syntax | Classic `(` vs Visual CESIL `*` comment lines | `gate-star-comment.ces` / `gate-paren-comment.ces` | **specified** — accept `*` in code (Jacobs live Check); keep `(` as **deliberate diverge** (Jacobs rejects with ~unrecognised instruction on L1); data `*` remains end marker |
-| Q6 | Trailing `*` after data | Classic requires end marker; many Jacobs examples omit it | `gate-data-no-star.ces` / `gate-data-with-star.ces` | **specified** — accept EOF or trailing `*` (Stage 1; both live Check: no error) |
-| Q7 | `DIVIDE` rounding | Classic toward-zero-style wording vs Jacobs | Negative dividend / positive divisor cases | **open** (Stage 3) |
-| Q8 | `OUT` / `PRINT` / `LINE` bytes | Spacing and newlines for golden tests | `smoke-print-out.ces`; Example 1–2 stdout | **Jacobs-observed (partial)** — live Run: `Hi1` (no space between `PRINT` and `OUT`); multi-digit / padding / exact newlines still **open** (Stage 3/4) |
-| Q9 | Fall off end without `HALT` | Success vs error | Program that ends without `HALT` | **open** (Stage 3) |
-| Q10 | Runtime banner text | Exact `*** … ***` strings | Capture Jacobs stdout on `IN` exhaustion and divide-by-zero | **open** (Stage 3) |
-| Q11 | Label length > 6 | Classic max 6; Jacobs probe used longer names in some tools | `JUMP NOWHERE` style names | **open** (this engine currently max 6) |
+| ID | Topic | Status |
+|----|--------|--------|
+| Q1 | Undefined variables (never-stored) | **specified** — compile OK; read as `0` |
+| Q2 | Store-name case | **specified** — case-sensitive |
+| Q3 | Integer range / overflow | **specified** — host `int`, no 24-bit clamp/trap; historical 24-bit non-enforced. Live Jacobs overflow Run deferred to Stage 4 if needed |
+| Q4 | Unsigned constants | **specified** |
+| Q5 | `*` / `(` comments | **specified** (`*`); `(` **deliberate diverge** |
+| Q6 | Data EOF or `*` | **specified** |
+| Q7 | `DIVIDE` rounding | **specified** — toward zero |
+| Q8 | `OUT` / `PRINT` / `LINE` | **specified** — no auto space; bare decimal `OUT` |
+| Q9 | Fall off end without `HALT` | **specified** — successful termination |
+| Q10 | Runtime banner text | **specified** — classic `*** PROGRAM REQUIRES MORE DATA ***` / `*** DIVISION BY ZERO ***` |
+| Q11 | Label length > 6 | **specified** — max 6 (classic). Jacobs may accept longer; keep classic limit |
 
 ## Settled divergences (not open)
-
-These are intentional and already documented:
 
 | Topic | Status |
 |-------|--------|
@@ -36,19 +29,18 @@ These are intentional and already documented:
 | Trailing junk after zero-operand mnemonics diagnosed | **deliberate diverge** |
 | Bare `STORE` and some operand shapes diagnosed | **deliberate diverge** |
 | Classic `(` line comments (Jacobs rejects; uses `*` instead) | **deliberate diverge** |
-| Own diagnostic message text | **specified** |
+| Identifier max length 6 if Jacobs allows longer | **deliberate diverge** / classic **specified** |
+| Own diagnostic message text (banners may still match classic) | **specified** |
 | CESIL “Plus” excluded from 1.0 | **specified** |
 
 ## Source disagreements (summary)
 
-| Topic | Classic (ICL / Wikipedia / cesil.org) | Visual CESIL | This dialect (after Stage 1) |
-|-------|----------------------------------------|--------------|------------------------------|
-| Comments | `(` line comments | `*` comment lines; live Check rejects `(` | **`*`** required for Jacobs; **`(`** kept as **deliberate diverge** |
-| Constants | Often require sign | Unsigned allowed (live Check) | **Both** signed and unsigned (**specified**) |
-| Data terminator | `*` | Often omitted (EOF); trailing `*` also accepted (live Check) | **Either** `*` or EOF (**specified**) |
-| Integer width | 24-bit cited | Unclear from available notes | Still **open** (Q3) |
-| Variable init / unset reads | Often treated as `0` | Compile OK; unset reads as `0` (live) | **Jacobs-observed** (Q1) |
-| Identifier case (stores) | Often unclear / folded in teaching materials | Case-sensitive (`Foo` ≠ `FOO`) | **specified** (Q2) |
-
-Engine implementation of Q4–Q6 is **done** (Milestone 6 Stage 2). Remaining **open** /
-**Jacobs-observed** rows belong to Stage 3+.
+| Topic | Classic | Visual CESIL | This dialect |
+|-------|---------|--------------|--------------|
+| Comments | `(` | `*` (rejects `(`) | Both (`(` diverge) |
+| Constants | Often signed | Unsigned OK | Both |
+| Data terminator | `*` | EOF or `*` | Either |
+| Integer width | 24-bit cited | Unclear / deferred live | Host `int`, no trap |
+| Unset variables | Often `0` | Live: `0` | `0` |
+| Store case | Unclear | Case-sensitive | Case-sensitive |
+| Label length | Max 6 | May allow longer | Max 6 |

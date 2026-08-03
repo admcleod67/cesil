@@ -21,12 +21,8 @@ Sources: [cesil.org](https://cesil.org) architecture notes; [Wikipedia](https://
 | Topic | Rule | Status |
 |-------|------|--------|
 | Domain | Integers only (no floating-point type) | **specified** |
-| Historical range | Classic materials and cesil.org cite **24-bit signed** integers: −8 388 608 … +8 388 607 | **specified** (historical claim) |
-| Enforcement | Whether this engine and Visual CESIL clamp, wrap, or error outside that range | **open** |
-| Parsing width | Current lexer accepts values in a wider host `int` range when parsing literals | implementation note — not a settled dialect rule |
-
-Overflow and underflow of arithmetic are **open** (see [Open questions](open-questions.md)).
-
+| Historical range | Classic materials and cesil.org cite **24-bit signed** integers: −8 388 608 … +8 388 607 | **specified** (historical claim; not enforced) |
+| Enforcement | This dialect uses host `int` arithmetic without 24-bit clamp or overflow trap | **specified** (Milestone 6 Stage 3) |
 ## Namespaces
 
 Labels (code line names) and store names share the same identifier spelling rules

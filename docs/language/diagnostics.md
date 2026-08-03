@@ -36,7 +36,8 @@ Documented in `testdata/diagnostics/` and the Milestone 4 probe log. **deliberat
 | `PRINT` / `STORE` wrong shapes | Often only flags bad `JUMP` | Shape errors for unquoted `PRINT`, numeric `STORE` |
 | Unknown mnemonic then undefined jump | May stop after first | Report both when independently checkable |
 
-Undefined *variables* remain **open** — not a Milestone 4 invent-a-diagnostic item.
+Undefined *variables* read as zero at runtime and are not compile-time errors
+(**specified** — Milestone 6 Stage 3).
 
 ## Runtime banners
 
@@ -45,5 +46,5 @@ Classic / Wikipedia cite:
 - `*** PROGRAM REQUIRES MORE DATA ***`
 - `*** DIVISION BY ZERO ***`
 
-Matching these strings exactly is **open** until Milestone 6 golden tests decide;
-the *conditions* are **specified**.
+Matching these strings exactly is **specified** for the classic banners above
+(Milestone 6 Stage 3 tests); other diagnostic wording remains this project's own.
