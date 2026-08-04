@@ -13,6 +13,7 @@ It complements:
 - [Project milestones](../milestones.md)
 - [Milestone 6 — Visual CESIL language parity](06-language-parity.md)
 - [Milestone 8 — Visual CESIL IDE parity](08-ide-parity.md)
+- Milestone 9 — Visual CESIL Debugger (planned; before this release)
 
 ### Version 1.0.0 contract
 
@@ -21,7 +22,7 @@ Version `1.0.0` is a cross-platform recreation of Visual CESIL 2.0:
 - Visual CESIL programs within the documented language scope parse and execute with
   matching user-visible behaviour.
 - The IDE provides the same essential single-program edit → check → run workflow and
-  information.
+  information (Milestone 8), plus the Visual CESIL Debugger dialogue (Milestone 9).
 - The CLI and IDE use the same tested `cesil-core` implementation.
 - macOS, Linux, and Windows builds pass the agreed parity checks.
 
@@ -33,7 +34,9 @@ programs.
 
 - New language instructions or extensions
 - Project / workspace support
-- Richer debugging or visualisation beyond the established parity contract
+- Richer debugging or visualisation beyond the established parity contract (the
+  Visual CESIL Debugger dialogue itself belongs to Milestone 9 and is in scope for
+  `1.0.0` once that milestone completes)
 - Refactors that do not remove a release blocker
 - Post-1.0 experiments such as IR visualisation or a hardware CESIL CPU
 
