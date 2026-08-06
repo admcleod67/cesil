@@ -64,5 +64,6 @@ class DiagnosticModel final : public QAbstractTableModel {
 /// \p line must be greater than 0. A \p column of 0 means the start of the line.
 QTextCursor cursorForDiagnostic(QTextDocument* document, int line, int column);
 
-/// Status text for a successful check or a count of compilation errors.
+/// Status text for a successful check or a count of compilation errors
+/// (Visual CESIL forms: "No compilation errors", "N compilation error(s)").
 QString compilationErrorSummary(int count);

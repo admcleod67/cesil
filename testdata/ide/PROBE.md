@@ -57,11 +57,7 @@ exposes Compile and Run from menus (and typically toolbar).
 | Successful compile | **No compilation errors** |
 | Failed compile | **`N` compilation error(s)** |
 | Unsaved prompt | `{name} file has changed` / `Do you want to save changes?` |
-
-Runtime-finished / run-failed status strings were not present as obvious literals in
-the UTF-16 extract; confirm on live Run in Stage 2 if wording must match exactly.
-Main-window status after a successful/failed **program** run is a Stage 2 check item
-(**gap** until observed live, but does not block Stage 1 menu/Errors locks).
+| Successful / failed program run (main window) | No stable status-bar literals in the UTF-16 extract (`Program finished` / `Run failed` absent). Stage 2 keeps this project’s `Program finished.` / `Run failed.` as **deliberate diverge**. |
 
 ## Window title
 

@@ -150,10 +150,7 @@ QTextCursor cursorForDiagnostic(QTextDocument* document, int line, int column) {
 
 QString compilationErrorSummary(int count) {
     if (count <= 0) {
-        return QObject::tr("No compilation errors.");
+        return QObject::tr("No compilation errors");
     }
-    if (count == 1) {
-        return QObject::tr("1 compilation error");
-    }
-    return QObject::tr("%1 compilation errors").arg(count);
+    return QObject::tr("%1 compilation error(s)").arg(count);
 }

@@ -56,7 +56,7 @@ not navigate from an error to its source.
 - Shows only actual diagnostic rows.
 - Preserves diagnostic order from `cesil-core`.
 - Leaves the table empty after a successful check and reports
-  `No compilation errors.` in the status bar.
+  `No compilation errors` in the status bar.
 - Failures without detailed diagnostics show one unlocated, non-navigable
   Description row.
 - Retains column and severity as model roles/metadata rather than visible columns.
@@ -74,8 +74,8 @@ not navigate from an error to its source.
 
 - Clear feedback for Ready, successful checks, diagnostic counts, compilation
   failures, runtime failures, successful runs, and saves.
-- Compilation summaries use correct singular and plural wording:
-  `No compilation errors.`, `1 compilation error`, `N compilation errors`.
+- Compilation summaries follow Visual CESIL status-bar forms (Milestone 8 Stage 2):
+  `No compilation errors`, `N compilation error(s)`.
 - Any user source modification replaces the previous operation or save result with
   `Ready`.
 - Tab selection alone does not reset the status.

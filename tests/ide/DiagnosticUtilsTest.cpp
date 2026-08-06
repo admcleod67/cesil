@@ -82,9 +82,9 @@ void DiagnosticUtilsTest::emptyAndFallbackStates() {
 }
 
 void DiagnosticUtilsTest::compilationErrorSummaries() {
-    QCOMPARE(compilationErrorSummary(0), QStringLiteral("No compilation errors."));
-    QCOMPARE(compilationErrorSummary(1), QStringLiteral("1 compilation error"));
-    QCOMPARE(compilationErrorSummary(2), QStringLiteral("2 compilation errors"));
+    QCOMPARE(compilationErrorSummary(0), QStringLiteral("No compilation errors"));
+    QCOMPARE(compilationErrorSummary(1), QStringLiteral("1 compilation error(s)"));
+    QCOMPARE(compilationErrorSummary(2), QStringLiteral("2 compilation error(s)"));
 }
 
 void DiagnosticUtilsTest::cursorClamping() {

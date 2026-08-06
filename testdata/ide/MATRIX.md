@@ -1,4 +1,4 @@
-# IDE compatibility matrix (Milestone 8 Stage 1)
+# IDE compatibility matrix (Milestone 8 Stages 1–2)
 
 Evidence: [`PROBE.md`](PROBE.md). Ours baseline: [`src/ide/MainWindow.cpp`](../../src/ide/MainWindow.cpp),
 [`src/ide/DiagnosticUtils.cpp`](../../src/ide/DiagnosticUtils.cpp).
@@ -25,16 +25,16 @@ Status values: **match** | **gap** | **deliberate diverge** | **defer** (Milesto
 | Topic | Jacobs (probe) | Ours today | Status | Stage 2/3 action |
 |-------|----------------|------------|--------|------------------|
 | Errors columns | Line, Description | Line, Description | **match** | None (keep). |
-| Error navigation | Double-click → source line | Activate → source line/column | **match** (role) | Stage 2: confirm double-click vs activate feels right; keep column navigation (exceedance OK). |
+| Error navigation | Double-click → source line | Activate → source line/column | **match** (role) | Confirmed Stage 2 (activate includes double-click); column nav kept. |
 | Diagnostic message text | Jacobs strings | Own `cesil-core` strings | **deliberate diverge** | None (policy). |
-| Success status | `No compilation errors` | `No compilation errors.` | **gap** (period) | Stage 2: drop trailing period to match Jacobs, or accept micro-diverge — **prefer match** (remove period). |
-| Error count status | `N compilation error(s)` | `1 compilation error` / `N compilation errors` | **gap** (plural form) | Stage 2: align to Jacobs `N compilation error(s)` **or** keep grammatical English as deliberate diverge — **prefer match** Jacobs form for status bar only. |
-| Ready / stale | Ready; updates on edit | Ready on contentsChanged | **match** | Stage 2: verify no stale “Program finished.” / error counts after edit (already intended). |
-| Check always selects Errors | Compile → Errors | Check always selects Errors tab (even on success) | **match** (likely) | Stage 2: confirm Jacobs always focuses Errors after Compile; keep or tweak if probe differs. |
-| Run failure → Errors | Yes | Yes | **match** | None. |
-| Run success → Output | Yes (expected) | Yes | **match** | Stage 2: confirm focus/clear behaviour against live Run if needed. |
-| Run success status | Not string-locked in Stage 1 | `Program finished.` | **gap** / settle in Stage 2 | Stage 2: live-confirm Jacobs post-run status; match if a stable string exists. |
-| Run failed status | Not string-locked in Stage 1 | `Run failed.` | **gap** / settle in Stage 2 | Stage 2: live-confirm; match if stable. |
+| Success status | `No compilation errors` | `No compilation errors` | **match** | Done Stage 2 (`compilationErrorSummary`). |
+| Error count status | `N compilation error(s)` | `N compilation error(s)` | **match** | Done Stage 2. |
+| Ready / stale | Ready; updates on edit | Ready on contentsChanged | **match** | Confirmed Stage 2 (`onSourceContentsChanged`). |
+| Check always selects Errors | Compile → Errors | Check always selects Errors tab (even on success) | **match** | Confirmed Stage 2 (`checkSyntax`). |
+| Run failure → Errors | Yes | Yes | **match** | Confirmed Stage 2. |
+| Run success → Output | Yes | Clears Output first; Output tab; Errors cleared | **match** | Confirmed Stage 2 (`runProgram`). |
+| Run success status | No stable UI literal in binary | `Program finished.` | **deliberate diverge** | Keep ours (Stage 2). |
+| Run failed status | No stable UI literal in binary | `Run failed.` | **deliberate diverge** | Keep ours (Stage 2). |
 
 ## Document and window
 
@@ -68,12 +68,12 @@ Status values: **match** | **gap** | **deliberate diverge** | **defer** (Milesto
 
 ---
 
-## Stage 2 implement list (workflow / Errors)
+## Stage 2 implement list (workflow / Errors) — done
 
-1. Align compilation status strings with Jacobs (`No compilation errors`, `N compilation error(s)`) unless explicitly kept as diverge in implementation notes.
-2. Verify/fix Ready-after-edit; Check/Run tab selection; Output clear on Run; post-run status strings via short live Run if needed.
-3. Confirm Errors empty-on-success and navigation; no diagnostic text cloning.
-4. Add focused IDE tests for status/tab transitions touched above.
+1. Aligned compilation status strings with Jacobs via `compilationErrorSummary` + `DiagnosticUtilsTest`.
+2. Audited Ready-after-edit, Check/Run tab selection, Output clear on Run — **match**; no MainWindow behaviour change required.
+3. Errors empty-on-success and navigation confirmed; diagnostic text policy unchanged.
+4. Post-run status settled as **deliberate diverge** (no Jacobs literals in binary extract).
 
 ## Stage 3 implement list (shell chrome)
 
@@ -90,4 +90,4 @@ Status values: **match** | **gap** | **deliberate diverge** | **defer** (Milesto
 | Debug menu, Debugger dialogue, Step/Stop/Reset/speed/variables | Milestone 9 |
 | Mnemonic gutter / syntax colouring | Post-M8 or never (teaching extra) |
 | Edit → Delete (Jacobs has it; we lack it) | Optional later; not blocking M8 |
-| Exact post-run status literals if unseen in Stage 1 extract | Stage 2 live confirm |
+| Post-run status string literals | **deliberate diverge** (Stage 2; no Jacobs UI literal found) |

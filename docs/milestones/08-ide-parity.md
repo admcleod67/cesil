@@ -80,12 +80,12 @@ Print) are easy to over-scope.
    classified; Stage 2/3 implement lists locked in the matrix. No IDE feature code
    in this stage.
 
-2. **Workflow and Errors parity** (after Stage 1) — Align Check / Run tab selection,
-   Output clearing and focus, Ready / stale status wording, and Errors panel fields /
-   summary / empty-success behaviour with the matrix. Refine navigation on top of
-   Milestone 2 where the inventory requires it. Keep diagnostic *text* from
-   `cesil-core` (Milestone 4 / 6 wording policy unchanged). Grow focused IDE tests for
-   stable state transitions.
+2. **Workflow and Errors parity** (done) — `compilationErrorSummary` matches Jacobs
+   (`No compilation errors`, `N compilation error(s)`); `DiagnosticUtilsTest` updated.
+   MainWindow Check/Run tab selection, Output clear, Ready-on-edit, and Errors
+   empty-on-success audited as **match**. Post-run status (`Program finished.` /
+   `Run failed.`) kept as **deliberate diverge** (no Jacobs UI literals in binary).
+   Matrix updated in [`testdata/ide/MATRIX.md`](../../testdata/ide/MATRIX.md).
 
 3. **Shell chrome** (after Stage 1; may overlap late Stage 2) — Menus, toolbar,
    shortcuts, and enablement per the matrix; document title and dirty-state behaviour;
@@ -110,7 +110,7 @@ Settled in [`testdata/ide/MATRIX.md`](../../testdata/ide/MATRIX.md). Summary:
 | Menu topology | Keep File/Edit/Build/**Run**; add Help in Stage 3; **no** Debug menu in M8 (**deliberate diverge** / **defer**) |
 | Debug menu | **Defer** to Milestone 9 |
 | Errors columns | Line / Description — **match**; own message text — **deliberate diverge** |
-| Status strings | Align `No compilation errors` / `N compilation error(s)` in Stage 2 |
+| Status strings | **match** compile summaries (Stage 2); post-run status **deliberate diverge** |
 | Source presentation | Monospace OK; mnemonic gutter / colouring **defer** |
 | Find / Print | Absent in Jacobs — **match** (do not add) |
 | About | Stage 3 **gap** → implement (own branding) |
