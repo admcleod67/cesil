@@ -96,11 +96,11 @@ exposes Compile and Run from menus (and typically toolbar).
 | Dismiss | OK |
 | Resize | Fixed size (Release Notes 1.2) |
 
-## Debugger (inventory only — Milestone 9)
+## Debugger (Milestone 9)
 
-Opened via Debug → Debugger. Fixed-size dialogue (Release Notes). Contains Source
-(with PC highlight), Variables (Name/Value), Accumulator, Speed (Slow–Fast), Data,
-Output, and buttons Run / Step / Stop / Reset / Quit. **Out of Milestone 8 scope.**
+Detailed probe and matrix: [`debugger/`](debugger/). Opened via Debug → Debugger.
+Fixed-size in Jacobs (Release Notes). Contains Source (PC highlight), Variables,
+Accumulator, Speed, Data, Output, and Run / Step / Stop / Reset / Quit.
 
 ## Find / Print
 

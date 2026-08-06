@@ -67,9 +67,8 @@ main-window scope. Remaining non-match rows are **deliberate diverge** or **defe
 
 ## Debugger (Milestone 9)
 
-| Topic | Jacobs (probe) | Ours today | Status | Stage 2/3 action |
-|-------|----------------|------------|--------|------------------|
-| Debugger dialogue | Full DebugForm | None | **defer** | Milestone 9 only. |
+Stage 1 inventory: [`debugger/MATRIX.md`](debugger/MATRIX.md). Dialogue and Debug menu
+remain **gap** in the product until Stages 2–3; no longer an unscoped **defer**.
 
 ---
 

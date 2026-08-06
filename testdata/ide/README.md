@@ -34,4 +34,5 @@ Do not commit absolute host paths to the local distribution.
 
 - **Milestone 8 (done):** main window — Source / Errors / Output, Compile and Run
   workflows, Help → About, status and document lifecycle.
-- **Milestone 9:** Debugger dialogue and Debug-menu actions.
+- **Milestone 9:** Debugger dialogue and Debug-menu actions — Stage 1 inventory under
+  [`debugger/`](debugger/).

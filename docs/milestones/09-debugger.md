@@ -64,14 +64,11 @@ It complements:
 Ship as one milestone and one pre-1.0 checkpoint (version confirmed at Stage 4).
 **Stage 1 must settle menu and session semantics before large UI or core rewrites.**
 
-1. **Debugger probe and matrix** (next) — Extend IDE inventory for the Debugger only:
-   confirm Debug menu items and enablement; dialogue controls; how Jacobs Run/Step/Stop/
-   Reset/Quit and Speed behave; relationship between main-window Run and debug Run.
-   Artefacts: extend [`testdata/ide/PROBE.md`](../../testdata/ide/PROBE.md) /
-   [`MATRIX.md`](../../testdata/ide/MATRIX.md) and/or add
-   [`testdata/ide/debugger/`](../../testdata/ide/debugger/) (`README.md`, probe notes).
-   Little or no feature code. Lock Stage 2–3 implement lists and deliberate divergences
-   (especially keeping top-level Run).
+1. **Debugger probe and matrix** (done) — Inventory under
+   [`testdata/ide/debugger/`](../../testdata/ide/debugger/) (`README.md`, `PROBE.md`,
+   `MATRIX.md`). Evidence: Debugger screenshot, UTF-16 UI strings, Release Notes 1.2,
+   parent IDE PROBE. Settle-or-defer rows classified; Stage 2/3 implement lists locked.
+   No Debugger UI or stepping API code in this stage.
 
 2. **Core stepping and debug session API** (after Stage 1) — Grow interpreter / hooks
    support for: single-step one instruction; continuous run with cooperative stop;
@@ -96,21 +93,18 @@ Stage 2 depends on 1. Stage 3 depends on 2. Stage 4 depends on 2 and 3.
 
 ### Stage 1 settle-or-defer checklist
 
-Inventory must classify at least:
+Settled in [`testdata/ide/debugger/MATRIX.md`](../../testdata/ide/debugger/MATRIX.md).
+Summary:
 
-| Topic | Working assumption (confirm in Stage 1) |
-|-------|----------------------------------------|
-| Debug menu | Add **Debug** with **Debugger…** (opens dialogue). **Stop** enabled only while a debug continuous-run is active (or always present but no-op when idle — probe Jacobs). |
-| Main-window Run | **Keep** File/Edit/Build/**Run**/Help topology from M8 (**deliberate diverge** vs Jacobs Debug→Run-only). |
-| Debug dialogue Run vs main Run | Separate debug session inside the dialogue; main Run stays fire-and-forget without opening Debugger. |
-| Step | Execute exactly one instruction; refresh Variables / Accumulator / highlight. |
-| Reset | Restore machine start state for the loaded program; clear debug Output as Jacobs does if observed. |
-| Speed | Maps to delay between instructions during dialogue continuous Run (not main-window Run). |
-| Source highlight | Highlight the source line for the current PC (instruction line metadata). |
-| Variables | Show store Name / Value; update after each step/run slice. |
-| Data | Show remaining or full data values as probe specifies. |
-| Breakpoints | Jacobs Debugger has no rich breakpoint UI in the M8 inventory — **defer** extra breakpoint UX unless Stage 1 finds it. `shouldBreak_` may still support internal step-stop. |
-| Dialogue size | Jacobs fixed-size (Release Notes); this project may use a **resizable** dialogue (**deliberate diverge**) for accessibility. |
+| Topic | Decision |
+|-------|----------|
+| Debug menu | Stage 3: **Debug** → Debugger…; Stop when continuous debug Run active |
+| Main-window Run | **Keep** (deliberate diverge vs Jacobs) |
+| Debug vs main Run | Separate dialogue session; main Run unchanged |
+| Step / Run / Reset / Quit / Speed | Parity targets for Stages 2–3 (see MATRIX) |
+| Source highlight / Variables / Accumulator / Data / Output | Stage 3 UI on Stage 2 state |
+| Breakpoints | **Defer** extra UI (absent in Jacobs) |
+| Dialogue size | Resizable OK (**deliberate diverge** vs Jacobs fixed-size) |
 
 ---
 
