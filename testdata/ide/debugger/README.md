@@ -1,9 +1,8 @@
 # Debugger inventory (Milestone 9)
 
-Probe and matrix for Visual CESIL 2.0 **Debugger** behaviour. Stage 1 locked the
-scope; Stage 2 delivered the core stepping API (`step()`, cooperative
-`shouldStop_` / `betweenInstructions_`, data/line accessors). Stage 3 adds the
-Debug menu and dialogue UI.
+Probe and matrix for Visual CESIL 2.0 **Debugger** behaviour. Stages 1–3 complete:
+core stepping API (Stage 2) and Debug menu + [`DebuggerDialog`](../../../src/ide/DebuggerDialog.hpp)
+(Stage 3). Stage 4 is manual checklist and `0.9.0` close-out.
 
 See [Milestone 9](../../../docs/milestones/09-debugger.md) and the parent
 [IDE inventory](../README.md).
@@ -17,7 +16,7 @@ rules from `cesil-ide` alone. Main-window Run remains a Milestone 8
 | File | Role |
 |------|------|
 | [`PROBE.md`](PROBE.md) | Jacobs Debugger observations |
-| [`MATRIX.md`](MATRIX.md) | Ours vs Jacobs → Stage 2 done / Stage 3 actions |
+| [`MATRIX.md`](MATRIX.md) | Ours vs Jacobs; Stages 2–3 done; Stage 4 close-out |
 
 No Visual CESIL binary or copyrighted examples are vendored here. Use an external
 2.0 distribution (see

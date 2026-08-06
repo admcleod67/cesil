@@ -41,12 +41,12 @@ It complements:
 
 | Prior work | Available today |
 |------------|-----------------|
-| [Milestone 8](08-ide-parity.md) | Main window: Source / Errors / Output; Compile; top-level Run; Help → About; no Debug menu |
+| [Milestone 8](08-ide-parity.md) | Main window: Source / Errors / Output; Compile; top-level Run; Help → About; **Debug** → Debugger… / Stop |
 | [Milestone 6](06-language-parity.md) | Language-compatible parse + interpret; Jacobs runtime banners |
 | `Interpreter` | `load` / `reset` / `run` / `step`; `accumulator()`, `programCounter()`, `store()`, `program()`, `data()`, `dataPointer()`, `sourceLineAtPc()` |
 | `ExecutionHooks` | `beforeInstruction_`, `afterInstruction_`, `shouldBreak_`, `shouldStop_`, `betweenInstructions_` |
+| [`DebuggerDialog`](../../src/ide/DebuggerDialog.hpp) | Non-modal dialogue: Source highlight, Variables, Accumulator, Speed, Data, Output; Run/Step/Stop/Reset/Quit |
 | [`testdata/ide/PROBE.md`](../../testdata/ide/PROBE.md) | Debug menu labels; Debugger pane list; fixed-size note from Release Notes 1.2 |
-| Stage 2 core API | Stepping + cooperative run/stop tested; Stage 3 UI still pending |
 
 ### Out of scope for Milestone 9
 
@@ -78,11 +78,12 @@ Ship as one milestone and one pre-1.0 checkpoint (version confirmed at Stage 4).
    while keeping the loaded program and data values; clearing debug Output is
    UI-only. Catch2 coverage in `tests/core/runtime/DebugSteppingTest.cpp`.
 
-3. **Debugger UI and Debug menu** (after Stage 2) — Qt Debugger dialogue (Source
-   highlight, Variables table, Accumulator, Speed slider, Data, Output, Run/Step/
-   Stop/Reset/Quit); Debug menu to open it and Stop when appropriate. Wire to the
-   Stage 2 API. Compile-gate before debug (same as Run: no execute on compile errors).
-   Do not remove Milestone 8 Run. Native conventions; resizable dialogue allowed.
+3. **Debugger UI and Debug menu** (done) — Added **Debug** menu (Debugger…, Stop when
+   continuous Run active) and non-modal [`DebuggerDialog`](../../src/ide/DebuggerDialog.hpp):
+   Source line highlight, Variables table, Accumulator, Speed slider (1–500 ms between
+   steps), Data list, Output via `QtIoHost`; Run/Step/Stop/Reset/Quit wired to
+   `Interpreter::step()` and `reset()`. Compile-gate before open (same as Run).
+   Top-level Run unchanged; resizable dialogue (deliberate diverge vs Jacobs fixed-size).
 
 4. **Close-out** (last) — Manual debugger checklist (extend
    [`testdata/ide/CHECKLIST.md`](../../testdata/ide/CHECKLIST.md) or add

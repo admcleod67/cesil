@@ -7,6 +7,7 @@
 
 #include <vector>
 
+class DebuggerDialog;
 class DiagnosticModel;
 class QAction;
 class QCloseEvent;
@@ -45,6 +46,9 @@ class MainWindow final : public QMainWindow {
 
     void checkSyntax();
     void runProgram();
+    void openDebugger();
+    void stopDebugRun();
+    void onDebuggerRunningChanged(bool running);
     void showAbout();
 
     QTabWidget* m_tabs{};
@@ -68,5 +72,9 @@ class MainWindow final : public QMainWindow {
     QAction* m_selectAllAction{};
     QAction* m_checkAction{};
     QAction* m_runAction{};
+    QAction* m_debuggerAction{};
+    QAction* m_debugStopAction{};
     QAction* m_aboutAction{};
+
+    DebuggerDialog* m_debuggerDialog{};
 };

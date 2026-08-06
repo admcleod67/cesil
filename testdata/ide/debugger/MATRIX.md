@@ -1,41 +1,39 @@
 # Debugger compatibility matrix (Milestone 9)
 
-Evidence: [`PROBE.md`](PROBE.md). Ours today: no Debug menu or Debugger dialogue
-([`MainWindow`](../../../src/ide/MainWindow.cpp) File/Edit/Build/Run/Help only).
-Core: [`Interpreter`](../../../src/core/runtime/Interpreter.hpp) +
-[`ExecutionHooks`](../../../src/core/runtime/Hooks.hpp) — Stage 2: `step()`,
-`data()` / `dataPointer()` / `sourceLineAtPc()`, `shouldStop_`,
-`betweenInstructions_`; `reset()` clears PC/accumulator/store/dataPtr (Output clear
-is UI-only).
+Evidence: [`PROBE.md`](PROBE.md). Ours today: **Debug** menu (**Debugger…**, **Stop**)
+and non-modal [`DebuggerDialog`](../../../src/ide/DebuggerDialog.hpp) wired to
+[`Interpreter::step()`](../../../src/core/runtime/Interpreter.hpp); top-level **Run**
+kept (M8 deliberate diverge). Resizable dialogue (deliberate diverge vs Jacobs
+fixed-size).
 
 Status: **match** | **gap** | **deliberate diverge** | **defer**.
 
 ## Menu and session
 
-| Topic | Jacobs | Ours today | Status | Stage 2/3 action |
-|-------|--------|------------|--------|------------------|
-| Debug menu | Debug → Run, Stop, Debugger | Missing | **gap** | Stage 3: add **Debug** with **Debugger…**; **Stop** when debug continuous-run active. |
-| Main-window Run | Under Debug only | Top-level **Run** (M8) | **deliberate diverge** | **Keep** M8 Run; do not remove. |
-| Debugger vs main Run | DebugForm has its own Run | Main Run only | **gap** | Stage 3: dialogue Run uses Stage 2 session API; main Run unchanged. |
-| Menu Stop (idle) | Present; dialogue Stop disabled at idle (screenshot) | None | **gap** | Stage 3: disable Stop when idle; enable during paced Run. |
+| Topic | Jacobs | Ours today | Status | Notes |
+|-------|--------|------------|--------|-------|
+| Debug menu | Debug → Run, Stop, Debugger | **Debug** → Debugger…, Stop | **match** (subset) / **deliberate diverge** | No Debug → Run (M8 Run kept). Stop enabled during dialogue continuous Run only. |
+| Main-window Run | Under Debug only | Top-level **Run** (M8) | **deliberate diverge** | Kept. |
+| Debugger vs main Run | DebugForm has its own Run | Dialogue Run + main Run | **match** | Dialogue uses `QTimer` + `step()`; main Run unchanged. |
+| Menu Stop (idle) | Present; dialogue Stop disabled at idle | Debug → Stop disabled at idle | **match** | Enabled during paced dialogue Run. |
 
 ## Dialogue controls
 
-| Topic | Jacobs | Ours today | Status | Stage 2/3 action |
-|-------|--------|------------|--------|------------------|
-| Step | One instruction; refresh state / highlight | `Interpreter::step()` | **match** (core) | Stage 3: wire button. |
-| Dialogue Run | Continuous, Speed-paced; Stop stops it | `run()` + `shouldStop_` / `betweenInstructions_` | **match** (core) | Stage 3: wire. |
-| Reset | Start-state restore; clear debug Output | `Interpreter::reset()` (PC/acc/store/dataPtr) | **gap** (UI) / **match** (core) | Stage 3: button + clear Output. |
-| Quit | Closes dialogue | None | **gap** | Stage 3: close dialogue. |
-| Speed | Slow–Fast delay on dialogue Run | `betweenInstructions_` hook | **match** (core) | Stage 3: slider. |
-| Source highlight | Current instruction line | `sourceLineAtPc()` | **match** (core) | Stage 3: highlight. |
-| Variables | Name / Value store table | `store()` | **match** (core) | Stage 3: table. |
-| Accumulator | Single value field | Readable via `accumulator()` | **gap** (UI) | Stage 3: display; refresh after step/run. |
-| Data | `dataList` of program data | `data()` / `dataPointer()` | **match** (core) | Stage 3: list UI. |
-| Output | Debug stdout | None in dialogue | **gap** | Stage 3: capture via IoHost into dialogue Output. |
-| Breakpoint UI | Absent | Absent | **match** (absent) / **defer** extras | No breakpoint UI in M9. |
-| Dialogue size | Fixed (Release Notes) | N/A | **deliberate diverge** (planned) | Stage 3: resizable Qt dialogue OK. |
-| Compile gate | No execute if compile fails | Main Run already gates | **gap** (debug path) | Stage 3: same gate before debug session load. |
+| Topic | Jacobs | Ours today | Status | Notes |
+|-------|--------|------------|--------|-------|
+| Step | One instruction; refresh state / highlight | Dialogue **Step** → `step()` | **match** | |
+| Dialogue Run | Continuous, Speed-paced; Stop stops it | **Run** + `QTimer`/`step()` | **match** | Speed slider 1–500 ms between steps. |
+| Reset | Start-state restore; clear debug Output | **Reset** → `reset()` + clear Output | **match** | |
+| Quit | Closes dialogue | **Quit** closes dialogue | **match** | |
+| Speed | Slow–Fast delay on dialogue Run | Vertical slider Slow (top) … Fast (bottom) | **match** | Step unaffected. |
+| Source highlight | Current instruction line | Blue line highlight via `sourceLineAtPc()` | **match** | |
+| Variables | Name / Value store table | `QTableWidget` from `store()` | **match** | |
+| Accumulator | Single value field | Read-only field; refreshed after step/run | **match** | |
+| Data | `dataList` of program data | `QListWidget` from parse `data()` at open | **match** | Static list; does not shrink on `IN`. |
+| Output | Debug stdout | `QtIoHost` → dialogue Output | **match** | |
+| Breakpoint UI | Absent | Absent | **match** / **defer** extras | No breakpoint UI in M9. |
+| Dialogue size | Fixed (Release Notes) | Resizable `QDialog` | **deliberate diverge** | |
+| Compile gate | No execute if compile fails | Parse gate before open (same as Run) | **match** | |
 
 ## Explicit deferrals
 
@@ -58,10 +56,10 @@ Status: **match** | **gap** | **deliberate diverge** | **defer**.
 
 Prefer extending `ExecutionHooks` / a small debug-session helper over blocking GUI `run()` loops.
 
-## Stage 3 implement list (UI) — locked
+## Stage 3 implement list (UI) — done
 
-1. **Debug** menu: **Debugger…** opens dialogue; **Stop** enabled only during debug continuous Run.
-2. Debugger dialogue: Source (highlight), Variables, Accumulator, Speed, Data, Output; Run / Step / Stop / Reset / Quit.
-3. Wire controls to Stage 2 API; IoHost into dialogue Output; compile-gate before load/run.
-4. Keep Milestone 8 File/Edit/Build/**Run**/Help; do not move main Run under Debug.
-5. Resizable dialogue allowed; no breakpoint UI.
+1. ~~**Debug** menu: **Debugger…** opens dialogue; **Stop** enabled only during debug continuous Run.~~ — [`MainWindow`](../../../src/ide/MainWindow.cpp)
+2. ~~Debugger dialogue: Source (highlight), Variables, Accumulator, Speed, Data, Output; Run / Step / Stop / Reset / Quit.~~ — [`DebuggerDialog`](../../../src/ide/DebuggerDialog.hpp)
+3. ~~Wire controls to Stage 2 API; IoHost into dialogue Output; compile-gate before load/run.~~
+4. ~~Keep Milestone 8 File/Edit/Build/**Run**/Help; do not move main Run under Debug.~~
+5. ~~Resizable dialogue allowed; no breakpoint UI.~~

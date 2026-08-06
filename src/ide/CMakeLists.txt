@@ -2,6 +2,8 @@ qt_add_executable(cesil-ide
         Main.cpp
         MainWindow.cpp
         MainWindow.hpp
+        DebuggerDialog.cpp
+        DebuggerDialog.hpp
         QtIoHost.cpp
         QtIoHost.hpp
         DiagnosticUtils.cpp

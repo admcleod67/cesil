@@ -1,4 +1,5 @@
 #include "MainWindow.hpp"
+#include "DebuggerDialog.hpp"
 #include "DiagnosticUtils.hpp"
 #include "QtIoHost.hpp"
 #include "SourceEditActions.hpp"
@@ -137,6 +138,13 @@ void MainWindow::createActions() {
     m_runAction->setIcon(style()->standardIcon(QStyle::SP_MediaPlay));
     connect(m_runAction, &QAction::triggered, this, &MainWindow::runProgram);
 
+    m_debuggerAction = new QAction(tr("Debugger..."), this);
+    connect(m_debuggerAction, &QAction::triggered, this, &MainWindow::openDebugger);
+
+    m_debugStopAction = new QAction(tr("&Stop"), this);
+    m_debugStopAction->setEnabled(false);
+    connect(m_debugStopAction, &QAction::triggered, this, &MainWindow::stopDebugRun);
+
     m_aboutAction = new QAction(tr("&About CESIL IDE..."), this);
     m_aboutAction->setMenuRole(QAction::AboutRole);
     connect(m_aboutAction, &QAction::triggered, this, &MainWindow::showAbout);
@@ -166,6 +174,10 @@ void MainWindow::createMenus() {
 
     QMenu* runMenu = menuBar()->addMenu(tr("&Run"));
     runMenu->addAction(m_runAction);
+
+    QMenu* debugMenu = menuBar()->addMenu(tr("&Debug"));
+    debugMenu->addAction(m_debuggerAction);
+    debugMenu->addAction(m_debugStopAction);
 
     QMenu* helpMenu = menuBar()->addMenu(tr("&Help"));
     helpMenu->addAction(m_aboutAction);
@@ -322,6 +334,61 @@ void MainWindow::runProgram() {
     statusBar()->showMessage(tr("Program finished."));
 }
 
+void MainWindow::openDebugger() {
+    const QByteArray utf8 = m_editor->toPlainText().toUtf8();
+    const std::string_view source(utf8.constData(),
+                                  static_cast<std::size_t>(utf8.size()));
+
+    cesil::Parser parser;
+    cesil::ParseResult parsed = parser.parse(source);
+
+    if (!parsed.ok_) {
+        if (parsed.diagnostics_.empty()) {
+            showFallbackDiagnostic(
+                tr("Compilation failed (no detailed diagnostics)."));
+            statusBar()->showMessage(tr("Compilation failed."));
+        } else {
+            showDiagnostics(parsed.diagnostics_);
+            statusBar()->showMessage(compilationErrorSummary(
+                static_cast<int>(parsed.diagnostics_.size())));
+        }
+        m_tabs->setCurrentIndex(kErrorsTabIndex);
+        return;
+    }
+
+    if (m_debuggerDialog) {
+        m_debuggerDialog->stopContinuousRun();
+        m_debuggerDialog->close();
+        m_debuggerDialog->deleteLater();
+        m_debuggerDialog = nullptr;
+        m_debugStopAction->setEnabled(false);
+    }
+
+    m_debuggerDialog =
+        new DebuggerDialog(std::move(parsed), m_editor->toPlainText(), this);
+    m_debuggerDialog->setAttribute(Qt::WA_DeleteOnClose);
+    connect(m_debuggerDialog, &DebuggerDialog::runningChanged, this,
+            &MainWindow::onDebuggerRunningChanged);
+    connect(m_debuggerDialog, &QObject::destroyed, this, [this]() {
+        m_debuggerDialog = nullptr;
+        m_debugStopAction->setEnabled(false);
+    });
+
+    m_debuggerDialog->show();
+    m_errorsModel->clear();
+    statusBar()->showMessage(compilationErrorSummary(0));
+}
+
+void MainWindow::stopDebugRun() {
+    if (m_debuggerDialog) {
+        m_debuggerDialog->stopContinuousRun();
+    }
+}
+
+void MainWindow::onDebuggerRunningChanged(bool running) {
+    m_debugStopAction->setEnabled(running);
+}
+
 QString MainWindow::displayFileName() const {
     if (m_filePath.isEmpty()) {
         return tr("Untitled");
@@ -426,6 +493,10 @@ void MainWindow::closeEvent(QCloseEvent* event) {
     if (!handleUnsavedChanges()) {
         event->ignore();
         return;
+    }
+    if (m_debuggerDialog) {
+        m_debuggerDialog->stopContinuousRun();
+        m_debuggerDialog->close();
     }
     event->accept();
 }
