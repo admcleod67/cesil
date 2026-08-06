@@ -28,6 +28,13 @@ void Interpreter::reset() {
     dataPtr_ = 0;
 }
 
+int Interpreter::sourceLineAtPc() const {
+    if (pc_ >= program_.size()) {
+        return 0;
+    }
+    return program_[pc_].lineNumber_;
+}
+
 int Interpreter::loadOperandValue(const Operand& op, int lineNumber, RunResult& result) {
     if (op.kind_ == OperandKind::Immediate) {
         return op.immediate_;
@@ -266,12 +273,59 @@ RunResult Interpreter::run() {
             result.ok_ = true;
             return result;
         }
+
+        if (hooks_.betweenInstructions_) {
+            hooks_.betweenInstructions_();
+        }
+
+        if (hooks_.shouldStop_ && hooks_.shouldStop_()) {
+            result.ok_ = true;
+            return result;
+        }
     }
 
     // Fell off the end without executing HALT (Visual CESIL requires a trailing HALT).
     io_.writeString("** ERROR: No HALT at end of program");
     pushDiagnostic(result.diagnostics_, DiagnosticSeverity::Error, "no HALT at end of program", 0, 0);
     result.ok_ = false;
+    return result;
+}
+
+RunResult Interpreter::step() {
+    RunResult result;
+    if (program_.empty()) {
+        result.ok_ = true;
+        return result;
+    }
+
+    if (pc_ >= program_.size()) {
+        io_.writeString("** ERROR: No HALT at end of program");
+        pushDiagnostic(result.diagnostics_, DiagnosticSeverity::Error, "no HALT at end of program", 0,
+                       0);
+        result.ok_ = false;
+        return result;
+    }
+
+    if (hooks_.beforeInstruction_) {
+        hooks_.beforeInstruction_(*this);
+    }
+    if (hooks_.shouldBreak_ && hooks_.shouldBreak_(pc_)) {
+        result.ok_ = true;
+        result.stoppedAtBreakpoint_ = true;
+        return result;
+    }
+
+    bool halted = false;
+    if (!executeCurrent(halted, result)) {
+        result.ok_ = false;
+        return result;
+    }
+
+    if (hooks_.afterInstruction_) {
+        hooks_.afterInstruction_(*this);
+    }
+
+    result.ok_ = true;
     return result;
 }
 

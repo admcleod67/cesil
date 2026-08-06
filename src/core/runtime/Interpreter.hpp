@@ -39,11 +39,16 @@ class Interpreter {
     void load(std::vector<Instruction> program, std::vector<int> runtimeData = {},
               std::unordered_map<std::string, std::size_t> labelIndices = {});
 
-    /// Reset PC, accumulator, and store without changing the loaded program.
+    /// Reset PC, accumulator, store, and data pointer without changing the loaded
+    /// program or data values. Clearing debug Output is a UI responsibility.
     void reset();
 
-    /// Run from the current PC until HALT, end of program, error, or breakpoint hook.
+    /// Run from the current PC until HALT, end of program, error, breakpoint, or
+    /// cooperative \ref ExecutionHooks::shouldStop_.
     RunResult run();
+
+    /// Execute at most one instruction from the current PC (debug single-step).
+    RunResult step();
 
     /// Current accumulator value.
     int accumulator() const { return accumulator_; }
@@ -56,6 +61,15 @@ class Interpreter {
 
     /// Loaded program (read-only inspection).
     const std::vector<Instruction>& program() const { return program_; }
+
+    /// Runtime data values consumed by \c IN (read-only).
+    const std::vector<int>& data() const { return data_; }
+
+    /// Index of the next unread data value for \c IN.
+    std::size_t dataPointer() const { return dataPtr_; }
+
+    /// Source line (1-based) for the instruction at the current PC, or 0 if none.
+    int sourceLineAtPc() const;
 
    private:
     IoHost& io_;

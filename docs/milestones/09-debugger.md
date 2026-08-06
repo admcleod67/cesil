@@ -43,9 +43,10 @@ It complements:
 |------------|-----------------|
 | [Milestone 8](08-ide-parity.md) | Main window: Source / Errors / Output; Compile; top-level Run; Help → About; no Debug menu |
 | [Milestone 6](06-language-parity.md) | Language-compatible parse + interpret; Jacobs runtime banners |
-| `Interpreter` | `load` / `reset` / `run`; `accumulator()`, `programCounter()`, `store()`, `program()` |
-| `ExecutionHooks` | `beforeInstruction_`, `afterInstruction_`, `shouldBreak_` (breakpoint stop before PC) |
+| `Interpreter` | `load` / `reset` / `run` / `step`; `accumulator()`, `programCounter()`, `store()`, `program()`, `data()`, `dataPointer()`, `sourceLineAtPc()` |
+| `ExecutionHooks` | `beforeInstruction_`, `afterInstruction_`, `shouldBreak_`, `shouldStop_`, `betweenInstructions_` |
 | [`testdata/ide/PROBE.md`](../../testdata/ide/PROBE.md) | Debug menu labels; Debugger pane list; fixed-size note from Release Notes 1.2 |
+| Stage 2 core API | Stepping + cooperative run/stop tested; Stage 3 UI still pending |
 
 ### Out of scope for Milestone 9
 
@@ -70,13 +71,12 @@ Ship as one milestone and one pre-1.0 checkpoint (version confirmed at Stage 4).
    parent IDE PROBE. Settle-or-defer rows classified; Stage 2/3 implement lists locked.
    No Debugger UI or stepping API code in this stage.
 
-2. **Core stepping and debug session API** (after Stage 1) — Grow interpreter / hooks
-   support for: single-step one instruction; continuous run with cooperative stop;
-   reset of PC/accumulator/store/data pointer while keeping the loaded program;
-   optional delay between instructions for Speed; expose enough state for Variables /
-   Accumulator / Data / PC→source line (use instruction `lineNumber_` where present).
-   Catch2 tests in `tests/core/` without Qt. Prefer expanding `ExecutionHooks` and
-   small session helpers over blocking the GUI thread with a tight `run()` loop.
+2. **Core stepping and debug session API** (done) — Added `Interpreter::step()`,
+   `data()` / `dataPointer()` / `sourceLineAtPc()`; extended `ExecutionHooks` with
+   `shouldStop_` (cooperative early return from `run()`) and `betweenInstructions_`
+   (Speed delay / smoke). `reset()` clears PC, accumulator, store, and data pointer
+   while keeping the loaded program and data values; clearing debug Output is
+   UI-only. Catch2 coverage in `tests/core/runtime/DebugSteppingTest.cpp`.
 
 3. **Debugger UI and Debug menu** (after Stage 2) — Qt Debugger dialogue (Source
    highlight, Variables table, Accumulator, Speed slider, Data, Output, Run/Step/

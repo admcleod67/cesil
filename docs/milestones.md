@@ -80,8 +80,8 @@ Planned growth:
 
 - **Milestone 8:** main-window IDE parity — inventory, workflow/Errors, shell chrome,
   manual checklist (completed).
-- **Milestone 9:** Debugger dialogue — probe/matrix, core stepping API, Qt Debug
-  menu and dialogue, manual checklist; expected `0.9.0` (planned).
+- **Milestone 9:** Debugger dialogue — probe/matrix (done), core stepping API (done),
+  Qt Debug menu and dialogue, manual checklist; expected `0.9.0` (in progress).
 - **Milestone 10:** cross-platform release checklists; automate stable state
   transitions where practical, keep fragile visual checks manual.
 

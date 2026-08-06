@@ -6,6 +6,7 @@ add_executable(cesil_tests
     parser/SourceCompatibilityTest.cpp
     runtime/SmokeTest.cpp
     runtime/RuntimeSemanticsTest.cpp
+    runtime/DebugSteppingTest.cpp
     runtime/GoldenCorpusTest.cpp
 )
 

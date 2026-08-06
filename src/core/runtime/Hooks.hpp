@@ -22,6 +22,14 @@ struct ExecutionHooks {
     ///
     /// TODO: breakpoint source map from Token/Instruction (line/column or IR index mapping).
     std::function<bool(std::size_t pc)> shouldBreak_{};
+
+    /// If set and returns true after an instruction completes (and the program has not
+    /// halted), \ref Interpreter::run stops cooperatively with \c ok_ == true.
+    std::function<bool()> shouldStop_{};
+
+    /// Invoked after each completed non-halting instruction during \ref Interpreter::run
+    /// (e.g. Speed delay). Ignored by \ref Interpreter::step.
+    std::function<void()> betweenInstructions_{};
 };
 
 }  // namespace cesil

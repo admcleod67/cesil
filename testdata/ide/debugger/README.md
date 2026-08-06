@@ -1,7 +1,9 @@
-# Debugger inventory (Milestone 9 Stage 1)
+# Debugger inventory (Milestone 9)
 
-Probe and matrix for Visual CESIL 2.0 **Debugger** behaviour. Stage 1 locks what
-Stages 2–3 implement; it does **not** add Debug UI or core stepping APIs.
+Probe and matrix for Visual CESIL 2.0 **Debugger** behaviour. Stage 1 locked the
+scope; Stage 2 delivered the core stepping API (`step()`, cooperative
+`shouldStop_` / `betweenInstructions_`, data/line accessors). Stage 3 adds the
+Debug menu and dialogue UI.
 
 See [Milestone 9](../../../docs/milestones/09-debugger.md) and the parent
 [IDE inventory](../README.md).
@@ -15,7 +17,7 @@ rules from `cesil-ide` alone. Main-window Run remains a Milestone 8
 | File | Role |
 |------|------|
 | [`PROBE.md`](PROBE.md) | Jacobs Debugger observations |
-| [`MATRIX.md`](MATRIX.md) | Ours vs Jacobs → Stage 2/3 action |
+| [`MATRIX.md`](MATRIX.md) | Ours vs Jacobs → Stage 2 done / Stage 3 actions |
 
 No Visual CESIL binary or copyrighted examples are vendored here. Use an external
 2.0 distribution (see

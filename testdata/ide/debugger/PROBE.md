@@ -51,7 +51,7 @@ gutter remains out of M8/M9 scope unless revisited later.
 | **Step** | Execute one instruction; advance PC highlight; refresh Accumulator / Variables | **specified** for parity |
 | **Run** | Continuous execution in the dialogue; paced by Speed; Stop becomes available | **specified** |
 | **Stop** | Halts continuous Run; screenshot shows **Stop disabled** at idle (before Run) | **specified** — enable while continuous debug Run is active; disabled when idle / after Step-only |
-| **Reset** | Return to program start state (PC, accumulator, stores, data pointer) with loaded program kept | **specified**; clear debug Output on Reset (teaching IDE expectation; consistent with empty Output at open) |
+| **Reset** | Return to program start state (PC, accumulator, stores, data pointer) with loaded program kept | **specified**; clear debug Output on Reset (teaching IDE expectation; consistent with empty Output at open). Core `Interpreter::reset()` does not clear Output — that remains a Stage 3 UI responsibility. |
 | **Quit** | Close the Debugger dialogue | **specified** |
 
 ### Speed
