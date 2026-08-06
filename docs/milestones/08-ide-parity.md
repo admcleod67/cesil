@@ -73,14 +73,12 @@ lands in ordered stages. **Stage 1 must settle scope before large layout or menu
 rewrites** — several editor-chrome items (syntax colouring, mnemonic gutter, Find,
 Print) are easy to over-scope.
 
-1. **Reference inventory and matrix** (next) — Capture Visual CESIL 2.0 main-window
-   screenshots and workflows (file handling, Check, Run, Errors, Output, status,
-   menus/toolbar, Help → About). Record each user-visible element and transition as
-   **match**, **gap**, **deliberate diverge**, or **defer** (e.g. to Milestone 9).
-   Distinguish functional parity from Windows-only decoration. Artefacts live under
-   [`testdata/ide/`](../../testdata/ide/) (create in this stage: `README.md`,
-   `PROBE.md`, `MATRIX.md`; screenshots optional / local-only if preferred). Little or
-   no IDE code beyond notes. Lock what Stage 2–3 will implement.
+1. **Reference inventory and matrix** (done) — Main-window inventory under
+   [`testdata/ide/`](../../testdata/ide/) (`README.md`, `PROBE.md`, `MATRIX.md`).
+   Evidence: operator screenshots, UTF-16 UI strings from a local Visual CESIL 2.0
+   binary (not vendored), and prior diagnostic-status probes. Settle-or-defer rows
+   classified; Stage 2/3 implement lists locked in the matrix. No IDE feature code
+   in this stage.
 
 2. **Workflow and Errors parity** (after Stage 1) — Align Check / Run tab selection,
    Output clearing and focus, Ready / stale status wording, and Errors panel fields /
@@ -105,17 +103,18 @@ Stage 2 and 3 both depend on Stage 1. Stage 4 depends on 2 and 3.
 
 ### Stage 1 settle-or-defer checklist
 
-Inventory must explicitly classify at least:
+Settled in [`testdata/ide/MATRIX.md`](../../testdata/ide/MATRIX.md). Summary:
 
-| Topic | Typical options |
-|-------|-----------------|
-| Menu topology | Jacobs Build/Debug/Help vs this project's Build/Run; where Check and Run live |
-| Debug menu | Omit until M9 / disabled stub / Help-only until Debugger lands |
-| Errors columns and summaries | Match useful fields; keep own message text |
-| Status strings | Ready, compilation failed / N errors, program finished, etc. |
-| Source presentation | Monospace, tab stops, colouring, left “mnemonic” gutter — in M8, diverge, or defer |
-| Find / Replace, Print | In M8 only if present and essential in Jacobs; else defer or diverge |
-| About | In M8 (role parity; own text) |
+| Topic | Decision |
+|-------|----------|
+| Menu topology | Keep File/Edit/Build/**Run**; add Help in Stage 3; **no** Debug menu in M8 (**deliberate diverge** / **defer**) |
+| Debug menu | **Defer** to Milestone 9 |
+| Errors columns | Line / Description — **match**; own message text — **deliberate diverge** |
+| Status strings | Align `No compilation errors` / `N compilation error(s)` in Stage 2 |
+| Source presentation | Monospace OK; mnemonic gutter / colouring **defer** |
+| Find / Print | Absent in Jacobs — **match** (do not add) |
+| About | Stage 3 **gap** → implement (own branding) |
+| Compile label | Rename Check syntax → **Compile** in Stage 3 |
 
 ---
 
