@@ -1,11 +1,14 @@
 ← [Project milestones index](../milestones.md)
 
-## Milestone 8 — Visual CESIL IDE parity (planned)
+## Milestone 8 — Visual CESIL IDE parity (completed)
 
-This milestone brings the Qt IDE's **main window** workflow and information
-presentation to parity with Visual CESIL 2.0. It preserves native macOS, Linux, and
-Windows behaviour rather than copying the historical Windows appearance pixel for
-pixel.
+This milestone brought the Qt IDE's **main window** workflow and information
+presentation to parity with Visual CESIL 2.0 for the agreed edit → compile → run
+scope. It preserves native macOS, Linux, and Windows behaviour rather than copying
+historical Windows appearance pixel for pixel.
+
+**Release note:** Milestone 8 is complete. The CLI and IDE report `0.8.0`
+(`${PROJECT_VERSION}` from CMake). Cut git tag `v0.8.0` when ready.
 
 It complements:
 
@@ -14,170 +17,71 @@ It complements:
 - [Milestone 2 — Diagnostic workflow](02-diagnostic-workflow.md)
 - [Milestone 3 — Editor ergonomics](03-editor-ergonomics.md)
 - [Milestone 6 — Visual CESIL language parity](06-language-parity.md)
+- [Milestone 9 — Visual CESIL Debugger](09-debugger.md)
 - [Milestone 10 — Visual CESIL parity and 1.0 release](10-version-1-release.md)
-
-The Visual CESIL **Debugger** dialogue is **not** part of this milestone. Reserve it
-for a later pre-1.0 milestone (planned as **Milestone 9** unless scope changes). The
-1.0 contract should include that Debugger once that milestone completes.
-
-**Release checkpoint:** assign at close-out (expected **`0.8.0`**,
-`project(cesil VERSION …)`). Cut git tag `v0.8.0` when ready. Do not bump the version
-until Stage 4.
 
 ### Goals
 
-- Establish a documented UI and workflow reference from Visual CESIL 2.0 for the
-  main window (not the Debugger).
-- Present source, errors, and output with the same essential information and
-  transitions as the reference application.
-- Make the single-program edit → check → run workflow complete and predictable.
-- Provide a Help → About dialogue comparable in *role* to Visual CESIL's, using this
-  project's own branding and license text.
-- Preserve cross-platform Qt conventions and accessibility.
+- Documented UI/workflow reference for the main window (not the Debugger).
+- Source, errors, and output with the same essential information and transitions.
+- Predictable single-program edit → compile → run workflow.
+- Help → About with this project's branding and license.
+- Cross-platform Qt conventions and accessibility.
 
 ### Starting point
 
-| Prior work | What the IDE already has |
-|------------|--------------------------|
-| [Milestone 1](01-ide-mvp.md) | Single-buffer Qt IDE; Source / Errors / Output tabs; File New/Open/Save/Save As; Build → Check syntax; Run; toolbar; status bar; `QApplication` name / organisation / version |
-| [Milestone 2](02-diagnostic-workflow.md) | Structured Errors table; activate row → source location; status cleared to Ready when the source becomes stale after a check/run |
-| [Milestone 3](03-editor-ergonomics.md) | Edit menu; CESIL-aware Tab / Shift-Tab; action enablement tied to the editor |
-| [Milestone 6](06-language-parity.md) | Language-compatible `cesil-core` used in-process by Check and Run |
-
-Today the menu bar is File / Edit / Build / Run (no Help, no Debug). Check lives under
-Build; Run has its own top-level menu. Jacobs uses File / Edit / Build / Debug / Help —
-Stage 1 must decide how this project maps Run vs Debug without implementing the
-Debugger dialogue here.
+Milestones 1–3 provided the IDE shell, Errors table, and Edit/Tab ergonomics.
+Milestone 6 provided the language-compatible engine. Stage 1 inventory locked scope
+under [`testdata/ide/`](../../testdata/ide/).
 
 ### Out of scope for Milestone 8
 
-- The Visual CESIL Debugger dialogue (step / run-in-debugger / stop / reset, live
-  variables and accumulator, speed slider, debugger-local Source / Output / Data) —
-  **Milestone 9** (or another reserved pre-1.0 slot)
-- Implementing Debug-menu actions that open or drive that dialogue (a disabled stub
-  or omitted Debug menu is an inventory decision in Stage 1)
-- New language features beyond Visual CESIL 2.0
-- General-purpose IDE features (projects, plugins, multi-file builds, split editors)
-- Packaging / installers
-- Cloning Andrew Jacobs' copyright, About body text, or vendor branding
-- Pixel-perfect Windows chrome
-- Features absent from Visual CESIL unless required for native platform operation or
-  accessibility
+- Visual CESIL Debugger dialogue and Debug-menu actions — [Milestone 9](09-debugger.md)
+- New language features, projects/plugins, packaging/installers
+- Cloning Jacobs About text or vendor branding; pixel-perfect Windows chrome
+- Mnemonic gutter, syntax colouring, Find, Print
+
+### Implementation stages
+
+Shipped as one milestone and pre-1.0 checkpoint **`0.8.0`**.
+
+1. **Reference inventory and matrix** (done) — [`testdata/ide/`](../../testdata/ide/)
+   PROBE/MATRIX; settle-or-defer classifications.
+2. **Workflow and Errors parity** (done) — Jacobs compilation status strings;
+   Check/Run tab and Ready/Output behaviour confirmed; post-run status deliberate diverge.
+3. **Shell chrome** (done) — Help → About; Compile label; monospace Source/Output;
+   File/Edit/Build/Run/Help without Debug.
+4. **Close-out** (done) — Manual [`CHECKLIST.md`](../../testdata/ide/CHECKLIST.md);
+   version `0.8.0`; milestone completed; Next up → Milestone 9.
+
+### Deferred / deliberate divergences
+
+| Item | Status |
+|------|--------|
+| Debugger / Debug menu | **defer** → Milestone 9 |
+| Mnemonic gutter / syntax colouring | **defer** / teaching extra |
+| Edit → Delete | optional later |
+| Quit vs Exit; unsaved-prompt wording | **deliberate diverge** |
+| Post-run status (`Program finished.` / `Run failed.`) | **deliberate diverge** |
+| Top-level Run vs Jacobs Debug → Run | **deliberate diverge** |
+| Own diagnostic message text | **deliberate diverge** (policy) |
 
 ---
 
-## Implementation stages
+## Deliverables (completed)
 
-Ship as one milestone and one pre-1.0 checkpoint (version assigned at Stage 4). Work
-lands in ordered stages. **Stage 1 must settle scope before large layout or menu
-rewrites** — several editor-chrome items (syntax colouring, mnemonic gutter, Find,
-Print) are easy to over-scope.
-
-1. **Reference inventory and matrix** (done) — Main-window inventory under
-   [`testdata/ide/`](../../testdata/ide/) (`README.md`, `PROBE.md`, `MATRIX.md`).
-   Evidence: operator screenshots, UTF-16 UI strings from a local Visual CESIL 2.0
-   binary (not vendored), and prior diagnostic-status probes. Settle-or-defer rows
-   classified; Stage 2/3 implement lists locked in the matrix. No IDE feature code
-   in this stage.
-
-2. **Workflow and Errors parity** (done) — `compilationErrorSummary` matches Jacobs
-   (`No compilation errors`, `N compilation error(s)`); `DiagnosticUtilsTest` updated.
-   MainWindow Check/Run tab selection, Output clear, Ready-on-edit, and Errors
-   empty-on-success audited as **match**. Post-run status (`Program finished.` /
-   `Run failed.`) kept as **deliberate diverge** (no Jacobs UI literals in binary).
-   Matrix updated in [`testdata/ide/MATRIX.md`](../../testdata/ide/MATRIX.md).
-
-3. **Shell chrome** (done) — Help → About (`QMessageBox::about`, AboutRole) with
-   CESIL IDE name, `${PROJECT_VERSION}`, MIT copyright; Build/toolbar **Compile**
-   (F7); system fixed font on Source and Output; File/Edit/Build/Run/Help without
-   Debug. Quit and unsaved-prompt wording left as deliberate diverge. Matrix updated
-   in [`testdata/ide/MATRIX.md`](../../testdata/ide/MATRIX.md).
-
-4. **Close-out** (last) — Manual parity checklist for visual and platform-specific
-   details; validate on macOS, Linux, and Windows; assign **`0.8.0`**; mark the
-   milestone completed; point “Next up” at the Debugger milestone (9) or the next
-   allocated slot. List any explicit deferrals in the matrix.
-
-Stage 2 and 3 both depend on Stage 1. Stage 4 depends on 2 and 3.
-
-### Stage 1 settle-or-defer checklist
-
-Settled in [`testdata/ide/MATRIX.md`](../../testdata/ide/MATRIX.md). Summary:
-
-| Topic | Decision |
-|-------|----------|
-| Menu topology | File/Edit/Build/**Run**/Help; no Debug in M8 (**deliberate diverge** / **defer**) |
-| Debug menu | **Defer** to Milestone 9 |
-| Errors columns | Line / Description — **match**; own message text — **deliberate diverge** |
-| Status strings | **match** compile summaries (Stage 2); post-run status **deliberate diverge** |
-| Source presentation | System fixed font **match** (Stage 3); mnemonic gutter / colouring **defer** |
-| Find / Print | Absent in Jacobs — **match** (do not add) |
-| About | **match** (role) — own branding (Stage 3) |
-| Compile label | **match** — Build → Compile (Stage 3) |
-
----
-
-## Deliverables
-
-### Reference inventory and parity matrix
-
-- Live or screenshot-backed probe of Visual CESIL 2.0 main-window behaviour.
-- Matrix under [`testdata/ide/`](../../testdata/ide/) with no **not yet established**
-  rows for Stage 1–settled main-window scope when the milestone closes.
-- Explicit **defer** rows for Debugger and any editor chrome postponed past M8.
-
-### Error presentation
-
-- Errors panel exposes the same useful fields, ordering, and summary information as
-  Visual CESIL where the matrix requires it.
-- Match reference behaviour for successful checks, multiple errors, and compilation
-  or runtime failures at the *presentation* layer.
-- Error selection identifies the corresponding source location when that behaviour is
-  in the reference workflow (build on Milestone 2).
-- Diagnostic content remains supplied by `cesil-core`.
-
-### Editor and output workflow
-
-- Match reference transitions between Source, Errors, and Output after Check and Run.
-- Restore a neutral Ready (or inventory-equivalent) state once an edit makes a
-  previous result stale.
-- Match output display, clearing, and focus behaviour.
-- Apply only Stage 1–approved source-editor presentation changes.
-
-### Menus, toolbar, status, document lifecycle, and About
-
-- Verify action names, availability, ordering, shortcuts, and toolbar coverage against
-  the matrix (native platform menu conventions intact).
-- Verify New, Open, Save, Save As, unsaved-change prompts, and window-title / dirty
-  state.
-- Status messages describe the current edit / check / run state without presenting
-  stale results as current.
-- Help → About: this product's name, version aligned with `cesil --version` / Qt
-  application version, copyright/license for *this* project, optional project URL;
-  dismiss with OK. Match role, not Jacobs wording.
-
-### UI regression coverage
-
-Follow the testing strategy in the [project milestones index](../milestones.md): grow
-automated checks with this milestone's workflow work; do not treat coverage as a
-separate goal.
-
-- Focused tests for state transitions that do not require fragile pixel comparisons.
-- Short manual parity checklist (including opening About) for layout and
-  platform-specific behaviour.
-- Workflow validated on macOS, Linux, and Windows before close-out.
+- Inventory and matrix under [`testdata/ide/`](../../testdata/ide/)
+- Errors presentation and navigation (on Milestone 2); status summaries match Jacobs compile forms
+- Compile / Run / Ready / Output workflow
+- Help → About; Compile menu/toolbar; fixed-pitch Source/Output
+- Manual checklist; `compilationErrorSummary` unit tests
 
 ---
 
 ## Done when
 
-- Stage 1–4 complete; matrix has no **not yet established** entries for the agreed
-  main-window scope (Debugger and other deferrals remain explicit **defer** /
-  **deliberate diverge** rows, not silent gaps).
-- Errors panel, editor/output workflow, actions, About dialogue, and state transitions
-  satisfy the reference checklist.
-- Automated tests cover stable application-state behaviour; the manual checklist
-  covers visual and native-platform details.
-- CLI and IDE report the Stage 4 checkpoint version (expected `0.8.0`).
-- There are no known functional IDE gaps within this milestone's agreed Visual CESIL
-  2.0 **main-window** scope.
+- [x] Stages 1–4 complete; matrix has no **not yet established** / blocking **gap** for main-window scope
+- [x] Errors, editor/output workflow, actions, About, and state transitions satisfy the checklist
+- [x] Automated tests cover stable helpers; manual checklist covers visual/platform details
+- [x] CLI and IDE report `0.8.0`
+- [x] No known functional gaps within the agreed main-window Visual CESIL 2.0 scope

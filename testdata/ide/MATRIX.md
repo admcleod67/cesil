@@ -1,10 +1,14 @@
-# IDE compatibility matrix (Milestone 8 Stages 1–3)
+# IDE compatibility matrix (Milestone 8 Stages 1–4)
 
-Evidence: [`PROBE.md`](PROBE.md). Ours baseline: [`src/ide/MainWindow.cpp`](../../src/ide/MainWindow.cpp),
+Evidence: [`PROBE.md`](PROBE.md). Manual close-out: [`CHECKLIST.md`](CHECKLIST.md).
+Ours: [`src/ide/MainWindow.cpp`](../../src/ide/MainWindow.cpp),
 [`src/ide/DiagnosticUtils.cpp`](../../src/ide/DiagnosticUtils.cpp),
 [`src/ide/SourceEditor.cpp`](../../src/ide/SourceEditor.cpp).
 
 Status values: **match** | **gap** | **deliberate diverge** | **defer** (Milestone 9 or later).
+
+No **not yet established** or blocking **gap** rows remain for the Milestone 8
+main-window scope. Remaining non-match rows are **deliberate diverge** or **defer**.
 
 ## Menus and actions
 

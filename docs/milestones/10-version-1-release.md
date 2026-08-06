@@ -13,7 +13,7 @@ It complements:
 - [Project milestones](../milestones.md)
 - [Milestone 6 — Visual CESIL language parity](06-language-parity.md)
 - [Milestone 8 — Visual CESIL IDE parity](08-ide-parity.md)
-- Milestone 9 — Visual CESIL Debugger (planned; before this release)
+- [Milestone 9 — Visual CESIL Debugger](09-debugger.md)
 
 ### Version 1.0.0 contract
 

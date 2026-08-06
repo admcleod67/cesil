@@ -191,11 +191,11 @@ CESIL documentation and historical material:
 
 See **[docs/milestones.md](docs/milestones.md)** for the milestone index.
 
-**Milestone 6** is complete (language parity checkpoint `0.6.0`: engine alignment with
-[`docs/language/`](docs/language/README.md) and in-repo goldens under
-`testdata/parity/`). Next up is Milestone 8 (main-window IDE parity; staged). The
-Visual CESIL Debugger is planned as Milestone 9 before **1.0.0**. Improvements beyond
-Visual CESIL are intentionally deferred until after 1.0.
+**Milestone 8** is complete (main-window IDE parity checkpoint `0.8.0`: inventory under
+`testdata/ide/`, Compile/Run workflow, Help → About). Next up is Milestone 9 (Visual
+CESIL Debugger). The path to **1.0.0** continues through Debugger parity and release
+validation. Improvements beyond Visual CESIL are intentionally deferred until after
+1.0.
 
 ---
 
