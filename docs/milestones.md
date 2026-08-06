@@ -23,7 +23,8 @@ prefixes sort lexicographically).
 **Release checkpoint:** Milestone 8 is complete. The CLI and IDE report `0.8.0`
 (`${PROJECT_VERSION}` from CMake). Cut git tag `v0.8.0` when ready.
 
-**Next up:** Milestone 9 (Visual CESIL Debugger dialogue).
+**Next up:** Milestone 9 (Visual CESIL Debugger — staged; see
+[`milestones/09-debugger.md`](milestones/09-debugger.md)). Expected checkpoint `0.9.0`.
 
 Language reference: **[`docs/language/`](language/README.md)**.
 
@@ -51,7 +52,8 @@ The planned landmarks are:
 - **Milestone 5:** CESIL language reference (completed; documentation; no version bump)
 - **Milestone 6 / `0.6.0`:** language and runtime parity (engine + golden corpus) (completed)
 - **Milestone 8 / `0.8.0`:** main-window IDE workflow and presentation parity (completed)
-- **Milestone 9:** Visual CESIL Debugger dialogue (planned; before `1.0.0`)
+- **Milestone 9 / `0.9.0`:** Visual CESIL Debugger dialogue (planned; staged —
+  probe → core stepping → UI → close-out)
 - **Milestone 10 / `1.0.0`:** integrated parity validation and release
 
 Milestone 7 remains deliberately unallocated. Pre-1.0 release versions for Milestone 9
@@ -78,8 +80,8 @@ Planned growth:
 
 - **Milestone 8:** main-window IDE parity — inventory, workflow/Errors, shell chrome,
   manual checklist (completed).
-- **Milestone 9:** Debugger dialogue parity and stepping coverage (planned; before
-  `1.0.0`).
+- **Milestone 9:** Debugger dialogue — probe/matrix, core stepping API, Qt Debug
+  menu and dialogue, manual checklist; expected `0.9.0` (planned).
 - **Milestone 10:** cross-platform release checklists; automate stable state
   transitions where practical, keep fragile visual checks manual.
 

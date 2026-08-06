@@ -193,9 +193,9 @@ See **[docs/milestones.md](docs/milestones.md)** for the milestone index.
 
 **Milestone 8** is complete (main-window IDE parity checkpoint `0.8.0`: inventory under
 `testdata/ide/`, Compile/Run workflow, Help → About). Next up is Milestone 9 (Visual
-CESIL Debugger). The path to **1.0.0** continues through Debugger parity and release
-validation. Improvements beyond Visual CESIL are intentionally deferred until after
-1.0.
+CESIL Debugger; staged — probe, core stepping, UI, close-out; expected `0.9.0`). The
+path to **1.0.0** continues through Debugger parity and release validation.
+Improvements beyond Visual CESIL are intentionally deferred until after 1.0.
 
 ---
 
