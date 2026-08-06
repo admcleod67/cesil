@@ -4,11 +4,13 @@
 #include "SourceIndent.hpp"
 
 #include <QEvent>
+#include <QFontDatabase>
 #include <QFontMetricsF>
 #include <QKeyEvent>
 
 SourceEditor::SourceEditor(QWidget* parent) : QPlainTextEdit(parent) {
     setTabChangesFocus(false);
+    setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
     updateTabStopDistance();
 }
 

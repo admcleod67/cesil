@@ -11,9 +11,11 @@
 #include <runtime/Io.hpp>
 
 #include <QAction>
+#include <QApplication>
 #include <QByteArray>
 #include <QFileDialog>
 #include <QFileInfo>
+#include <QFontDatabase>
 #include <QHeaderView>
 #include <QKeySequence>
 #include <QLabel>
@@ -60,6 +62,7 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
 
     m_output = new QPlainTextEdit(m_tabs);
     m_output->setReadOnly(true);
+    m_output->setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
 
     m_tabs->addTab(m_editor, tr("Source"));
     m_tabs->addTab(m_errorsView, tr("Errors"));
@@ -124,7 +127,7 @@ void MainWindow::createActions() {
                           SourceEditActions{m_undoAction, m_redoAction, m_cutAction,
                                             m_copyAction, m_pasteAction, m_selectAllAction});
 
-    m_checkAction = new QAction(tr("Check &syntax"), this);
+    m_checkAction = new QAction(tr("&Compile"), this);
     m_checkAction->setShortcut(QKeySequence(Qt::Key_F7));
     m_checkAction->setIcon(style()->standardIcon(QStyle::SP_DialogApplyButton));
     connect(m_checkAction, &QAction::triggered, this, &MainWindow::checkSyntax);
@@ -133,6 +136,10 @@ void MainWindow::createActions() {
     m_runAction->setShortcut(QKeySequence(Qt::Key_F5));
     m_runAction->setIcon(style()->standardIcon(QStyle::SP_MediaPlay));
     connect(m_runAction, &QAction::triggered, this, &MainWindow::runProgram);
+
+    m_aboutAction = new QAction(tr("&About CESIL IDE..."), this);
+    m_aboutAction->setMenuRole(QAction::AboutRole);
+    connect(m_aboutAction, &QAction::triggered, this, &MainWindow::showAbout);
 }
 
 void MainWindow::createMenus() {
@@ -159,6 +166,9 @@ void MainWindow::createMenus() {
 
     QMenu* runMenu = menuBar()->addMenu(tr("&Run"));
     runMenu->addAction(m_runAction);
+
+    QMenu* helpMenu = menuBar()->addMenu(tr("&Help"));
+    helpMenu->addAction(m_aboutAction);
 }
 
 void MainWindow::createToolBar() {
@@ -229,6 +239,17 @@ void MainWindow::newFile() {
     updateWindowTitle();
     updateCursorPosition();
     statusBar()->showMessage(tr("Ready"));
+}
+
+void MainWindow::showAbout() {
+    const QString text = tr(
+                             "<h3>%1</h3>"
+                             "<p>Version %2</p>"
+                             "<p>Copyright (c) 2026 admcleod67</p>"
+                             "<p>Licensed under the MIT License.</p>")
+                             .arg(QApplication::applicationName(),
+                                  QApplication::applicationVersion());
+    QMessageBox::about(this, tr("About %1").arg(QApplication::applicationName()), text);
 }
 
 void MainWindow::checkSyntax() {

@@ -32,7 +32,8 @@ Use an external Visual CESIL 2.0 distribution (see
 Stage 1 evidence (2026-08): live diagnostic/status probes, operator screenshots
 (About, main window, Debugger), and UTF-16 UI string extraction from
 `Visual CESIL.exe` in a local (non-repo) 2.0 tree. Stage 2 (2026-08) aligned
-compilation status helpers and settled post-run status diverge. See
+compilation status helpers and settled post-run status diverge. Stage 3 (2026-08)
+added Help → About, Compile label, and monospace Source/Output fonts. See
 [`PROBE.md`](PROBE.md) and [`MATRIX.md`](MATRIX.md).
 
 ## Scope reminder

@@ -45,6 +45,7 @@ class MainWindow final : public QMainWindow {
 
     void checkSyntax();
     void runProgram();
+    void showAbout();
 
     QTabWidget* m_tabs{};
     QPlainTextEdit* m_editor{};
@@ -67,4 +68,5 @@ class MainWindow final : public QMainWindow {
     QAction* m_selectAllAction{};
     QAction* m_checkAction{};
     QAction* m_runAction{};
+    QAction* m_aboutAction{};
 };

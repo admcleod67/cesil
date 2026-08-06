@@ -87,12 +87,11 @@ Print) are easy to over-scope.
    `Run failed.`) kept as **deliberate diverge** (no Jacobs UI literals in binary).
    Matrix updated in [`testdata/ide/MATRIX.md`](../../testdata/ide/MATRIX.md).
 
-3. **Shell chrome** (after Stage 1; may overlap late Stage 2) — Menus, toolbar,
-   shortcuts, and enablement per the matrix; document title and dirty-state behaviour;
-   Help → About (product name, `${PROJECT_VERSION}`, this project's copyright/license,
-   optional URL; native Help / application-menu placement). Apply only the
-   source-editor presentation items Stage 1 marked in-scope (e.g. monospace / column
-   cues). Do **not** implement Debugger UI.
+3. **Shell chrome** (done) — Help → About (`QMessageBox::about`, AboutRole) with
+   CESIL IDE name, `${PROJECT_VERSION}`, MIT copyright; Build/toolbar **Compile**
+   (F7); system fixed font on Source and Output; File/Edit/Build/Run/Help without
+   Debug. Quit and unsaved-prompt wording left as deliberate diverge. Matrix updated
+   in [`testdata/ide/MATRIX.md`](../../testdata/ide/MATRIX.md).
 
 4. **Close-out** (last) — Manual parity checklist for visual and platform-specific
    details; validate on macOS, Linux, and Windows; assign **`0.8.0`**; mark the
@@ -107,14 +106,14 @@ Settled in [`testdata/ide/MATRIX.md`](../../testdata/ide/MATRIX.md). Summary:
 
 | Topic | Decision |
 |-------|----------|
-| Menu topology | Keep File/Edit/Build/**Run**; add Help in Stage 3; **no** Debug menu in M8 (**deliberate diverge** / **defer**) |
+| Menu topology | File/Edit/Build/**Run**/Help; no Debug in M8 (**deliberate diverge** / **defer**) |
 | Debug menu | **Defer** to Milestone 9 |
 | Errors columns | Line / Description — **match**; own message text — **deliberate diverge** |
 | Status strings | **match** compile summaries (Stage 2); post-run status **deliberate diverge** |
-| Source presentation | Monospace OK; mnemonic gutter / colouring **defer** |
+| Source presentation | System fixed font **match** (Stage 3); mnemonic gutter / colouring **defer** |
 | Find / Print | Absent in Jacobs — **match** (do not add) |
-| About | Stage 3 **gap** → implement (own branding) |
-| Compile label | Rename Check syntax → **Compile** in Stage 3 |
+| About | **match** (role) — own branding (Stage 3) |
+| Compile label | **match** — Build → Compile (Stage 3) |
 
 ---
 
